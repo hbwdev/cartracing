@@ -109,44 +109,44 @@ var EventedLoop = require('eventedloop');
 		function drawBackground() {
 			// Stretch image to canvas
 			scrollImg.width = mainCanvas.width;
-			if (scrollImg.height < mainCanvas.height)
-				scrollImg.height = mainCanvas.height;
+			scrollImg.height = mainCanvas.height;
+			//if (scrollImg.height < mainCanvas.height)
+			//	scrollImg.height = mainCanvas.height;
 			
+			// Redraw background
+			dContext.drawImage(scrollImg, imgWidth, imgHeight, mainCanvas.width, scrollImg.height);
+
+			dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
+			dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
+
+			dContext.drawImage(scrollImg, imgWidth, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+			dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+			dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+
 			// Adjust background position
 			if (imgHeight <= 0)
             	imgHeight = mainCanvas.height;
 
-			/*
+			
 			if (imgWidth < 0)
 				imgWidth = mainCanvas.width;
 			
 			if (imgWidth > mainCanvas.width)
 				imgWidth = 0;
-			*/
+			
 
 			if (player.isMoving) {
 				imgHeight -= (player.getSpeedY() * 2);
 
-				/*
-				TODO: sort out relative movement and mouse control
+				//TODO: sort out relative movement and mouse control
 				if (typeof player.direction !== 'undefined') {
 					if (player.direction > 180)
 						imgWidth += player.getSpeedX() * 5;
 					else if (player.direction < 180)
 						imgWidth -= player.getSpeedX() * 5;
 				}
-				*/
+				
 			}
-
-			// Redraw background
-			dContext.drawImage(scrollImg, imgWidth, imgHeight, mainCanvas.width, scrollImg.height);
-
-			//dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
-			//dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
-
-			dContext.drawImage(scrollImg, imgWidth, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
-			//dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
-			//dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
 		}
 
 		that.draw = function () {
