@@ -249,6 +249,27 @@ if (typeof navigator !== 'undefined') {
 
 		that.setMapPositionTarget = function (x, y) {
 			if (that.hasBeenHit) return;
+			
+			/*
+			var targetAngle = // todo: calculate angle - might not work with keyboard?
+			if (targetAngle <= 90) {
+				setDiscreteDirection('east');
+			} else if (targetAngle > 90 && targetAngle < 150) {
+				setDiscreteDirection('esEast');
+			} else if (targetAngle >= 150 && targetAngle < 180) {
+				setDiscreteDirection('sEast');
+			} else if (targetAngle === 180) {
+				setDiscreteDirection('south');
+			} else if (targetAngle > 180 && targetAngle <= 210) {
+				setDiscreteDirection('sWest');
+			} else if (targetAngle > 210 && targetAngle < 270) {
+				setDiscreteDirection('wsWest');
+			} else if (targetAngle >= 270) {
+				setDiscreteDirection('west');
+			} else {
+				setDiscreteDirection('south');
+			}
+			*/
 
 			if (Math.abs(that.mapPosition[0] - x) <= 75) {
 				x = that.mapPosition[0];

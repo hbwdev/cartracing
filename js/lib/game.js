@@ -7,6 +7,12 @@ var EventedLoop = require('eventedloop');
 		var movingObjects = new SpriteArray();
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
+		
+		var scrollImg = new Image();
+		scrollImg.src = 'road.png';
+		var imgHeight = 0;
+		var imgWidth = 0;
+
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
 		var paused = false;
@@ -62,6 +68,7 @@ var EventedLoop = require('eventedloop');
 		var intervalNum = 0;
 
 		this.cycle = function () {
+
 			beforeCycleCallbacks.each(function(c) {
 				c();
 			});
@@ -99,9 +106,55 @@ var EventedLoop = require('eventedloop');
 			});
 		};
 
+		function drawBackground() {
+			// Stretch image to canvas
+			scrollImg.width = mainCanvas.width;
+			if (scrollImg.height < mainCanvas.height)
+				scrollImg.height = mainCanvas.height;
+			
+			// Adjust background position
+			if (imgHeight <= 0)
+            	imgHeight = mainCanvas.height;
+
+			/*
+			if (imgWidth < 0)
+				imgWidth = mainCanvas.width;
+			
+			if (imgWidth > mainCanvas.width)
+				imgWidth = 0;
+			*/
+
+			if (player.isMoving) {
+				imgHeight -= (player.getSpeedY() * 2);
+
+				/*
+				TODO: sort out relative movement and mouse control
+				if (typeof player.direction !== 'undefined') {
+					if (player.direction > 180)
+						imgWidth += player.getSpeedX() * 5;
+					else if (player.direction < 180)
+						imgWidth -= player.getSpeedX() * 5;
+				}
+				*/
+			}
+
+			// Redraw background
+			dContext.drawImage(scrollImg, imgWidth, imgHeight, mainCanvas.width, scrollImg.height);
+
+			//dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
+			//dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight, mainCanvas.width, scrollImg.height);
+
+			dContext.drawImage(scrollImg, imgWidth, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+			//dContext.drawImage(scrollImg, imgWidth + mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+			//dContext.drawImage(scrollImg, imgWidth - mainCanvas.width, imgHeight - mainCanvas.height, mainCanvas.width, scrollImg.height);
+		}
+
 		that.draw = function () {
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
+			
+			// Update scrolling background
+			drawBackground();
 
 			player.draw(dContext);
 

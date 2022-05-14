@@ -22,6 +22,10 @@ var Game = require('./lib/game');
 // Local variables for starting the game
 var mainCanvas = document.getElementById('skifree-canvas');
 var dContext = mainCanvas.getContext('2d');
+
+var scrollImg = new Image();
+scrollImg.src = 'road.png';
+
 var imageSources = [ 'sprite-characters.png', 'skifree-objects.png' ];
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the player';
