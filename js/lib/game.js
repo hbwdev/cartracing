@@ -14,6 +14,10 @@ var EventedLoop = require('eventedloop');
 		var backgroundX = 0;
 		var backgroundY = 0;
 
+		// Hud mockup
+		var hudImage = new Image();
+		hudImage.src = 'hud-mockup.png';
+
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
 		var paused = false;
@@ -124,6 +128,10 @@ var EventedLoop = require('eventedloop');
 			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
 		}
 
+		function drawHud() {
+			dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
+		}
+
 		that.draw = function () {
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
@@ -150,6 +158,8 @@ var EventedLoop = require('eventedloop');
 					uiElement.draw(dContext, 'main');
 				}
 			});
+			
+			drawHud();
 		};
 
 		this.start = function () {
