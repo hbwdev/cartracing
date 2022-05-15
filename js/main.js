@@ -28,8 +28,8 @@ scrollImg.src = 'road.png';
 
 var imageSources = [ 'sprite-characters.png', 'skifree-objects.png' ];
 var global = this;
-var infoBoxControls = 'Use the mouse or WASD to control the player';
-if (isMobileDevice()) infoBoxControls = 'Tap or drag on the piste to control the player';
+var infoBoxControls = 'Use the mouse or WASD to control the cart';
+if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
 
 var pixelsPerMetre = 18;
@@ -37,7 +37,7 @@ var distanceTravelledInMetres = 0;
 var monsterDistanceThreshold = 2000;
 var livesLeft = 5;
 var highScore = 0;
-var loseLifeOnObstacleHit = false;
+var loseLifeOnObstacleHit = true;
 var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
@@ -78,6 +78,11 @@ function startNeverEndingGame (images) {
 	var startSign;
 	var infoBox;
 	var game;
+
+	function toggleGodMode() {
+		loseLifeOnObstacleHit = !loseLifeOnObstacleHit;
+		console.log('God mode changed: ' + !loseLifeOnObstacleHit);
+	}
 
 	function resetGame () {
 		distanceTravelledInMetres = 0;
@@ -131,11 +136,11 @@ function startNeverEndingGame (images) {
 	player = new Skier(sprites.skier);
 	player.setMapPosition(0, 0);
 	player.setMapPositionTarget(0, -10);
-	if ( loseLifeOnObstacleHit ) {
-		player.setHitObstacleCb(function() {
+
+	player.setHitObstacleCb(function() {
+		if (loseLifeOnObstacleHit)
 			livesLeft -= 1;
-		});
-	}
+	});
 
 	game = new Game(mainCanvas, player);
 
@@ -150,7 +155,8 @@ function startNeverEndingGame (images) {
 			'Travelled 0m',
 			'High Score: ' + highScore,
 			'Carts left: ' + livesLeft,
-			'Brought to you by Serious Business'
+			'Brought to you by Serious Business',
+			loseLifeOnObstacleHit ? '' : 'God Mode'
 		],
 		position: {
 			top: 130,
@@ -178,7 +184,9 @@ function startNeverEndingGame (images) {
 		if (!game.isPaused()) {
 			game.addStaticObjects(newObjects);
 
-			randomlySpawnNPC(spawnBoarder, 0.1);
+			// Disabled snowboarder spawn for cart conversion
+			//randomlySpawnNPC(spawnBoarder, 0.1);
+
 			distanceTravelledInMetres = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
 
 			if (distanceTravelledInMetres > monsterDistanceThreshold) {
@@ -191,7 +199,8 @@ function startNeverEndingGame (images) {
 				'Carts left: ' + livesLeft,
 				'High Score: ' + highScore,
 				'Brought to you by Serious Business',
-				'Current Speed: ' + player.getSpeed()/*,
+				'Current Speed: ' + player.getSpeed(),
+				loseLifeOnObstacleHit ? '' : 'GOD MODE'/*,
 				'Cart Map Position: ' + player.mapPosition[0].toFixed(1) + ', ' + player.mapPosition[1].toFixed(1),
 				'Cart Map Position: ' + mouseMapPosition[0].toFixed(1) + ', ' + mouseMapPosition[1].toFixed(1)*/
 			]);
@@ -247,6 +256,7 @@ function startNeverEndingGame (images) {
 	Mousetrap.bind('m', spawnMonster);
 	Mousetrap.bind('b', spawnBoarder);
 	Mousetrap.bind('space', resetGame);
+	Mousetrap.bind('g', toggleGodMode);
 
 	var hammertime = Hammer(mainCanvas).on('press', function (e) {
 		e.preventDefault();
