@@ -36,8 +36,7 @@ function InfoBox(data) {
 			}
 
 			yOffset += textHeight;
-
-
+			dContext.fillStyle = "#ffffff";
 			dContext.fillText(line, xPos, yPos);
 		});
 	};
