@@ -133,10 +133,14 @@ var isMobileDevice = require('../lib/isMobileDevice');
 		}
 
 		function drawHud() {
-			if (isMobileDevice())
-				dContext.drawImage(hudImage, 0, 0)
+			if (isMobileDevice()) {
+				var factor = mainCanvas.width / hudImage.width;
+				dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height * factor);
+			}
 			else
+			{
 				dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
+			}
 		}
 
 		that.draw = function () {
