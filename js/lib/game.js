@@ -1,5 +1,6 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
+var isMobileDevice = require('../lib/isMobileDevice');
 
 (function (global) {
 	function Game (mainCanvas, player) {
@@ -16,7 +17,10 @@ var EventedLoop = require('eventedloop');
 
 		// Hud mockup
 		var hudImage = new Image();
-		hudImage.src = 'hud-mockup.png';
+		if (isMobileDevice())
+			hudImage.src = 'mobilehud-mockup.png';
+		else
+			hudImage.src = 'hud-mockup.png';
 
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
@@ -129,7 +133,10 @@ var EventedLoop = require('eventedloop');
 		}
 
 		function drawHud() {
-			dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
+			if (isMobileDevice())
+				dContext.drawImage(hudImage, 0, 0)
+			else
+				dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
 		}
 
 		that.draw = function () {
