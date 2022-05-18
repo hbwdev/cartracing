@@ -15,7 +15,7 @@ var SpriteArray = require('./lib/spriteArray');
 var Monster = require('./lib/monster');
 var Sprite = require('./lib/sprite');
 var Snowboarder = require('./lib/snowboarder');
-var Skier = require('./lib/skier');
+var Player = require('./lib/player');
 var InfoBox = require('./lib/infoBox');
 var Game = require('./lib/game');
 
@@ -60,13 +60,13 @@ function loadImages (sources, next) {
 	});
 }
 
-function monsterHitsSkierBehaviour(monster, skier) {
-	skier.isEatenBy(monster, function () {
+function monsterHitsPlayerBehaviour(monster, player) {
+	player.isEatenBy(monster, function () {
 		livesLeft -= 1;
 		monster.isFull = true;
 		monster.isEating = false;
-		skier.isBeingEaten = false;
-		monster.setSpeed(skier.getSpeed());
+		player.isBeingEaten = false;
+		monster.setSpeed(player.getSpeed());
 		monster.stopFollowing();
 		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
 		monster.setMapPositionTarget(randomPositionAbove[0], randomPositionAbove[1]);
@@ -117,7 +117,7 @@ function startNeverEndingGame (images) {
 		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
 		newMonster.follow(player);
 		newMonster.setSpeed(player.getStandardSpeed());
-		newMonster.onHitting(player, monsterHitsSkierBehaviour);
+		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
 		game.addMovingObject(newMonster, 'monster');
 	}
@@ -128,12 +128,12 @@ function startNeverEndingGame (images) {
 		var randomPositionBelow = dContext.getRandomMapPositionBelowViewport();
 		newBoarder.setMapPosition(randomPositionAbove[0], randomPositionAbove[1]);
 		newBoarder.setMapPositionTarget(randomPositionBelow[0], randomPositionBelow[1]);
-		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.skier);
+		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.player);
 
 		game.addMovingObject(newBoarder);
 	}
 
-	player = new Skier(sprites.skier);
+	player = new Player(sprites.player);
 	player.setMapPosition(0, 0);
 	player.setMapPositionTarget(0, -10);
 

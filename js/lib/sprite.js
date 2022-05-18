@@ -377,8 +377,8 @@
 
 				sprite.setMapPosition(position[0], position[1]);
 
-				if (spriteInfo.sprite.hitBehaviour && spriteInfo.sprite.hitBehaviour.skier && opts.player) {
-					sprite.onHitting(opts.player, spriteInfo.sprite.hitBehaviour.skier);
+				if (spriteInfo.sprite.hitBehaviour && spriteInfo.sprite.hitBehaviour.player && opts.player) {
+					sprite.onHitting(opts.player, spriteInfo.sprite.hitBehaviour.player);
 				}
 
 				return sprite;

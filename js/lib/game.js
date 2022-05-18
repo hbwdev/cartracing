@@ -9,7 +9,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
 		
-		var isMobile = true; //isMobileDevice();
+		var isMobile = isMobileDevice();
 
 		// Scrolling background
 		var backgroundImage = new Image();

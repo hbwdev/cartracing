@@ -1,6 +1,6 @@
 (function (global) {
 	var sprites = {
-		'skier' : {
+		'player' : {
 			$imageFile : 'sprite-characters.png',
 			parts : {
 				blank : [ 0, 0, 0, 0 ],
@@ -127,57 +127,57 @@
 	sprites.smallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
 	sprites.tallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
 
-	function skierHitsTreeBehaviour(skier, tree) {
-		skier.hasHitObstacle(tree);
+	function playerHitsTreeBehaviour(player, tree) {
+		player.hasHitObstacle(tree);
 	}
 
-	function treeHitsSkierBehaviour(tree, skier) {
-		skier.hasHitObstacle(tree);
+	function treeHitsSkierBehaviour(tree, player) {
+		player.hasHitObstacle(tree);
 	}
 
-	sprites.smallTree.hitBehaviour.skier = treeHitsSkierBehaviour;
-	sprites.tallTree.hitBehaviour.skier = treeHitsSkierBehaviour;
+	sprites.smallTree.hitBehaviour.player = treeHitsSkierBehaviour;
+	sprites.tallTree.hitBehaviour.player = treeHitsSkierBehaviour;
 
-	function rockHitsSkierBehaviour(rock, skier) {
-		skier.hasHitObstacle(rock);
+	function rockHitsSkierBehaviour(rock, player) {
+		player.hasHitObstacle(rock);
 	}
 
-	sprites.rock.hitBehaviour.skier = rockHitsSkierBehaviour;
+	sprites.rock.hitBehaviour.player = rockHitsSkierBehaviour;
 
-	function skierHitsJumpBehaviour(skier, jump) {
-		skier.hasHitJump(jump);
+	function playerHitsJumpBehaviour(player, jump) {
+		player.hasHitJump(jump);
 	}
 
-	function jumpHitsSkierBehaviour(jump, skier) {
-		skier.hasHitJump(jump);
+	function jumpHitsSkierBehaviour(jump, player) {
+		player.hasHitJump(jump);
 	}
 
-	sprites.jump.hitBehaviour.skier = jumpHitsSkierBehaviour;
+	sprites.jump.hitBehaviour.player = jumpHitsSkierBehaviour;
 
 // Really not a fan of this behaviour.
-/*	function skierHitsThickSnowBehaviour(skier, thickSnow) {
+/*	function playerHitsThickSnowBehaviour(player, thickSnow) {
 		// Need to implement this properly
-		skier.setSpeed(2);
+		player.setSpeed(2);
 		setTimeout(function() {
-			skier.resetSpeed();
+			player.resetSpeed();
 		}, 700);
 	}
 
-	function thickSnowHitsSkierBehaviour(thickSnow, skier) {
+	function thickSnowHitsSkierBehaviour(thickSnow, player) {
 		// Need to implement this properly
-		skier.setSpeed(2);
+		player.setSpeed(2);
 		setTimeout(function() {
-			skier.resetSpeed();
+			player.resetSpeed();
 		}, 300);
 	}*/
 
-	// sprites.thickSnow.hitBehaviour.skier = thickSnowHitsSkierBehaviour;
+	// sprites.thickSnow.hitBehaviour.player = thickSnowHitsSkierBehaviour;
 
-	function snowboarderHitsSkierBehaviour(snowboarder, skier) {
-		skier.hasHitObstacle(snowboarder);
+	function snowboarderHitsSkierBehaviour(snowboarder, player) {
+		player.hasHitObstacle(snowboarder);
 	}
 
-	sprites.snowboarder.hitBehaviour.skier = snowboarderHitsSkierBehaviour;
+	sprites.snowboarder.hitBehaviour.player = snowboarderHitsSkierBehaviour;
 
 	global.spriteInfo = sprites;
 })( this );

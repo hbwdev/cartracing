@@ -11,7 +11,7 @@ if (typeof navigator !== 'undefined') {
 }
 
 (function(global) {
-	function Skier(data) {
+	function Player(data) {
 		var discreteDirections = {
 			'west': 270,
 			'wsWest': 240,
@@ -495,9 +495,9 @@ if (typeof navigator !== 'undefined') {
 		return that;
 	}
 
-	global.skier = Skier;
+	global.player = Player;
 })(this);
 
 if (typeof module !== 'undefined') {
-	module.exports = this.skier;
+	module.exports = this.player;
 }
