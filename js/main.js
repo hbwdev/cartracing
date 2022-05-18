@@ -159,7 +159,7 @@ function startNeverEndingGame (images) {
 			loseLifeOnObstacleHit ? '' : 'God Mode'
 		],
 		position: {
-			top: 130,
+			top: isMobileDevice() ? 90 : 130, // TODO: Need dynamic positioning
 			right: 10
 		}
 	});

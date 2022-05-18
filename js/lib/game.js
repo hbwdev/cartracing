@@ -9,6 +9,8 @@ var isMobileDevice = require('../lib/isMobileDevice');
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
 		
+		var isMobile = true; //isMobileDevice();
+
 		// Scrolling background
 		var backgroundImage = new Image();
 		backgroundImage.src = 'road.png';
@@ -17,7 +19,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 
 		// Hud mockup
 		var hudImage = new Image();
-		if (true)//isMobileDevice())
+		if (isMobile)
 			hudImage.src = 'mobilehud-mockup.png';
 		else
 			hudImage.src = 'hud-mockup.png';
@@ -132,32 +134,31 @@ var isMobileDevice = require('../lib/isMobileDevice');
 			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
 		}
 
-		function drawHud() {
-			if (isMobileDevice()) {
-				var imgWidth = hudImage.naturalWidth;
-				var screenWidth  = mainCanvas.width;
-				var scaleX = 1;
-				if (imgWidth > screenWidth)
-					scaleX = screenWidth / imgWidth;
-				var imgHeight = hudImage.naturalHeight;
-				var screenHeight = mainCanvas.height;
-				var scaleY = 1;
-				if (imgHeight > screenHeight)
-					scaleY = screenHeight / imgHeight;
-				var scale = scaleY;
-				if (scaleX < scaleY)
-					scale = scaleX;
-				if (scale < 1) {
-					imgHeight = imgHeight * scale;
-					imgWidth = imgWidth * scale;          
-				}
+		function drawMobileHud() {
+			var imgWidth = hudImage.naturalWidth;
+			var screenWidth  = mainCanvas.width;
+			var scaleX = 1;
+			if (imgWidth > screenWidth)
+				scaleX = screenWidth / imgWidth;
+			var imgHeight = hudImage.naturalHeight;
+			var screenHeight = mainCanvas.height;
+			var scaleY = 1;
+			if (imgHeight > screenHeight)
+				scaleY = screenHeight / imgHeight;
+			var scale = scaleY;
+			if (scaleX < scaleY)
+				scale = scaleX;
+			if (scale < 1) {
+				imgHeight = imgHeight * scale;
+				imgWidth = imgWidth * scale;          
+			}
 
-				dContext.drawImage(hudImage, 0, 0, hudImage.naturalWidth, hudImage.naturalHeight, 0,0, imgWidth, imgHeight);
-			}
-			else
-			{
-				dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
-			}
+			console.log(hudImage.width, hudImage.height, imgWidth, imgHeight);
+			dContext.drawImage(hudImage, 0, 0, hudImage.naturalWidth, hudImage.naturalHeight, 0,0, imgWidth, imgHeight);
+		}
+
+		function drawHud() {
+			dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
 		}
 
 		that.draw = function () {
@@ -187,7 +188,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 				}
 			});
 			
-			drawHud();
+			isMobile ? drawMobileHud() : drawHud();
 		};
 
 		this.start = function () {
