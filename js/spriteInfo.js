@@ -1,30 +1,20 @@
 (function (global) {
 	var sprites = {
 		'player' : {
-			$imageFile : 'sprite-characters.png',
+			$imageFile : 'assets/cart-sprites.png',
 			parts : {
 				blank : [ 0, 0, 0, 0 ],
-				//east : [ 0, 0, 24, 34 ],
-				east : [ 110, 37, 36, 34 ],
-				//esEast : [ 24, 0, 24, 34 ],
-				esEast : [ 207, 74, 60, 34 ],
-				//sEast : [ 49, 0, 17, 34 ],
-				sEast : [ 207, 74, 60, 34 ],
-				south : [ 65, 0, 17, 34 ],
-				//sWest : [ 49, 37, 17, 34 ],
-				sWest : [ 144, 74, 60, 34 ],
-				//wsWest : [ 24, 37, 24, 34 ],
-				wsWest : [ 144, 74, 60, 34 ],
-				//west : [ 0, 37, 24, 34 ],
-				west : [ 71, 37, 37, 34 ],
-				//hit : [ 0, 78, 31, 31 ],
-				hit : [ 65, 0, 17, 34 ],
-				//jumping : [ 84, 0, 32, 34 ],
-				jumping : [ 65, 0, 17, 34 ],
-				//somersault1 : [ 116, 0, 32, 34 ],
-				somersault1 : [ 65, 0, 17, 34 ],
-				//somersault2 : [ 148, 0, 32, 34 ]
-				somersault1 : [ 65, 0, 17, 34 ]
+				east : [ 0, 210, 120, 99 ],
+				esEast : [ 247, 104, 105, 104 ],
+				sEast : [ 140, 104, 79, 104 ],
+				south : [ 26, 104, 67, 104 ],
+				sWest : [ 260, 0, 79, 104 ],
+				wsWest : [ 127, 0, 105, 104 ],
+				west : [ 0,0,120,104 ],
+				hit : [ 26, 104, 67, 104 ],
+				jumping : [ 26, 104, 67, 104 ],
+				somersault1 : [ 26, 104, 67, 104 ],
+				somersault1 : [ 26, 104, 67, 104 ]
 			},
 			hitBoxes: {
 				0: [ 7, 20, 27, 34 ]
@@ -131,28 +121,28 @@
 		player.hasHitObstacle(tree);
 	}
 
-	function treeHitsSkierBehaviour(tree, player) {
+	function treeHitsPlayerBehaviour(tree, player) {
 		player.hasHitObstacle(tree);
 	}
 
-	sprites.smallTree.hitBehaviour.player = treeHitsSkierBehaviour;
-	sprites.tallTree.hitBehaviour.player = treeHitsSkierBehaviour;
+	sprites.smallTree.hitBehaviour.player = treeHitsPlayerBehaviour;
+	sprites.tallTree.hitBehaviour.player = treeHitsPlayerBehaviour;
 
-	function rockHitsSkierBehaviour(rock, player) {
+	function rockHitsPlayerBehaviour(rock, player) {
 		player.hasHitObstacle(rock);
 	}
 
-	sprites.rock.hitBehaviour.player = rockHitsSkierBehaviour;
+	sprites.rock.hitBehaviour.player = rockHitsPlayerBehaviour;
 
 	function playerHitsJumpBehaviour(player, jump) {
 		player.hasHitJump(jump);
 	}
 
-	function jumpHitsSkierBehaviour(jump, player) {
+	function jumpHitsPlayerBehaviour(jump, player) {
 		player.hasHitJump(jump);
 	}
 
-	sprites.jump.hitBehaviour.player = jumpHitsSkierBehaviour;
+	sprites.jump.hitBehaviour.player = jumpHitsPlayerBehaviour;
 
 // Really not a fan of this behaviour.
 /*	function playerHitsThickSnowBehaviour(player, thickSnow) {
@@ -163,7 +153,7 @@
 		}, 700);
 	}
 
-	function thickSnowHitsSkierBehaviour(thickSnow, player) {
+	function thickSnowHitsPlayerBehaviour(thickSnow, player) {
 		// Need to implement this properly
 		player.setSpeed(2);
 		setTimeout(function() {
@@ -171,13 +161,13 @@
 		}, 300);
 	}*/
 
-	// sprites.thickSnow.hitBehaviour.player = thickSnowHitsSkierBehaviour;
+	// sprites.thickSnow.hitBehaviour.player = thickSnowHitsPlayerBehaviour;
 
-	function snowboarderHitsSkierBehaviour(snowboarder, player) {
+	function snowboarderHitsPlayerBehaviour(snowboarder, player) {
 		player.hasHitObstacle(snowboarder);
 	}
 
-	sprites.snowboarder.hitBehaviour.player = snowboarderHitsSkierBehaviour;
+	sprites.snowboarder.hitBehaviour.player = snowboarderHitsPlayerBehaviour;
 
 	global.spriteInfo = sprites;
 })( this );
