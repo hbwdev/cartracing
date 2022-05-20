@@ -1,12 +1,12 @@
 {
-  "name": "SkiFree.js",
-  "version": "0.1.0",
+  "name": "cart-racing",
+  "version": "0.0.1",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "name": "SkiFree.js",
-      "version": "0.1.0",
+      "name": "cart-racing",
+      "version": "0.0.1",
       "dependencies": {
         "br-mousetrap": "~1.1.3",
         "eventedloop": "~1.0.1",
@@ -21,7 +21,7 @@
     "node_modules/br-mousetrap": {
       "version": "1.1.3",
       "resolved": "https://registry.npmjs.org/br-mousetrap/-/br-mousetrap-1.1.3.tgz",
-      "integrity": "sha1-XzxAd8azbugdJ27FlXBmOvIsrLc="
+      "integrity": "sha512-M0Zdmh+BrectJohGEMeUPhOWQI2/gueofHKZZ4qXRM4L+CfX+f48E8TSltdgIZgm9m7V3/hB0BBKuMMHVrNl4g=="
     },
     "node_modules/commander": {
       "version": "0.6.1",
@@ -66,14 +66,11 @@
     },
     "node_modules/eventedloop": {
       "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/eventedloop/-/eventedloop-1.0.1.tgz",
       "integrity": "sha1-xx6oLj7Uvq+rvOcZQKgEjk9ioYU=",
       "dependencies": {
         "underscore": "~1.6.0"
       }
-    },
-    "node_modules/eventedloop/node_modules/underscore": {
-      "version": "1.6.0",
-      "integrity": "sha1-izixDKze9jM3uLJOT/htRa6lKag="
     },
     "node_modules/growl": {
       "version": "1.7.0",
@@ -82,9 +79,9 @@
       "dev": true
     },
     "node_modules/hammerjs": {
-      "version": "1.0.7dev",
-      "resolved": "git+ssh://git@github.com/EightMedia/hammer.js.git#d0bac7f9daa6793219a7d823dfee8d9e98b7ed75",
-      "integrity": "sha512-KimzJa3uvWCmGvH6VUv1zhfhp8I9r9g4x4SMFiQblm22DKxWw52FPxmd+MVv25eyu9iuaetNLwJx+RyXJBbWrQ==",
+      "version": "2.0.8",
+      "resolved": "git+ssh://git@github.com/EightMedia/hammer.js.git#ff687ea0daa3c806b9accd2ecb1a46165ea3c00a",
+      "license": "MIT",
       "engines": {
         "node": ">=0.8.0"
       }
@@ -169,12 +166,18 @@
       "engines": {
         "node": ">= 0.4.0"
       }
+    },
+    "node_modules/underscore": {
+      "version": "1.6.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz",
+      "integrity": "sha1-izixDKze9jM3uLJOT/htRa6lKag="
     }
   },
   "dependencies": {
     "br-mousetrap": {
       "version": "1.1.3",
-      "resolved": "https://registry.npmjs.org/br-mousetrap/-/br-mousetrap-1.1.3.tgz"
+      "resolved": "https://registry.npmjs.org/br-mousetrap/-/br-mousetrap-1.1.3.tgz",
+      "integrity": "sha512-M0Zdmh+BrectJohGEMeUPhOWQI2/gueofHKZZ4qXRM4L+CfX+f48E8TSltdgIZgm9m7V3/hB0BBKuMMHVrNl4g=="
     },
     "commander": {
       "version": "0.6.1",
@@ -207,13 +210,10 @@
     },
     "eventedloop": {
       "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/eventedloop/-/eventedloop-1.0.1.tgz",
+      "integrity": "sha1-xx6oLj7Uvq+rvOcZQKgEjk9ioYU=",
       "requires": {
         "underscore": "~1.6.0"
-      },
-      "dependencies": {
-        "underscore": {
-          "version": "1.6.0"
-        }
       }
     },
     "growl": {
@@ -223,7 +223,7 @@
       "dev": true
     },
     "hammerjs": {
-      "version": "git+ssh://git@github.com/EightMedia/hammer.js.git#d0bac7f9daa6793219a7d823dfee8d9e98b7ed75",
+      "version": "git+ssh://git@github.com/EightMedia/hammer.js.git#ff687ea0daa3c806b9accd2ecb1a46165ea3c00a",
       "from": "hammerjs@git://github.com/EightMedia/hammer.js"
     },
     "jade": {
@@ -282,6 +282,11 @@
       "resolved": "https://registry.npmjs.org/sugar/-/sugar-1.3.9.tgz",
       "integrity": "sha1-+HnGyHchJStR/QtlIEEtmNg8sXk=",
       "dev": true
+    },
+    "underscore": {
+      "version": "1.6.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz",
+      "integrity": "sha1-izixDKze9jM3uLJOT/htRa6lKag="
     }
   }
 }

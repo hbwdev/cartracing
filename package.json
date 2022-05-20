@@ -1,21 +1,12 @@
 {
-  "name": "SkiFree.js",
-  "version": "0.1.0",
-  "author": "Dan Hough <daniel.hough@gmail.com>",
-  "description": "A browser-based SkiFree port",
+  "name": "cart-racing",
+  "version": "0.0.1",
+  "author": "Yammy (197887)",
+  "description": "A cart racing game adapted from SkiFree.js",
   "contributors": [
     {
-      "name": "Daniel Hough",
-      "email": "daniel.hough@gmail.com",
-      "url": "https://danhough.com"
-    },
-    {
-      "name": "tomgrim",
-      "url": "https://github.com/tomgrim"
-    },
-    {
-      "name": "andersevenrud",
-      "url": "https://github.com/andersevenrud"
+      "name": "Yammy",
+      "url": "https://github.com/hbwdev"
     }
   ],
   "scripts": {

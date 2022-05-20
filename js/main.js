@@ -4,7 +4,6 @@ require('./lib/extenders');
 require('./lib/plugins');
 
 // External dependencies
-var Hammer = require('hammerjs');
 var Mousetrap = require('br-mousetrap');
 
 // Method modules
@@ -31,6 +30,7 @@ var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
+const Hammer = require('hammerjs');
 
 var pixelsPerMetre = 18;
 var distanceTravelledInMetres = 0;
@@ -258,7 +258,7 @@ function startNeverEndingGame (images) {
 	Mousetrap.bind('space', resetGame);
 	Mousetrap.bind('g', toggleGodMode);
 
-	var hammertime = Hammer(mainCanvas).on('press', function (e) {
+	var hammertime = new Hammer(mainCanvas).on('press', function (e) {
 		e.preventDefault();
 		game.setMouseX(e.gesture.center.x);
 		game.setMouseY(e.gesture.center.y);
