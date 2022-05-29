@@ -22,10 +22,7 @@ var Game = require('./lib/game');
 var mainCanvas = document.getElementById('skifree-canvas');
 var dContext = mainCanvas.getContext('2d');
 
-var scrollImg = new Image();
-scrollImg.src = './assets/background.png';
-
-var imageSources = [ 'assets/cart-sprites.png', 'sprite-characters.png', 'skifree-objects.png' ];
+var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png' ];
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';

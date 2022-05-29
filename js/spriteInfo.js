@@ -24,7 +24,7 @@
 			hitBehaviour: {}
 		},
 		'smallTree' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 0, 28, 30, 34 ]
 			},
@@ -34,7 +34,7 @@
 			hitBehaviour: {}
 		},
 		'tallTree' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 95, 66, 32, 64 ]
 			},
@@ -46,21 +46,21 @@
 			hitBehaviour: {}
 		},
 		'thickSnow' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 143, 53, 43, 10 ]
 			},
 			hitBehaviour: {}
 		},
 		'rock' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 30, 52, 23, 11 ]
 			},
 			hitBehaviour: {}
 		},
 		'monster' : {
-			$imageFile : 'sprite-characters.png',
+			$imageFile : 'assets/sprite-characters.png',
 			parts : {
 				sEast1 : [ 64, 112, 26, 43 ],
 				sEast2 : [ 90, 112, 32, 43 ],
@@ -75,21 +75,21 @@
 			hitBehaviour: {}
 		},
 		'jump' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 109, 55, 32, 8 ]
 			},
 			hitBehaviour: {}
 		},
 		'signStart' : {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 260, 103, 42, 27 ]
 			},
 			hitBehaviour: {}
 		},
 		'snowboarder' : {
-			$imageFile : 'sprite-characters.png',
+			$imageFile : 'assets/sprite-characters.png',
 			parts : {
 				sEast : [ 73, 229, 20, 29 ],
 				sWest : [ 95, 228, 26, 30 ]
@@ -97,7 +97,7 @@
 			hitBehaviour: {}
 		},
 		'emptyChairLift': {
-			$imageFile : 'skifree-objects.png',
+			$imageFile : 'assets/skifree-objects.png',
 			parts: {
 				main : [ 92, 136, 26, 30 ]
 			},

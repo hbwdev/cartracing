@@ -15,16 +15,16 @@ const sprite = require('./sprite');
 
 		// Scrolling background
 		var backgroundImage = new Image();
-		backgroundImage.src = './assets/background.png';
+		backgroundImage.src = 'assets/background.png';
 		var backgroundX = 0;
 		var backgroundY = 0;
 
 		// Hud mockup
 		var hudImage = new Image();
 		if (isMobile)
-			hudImage.src = 'mobilehud-mockup.png';
+			hudImage.src = 'assets/mockups/mobilehud-mockup.png';
 		else
-			hudImage.src = 'hud-mockup.png';
+			hudImage.src = 'assets/mockups/hud-mockup.png';
 
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
