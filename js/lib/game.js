@@ -1,6 +1,7 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
 var isMobileDevice = require('../lib/isMobileDevice');
+const sprite = require('./sprite');
 
 (function (global) {
 	function Game (mainCanvas, player) {
@@ -8,6 +9,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 		var movingObjects = new SpriteArray();
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
+		var showHitBoxes = false;
 		
 		var isMobile = isMobileDevice();
 
@@ -32,7 +34,15 @@ var isMobileDevice = require('../lib/isMobileDevice');
 		var afterCycleCallbacks = [];
 		var gameLoop = new EventedLoop();
 
+		this.toggleHitBoxes = function() {
+			showHitBoxes = !showHitBoxes;
+			staticObjects.each(function (sprite) {
+				sprite.setHitBoxesVisible(showHitBoxes);
+			});
+		};
+
 		this.addStaticObject = function (sprite) {
+			sprite.setHitBoxesVisible(showHitBoxes);
 			staticObjects.push(sprite);
 		};
 
@@ -49,6 +59,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 				}, true);
 			}
 
+			movingObject.setHitBoxesVisible(showHitBoxes);
 			movingObjects.push(movingObject);
 		};
 
@@ -153,7 +164,6 @@ var isMobileDevice = require('../lib/isMobileDevice');
 				imgWidth = imgWidth * scale;          
 			}
 
-			console.log(hudImage.width, hudImage.height, imgWidth, imgHeight);
 			dContext.drawImage(hudImage, 0, 0, hudImage.naturalWidth, hudImage.naturalHeight, 0,0, imgWidth, imgHeight);
 		}
 
@@ -168,6 +178,7 @@ var isMobileDevice = require('../lib/isMobileDevice');
 			// Update scrolling background
 			drawBackground();
 
+			player.setHitBoxesVisible(showHitBoxes);
 			player.draw(dContext);
 
 			player.cycle();

@@ -5,6 +5,8 @@
 		var zIndexesOccupied = [ 0 ];
 		var that = this;
 		var trackedSpriteToMoveToward;
+		var showHitBoxes = false;
+
 		that.direction = undefined;
 		that.mapPosition = [0, 0, 0];
 		that.id = GUID();
@@ -91,6 +93,10 @@
 			that.setMapPosition(currentX, currentY);
 		}
 
+		this.setHitBoxesVisible = function(show) {
+			showHitBoxes = show;
+		}
+
 		this.draw = function (dCtx, spriteFrame) {
 			var fr = that.data.parts[spriteFrame];
 			that.height = fr[3];
@@ -99,6 +105,21 @@
 			var newCanvasPosition = dCtx.mapPositionToCanvasPosition(that.mapPosition);
 			that.setCanvasPosition(newCanvasPosition[0], newCanvasPosition[1]);
 			dCtx.drawImage(dCtx.getLoadedImage(that.data.$imageFile), fr[0], fr[1], fr[2], fr[3], that.canvasX, that.canvasY, fr[2], fr[3]);
+		
+			if (showHitBoxes) {
+				// Draw hitboxes
+				for (const box in that.data.hitBoxes) {
+					if (Object.hasOwnProperty.call(that.data.hitBoxes, box)) {
+						const hitBox = that.data.hitBoxes[box];
+						const left = hitBox[0];
+						const top = hitBox[1];
+						const right = hitBox[2];
+						const bottom = hitBox[3];
+						dCtx.strokeStyle = 'yellow';
+						dCtx.strokeRect(that.canvasX + left, that.canvasY + top, right - left, bottom - top);
+					}
+				}
+			}
 		};
 
 		this.setMapPosition = function (x, y, z) {

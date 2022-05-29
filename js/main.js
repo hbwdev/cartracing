@@ -275,6 +275,7 @@ function startNeverEndingGame (images) {
 	Mousetrap.bind('b', spawnBoarder);
 	Mousetrap.bind('space', resetGame);
 	Mousetrap.bind('g', toggleGodMode);
+	Mousetrap.bind('h', game.toggleHitBoxes);
 
 	var hammertime = new Hammer(mainCanvas).on('press', function (e) {
 		e.preventDefault();

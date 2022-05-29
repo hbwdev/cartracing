@@ -17,6 +17,7 @@
 				somersault1 : [ 26, 104, 67, 104 ]
 			},
 			hitBoxes: {
+				//Left, Top, Right, Bottom
 				0: [ 7, 20, 27, 34 ]
 			},
 			id : 'player',
