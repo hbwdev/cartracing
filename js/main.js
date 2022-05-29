@@ -19,7 +19,7 @@ var InfoBox = require('./lib/infoBox');
 var Game = require('./lib/game');
 
 // Local variables for starting the game
-var mainCanvas = document.getElementById('skifree-canvas');
+var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png' ];
@@ -48,7 +48,7 @@ const score = {
 		points = 0;
 		cans = 0;
 	}
-}
+};
 
 var loseLifeOnObstacleHit = true;
 var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1};
@@ -91,6 +91,11 @@ function startNeverEndingGame (images) {
 	var startSign;
 	var infoBox;
 	var game;
+
+	function showMainMenu(images) {
+		mainCanvas.style.display = 'none';
+		$('#main').show();
+	}
 
 	function toggleGodMode() {
 		loseLifeOnObstacleHit = !loseLifeOnObstacleHit;
@@ -293,13 +298,31 @@ function startNeverEndingGame (images) {
 	player.isMoving = false;
 	player.setDirection(270);
 
-	game.start();
+	$('.play').click(function() {
+		$('#menu').hide();
+		mainCanvas.style.display = '';
+		game.start();
+	  });
+
+	showMainMenu();
 }
 
 function resizeCanvas() {
 	mainCanvas.width = window.innerWidth;
 	mainCanvas.height = window.innerHeight;
 }
+
+$('.credits').click(function() {
+	$('#main').hide();
+	$('#credits').show();
+	$('#menu').addClass('credits');
+  });
+
+$('.back').click(function() {
+	$('#credits').hide();
+	$('#main').show();
+	$('#menu').removeClass('credits');
+  });
 
 window.addEventListener('resize', resizeCanvas, false);
 
