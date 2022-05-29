@@ -18,7 +18,7 @@
 			},
 			hitBoxes: {
 				//Left, Top, Right, Bottom
-				0: [ 7, 20, 27, 34 ]
+				0: [ 5, 10, 62, 90 ]
 			},
 			id : 'player',
 			hitBehaviour: {}
