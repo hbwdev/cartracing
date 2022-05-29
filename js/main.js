@@ -33,10 +33,26 @@ var sprites = require('./spriteInfo');
 const Hammer = require('hammerjs');
 
 var pixelsPerMetre = 18;
-var distanceTravelledInMetres = 0;
 var monsterDistanceThreshold = 2000;
 var livesLeft = 5;
 var highScore = 0;
+
+const score = {
+	distance: 0,
+	money: 0,
+	tokens: 0,
+	points: 0,
+	cans: 0,
+
+	reset() {
+		distance = 0;
+		money = 0;
+		tokens = 0;
+		points = 0;
+		cans = 0;
+	}
+}
+
 var loseLifeOnObstacleHit = true;
 var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
@@ -85,16 +101,16 @@ function startNeverEndingGame (images) {
 	}
 
 	function resetGame () {
-		distanceTravelledInMetres = 0;
 		livesLeft = 5;
 		highScore = localStorage.getItem('highScore');
 		game.reset();
 		game.addStaticObject(startSign);
+		score.reset();
 	}
 
 	function detectEnd () {
 		if (!game.isPaused()) {
-			highScore = localStorage.setItem('highScore', distanceTravelledInMetres);
+			highScore = localStorage.setItem('highScore', score.distance);
 			infoBox.setLines([
 				'Game over!',
 				'Hit space to restart'
@@ -152,7 +168,7 @@ function startNeverEndingGame (images) {
 	infoBox = new InfoBox({
 		initialLines : [
 			infoBoxControls,
-			'Travelled 0m',
+			'Distance: 0m',
 			'High Score: ' + highScore,
 			'Carts left: ' + livesLeft,
 			'Brought to you by Serious Business',
@@ -187,19 +203,21 @@ function startNeverEndingGame (images) {
 			// Disabled snowboarder spawn for cart conversion
 			//randomlySpawnNPC(spawnBoarder, 0.1);
 
-			distanceTravelledInMetres = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+			score.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
 
-			if (distanceTravelledInMetres > monsterDistanceThreshold) {
+			if (score.distance > monsterDistanceThreshold) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
 
 			infoBox.setLines([
 				infoBoxControls,
-				'Travelled ' + distanceTravelledInMetres + 'm',
+				'Distance: ' + score.distance + 'm',
 				'Carts left: ' + livesLeft,
 				'High Score: ' + highScore,
 				'Brought to you by Serious Business',
 				'Current Speed: ' + player.getSpeed(),
+				'Money: ' + score.money,
+				'Tokens: ' + score.tokens,
 				loseLifeOnObstacleHit ? '' : 'GOD MODE'/*,
 				'Cart Map Position: ' + player.mapPosition[0].toFixed(1) + ', ' + player.mapPosition[1].toFixed(1),
 				'Cart Map Position: ' + mouseMapPosition[0].toFixed(1) + ', ' + mouseMapPosition[1].toFixed(1)*/
