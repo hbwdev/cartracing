@@ -15,7 +15,7 @@ const sprite = require('./sprite');
 
 		// Scrolling background
 		var backgroundImage = new Image();
-		backgroundImage.src = 'road.png';
+		backgroundImage.src = './assets/background.png';
 		var backgroundX = 0;
 		var backgroundY = 0;
 

@@ -23,7 +23,7 @@ var mainCanvas = document.getElementById('skifree-canvas');
 var dContext = mainCanvas.getContext('2d');
 
 var scrollImg = new Image();
-scrollImg.src = 'road.png';
+scrollImg.src = './assets/background.png';
 
 var imageSources = [ 'assets/cart-sprites.png', 'sprite-characters.png', 'skifree-objects.png' ];
 var global = this;
