@@ -1,3 +1,5 @@
+const game = require("./lib/game");
+
 (function (global) {
 	var sprites = {
 		'player' : {
@@ -21,6 +23,20 @@
 				0: [ 5, 10, 62, 90 ]
 			},
 			id : 'player',
+			hitBehaviour: {}
+		},
+		'token' : {
+			name: 'Token',
+			$imageFile: 'assets/token-sprites.png',
+			animated: true,
+			collectible: true,
+			pointValues: [125, 150, 175, 200, 250, 300, 350, 400, 450, 500],
+			parts: {
+				frame1: [0, 0, 25, 26],
+				frame2: [25, 0, 25, 26],
+				frame3: [50, 0, 25, 26],
+				frame4: [75, 0, 25, 26]
+			},
 			hitBehaviour: {}
 		},
 		'smallTree' : {
@@ -167,8 +183,13 @@
 	function snowboarderHitsPlayerBehaviour(snowboarder, player) {
 		player.hasHitObstacle(snowboarder);
 	}
-
 	sprites.snowboarder.hitBehaviour.player = snowboarderHitsPlayerBehaviour;
+
+	function playerHitsTokenBehaviour(token, player) {
+		player.hasHitCollectible(token);
+		token.deleteOnNextCycle();
+	}
+	sprites.token.hitBehaviour.player = playerHitsTokenBehaviour;
 
 	global.spriteInfo = sprites;
 })( this );

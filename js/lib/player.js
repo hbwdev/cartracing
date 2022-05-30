@@ -472,6 +472,10 @@ if (typeof navigator !== 'undefined') {
 			}, 1000);
 		};
 
+		that.hasHitCollectible = function (item) {
+			console.log('Hit item:', item.data.name)
+		}
+
 		that.isEatenBy = function (monster, whenEaten) {
 			that.hasHitObstacle(monster);
 			monster.startEating(whenEaten);

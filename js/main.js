@@ -12,6 +12,7 @@ var isMobileDevice = require('./lib/isMobileDevice');
 // Game Objects
 var SpriteArray = require('./lib/spriteArray');
 var Monster = require('./lib/monster');
+var AnimatedSprite = require('./lib/animatedSprite');
 var Sprite = require('./lib/sprite');
 var Snowboarder = require('./lib/snowboarder');
 var Player = require('./lib/player');
@@ -22,7 +23,7 @@ var Game = require('./lib/game');
 var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
-var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png' ];
+var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 'assets/token-sprites.png' ];
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
@@ -51,7 +52,7 @@ const score = {
 };
 
 var loseLifeOnObstacleHit = true;
-var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1};
+var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 5};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -191,6 +192,7 @@ function startNeverEndingGame (images) {
 				{ sprite: sprites.jump, dropRate: dropRates.jump },
 				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
 				{ sprite: sprites.rock, dropRate: dropRates.rock },
+				{ sprite: sprites.token, dropRate: dropRates.token },
 			], {
 				rateModifier: Math.max(800 - mainCanvas.width, 0),
 				position: function () {

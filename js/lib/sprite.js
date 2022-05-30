@@ -385,10 +385,17 @@
 			position: [0, 0]
 		}, false, false);
 
+		var AnimatedSprite = require('./animatedSprite');
 		function createOne (spriteInfo) {
 			var position = opts.position;
 			if (Number.random(100 + opts.rateModifier) <= spriteInfo.dropRate) {
-				var sprite = new Sprite(spriteInfo.sprite);
+				var sprite;
+				if (spriteInfo.sprite.animated) {
+					sprite = new AnimatedSprite(spriteInfo.sprite);
+				} else {
+					sprite = new Sprite(spriteInfo.sprite);
+				}	
+
 				sprite.setSpeed(0);
 
 				if (Object.isFunction(position)) {
