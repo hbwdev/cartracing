@@ -57,6 +57,7 @@ if (typeof navigator !== 'undefined') {
 		that.isJumping = false;
 		that.isPerformingTrick = false;
 		that.onHitObstacleCb = function() {};
+		that.onCollectItemCb = function() {};
 		that.setSpeed(standardSpeed);
 
 		that.reset = function () {
@@ -474,6 +475,7 @@ if (typeof navigator !== 'undefined') {
 
 		that.hasHitCollectible = function (item) {
 			console.log('Hit item:', item.data.name)
+			that.onCollectItemCb(item);
 		}
 
 		that.isEatenBy = function (monster, whenEaten) {
@@ -496,6 +498,10 @@ if (typeof navigator !== 'undefined') {
 		that.setHitObstacleCb = function (fn) {
 			that.onHitObstacleCb = fn || function() {};
 		};
+
+		that.setCollectItemCb = function (fn) {
+			that.onCollectItemCb = fn || function() {};
+		}
 		return that;
 	}
 

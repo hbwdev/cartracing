@@ -166,6 +166,14 @@ function startNeverEndingGame (images) {
 			livesLeft -= 1;
 	});
 
+	player.setCollectItemCb(function(item) {
+		if (item.data.name == 'Token')
+		{
+			// Pick a random token value
+			score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+		}
+	});
+
 	game = new Game(mainCanvas, player);
 
 	startSign = new Sprite(sprites.signStart);
@@ -221,7 +229,7 @@ function startNeverEndingGame (images) {
 			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
 			infoBox.setLines([
 				('Cash $' + score.money).padEnd(26) + 'Level ' + level,
-				('Points' + score.money).padEnd(26) + 'Life ' + livesLeft / totalLives * 100 + '%',
+				('Points ' + score.money).padEnd(26) + 'Life ' + livesLeft / totalLives * 100 + '%',
 				('Tokens ' + score.tokens).padEnd(26) + 'Awake 100/100',
 				'Distance ' + score.distance + 'm',
 				loseLifeOnObstacleHit ? '' : 'God Mode'
