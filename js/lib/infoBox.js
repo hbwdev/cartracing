@@ -16,12 +16,12 @@ function InfoBox(data) {
 	};
 
 	that.draw = function (dContext) {
-		dContext.font = '11px monospace';
+		dContext.font = '12px monospace';
 		var yOffset = 0;
 		that.lines.each(function (line) {
 			var fontSize = +dContext.font.slice(0,2);
 			var textWidth = dContext.measureText(line).width;
-			var textHeight = fontSize * 1.5;
+			var textHeight = fontSize * 1.3;
 			var xPos, yPos;
 			if (that.top) {
 				yPos = that.top + yOffset;
@@ -36,7 +36,7 @@ function InfoBox(data) {
 			}
 
 			yOffset += textHeight;
-			dContext.fillStyle = "#ffffff";
+			dContext.fillStyle = "#FFFFFF";
 			dContext.fillText(line, xPos, yPos);
 		});
 	};

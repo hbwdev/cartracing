@@ -22,9 +22,9 @@ const sprite = require('./sprite');
 		// Hud mockup
 		var hudImage = new Image();
 		if (isMobile)
-			hudImage.src = 'assets/mockups/mobilehud-mockup.png';
+			hudImage.src = 'assets/top-bar.png';
 		else
-			hudImage.src = 'assets/mockups/hud-mockup.png';
+			hudImage.src = 'assets/top-bar.png';
 
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
@@ -145,28 +145,6 @@ const sprite = require('./sprite');
 			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
 		}
 
-		function drawMobileHud() {
-			var imgWidth = hudImage.naturalWidth;
-			var screenWidth  = mainCanvas.width;
-			var scaleX = 1;
-			if (imgWidth > screenWidth)
-				scaleX = screenWidth / imgWidth;
-			var imgHeight = hudImage.naturalHeight;
-			var screenHeight = mainCanvas.height;
-			var scaleY = 1;
-			if (imgHeight > screenHeight)
-				scaleY = screenHeight / imgHeight;
-			var scale = scaleY;
-			if (scaleX < scaleY)
-				scale = scaleX;
-			if (scale < 1) {
-				imgHeight = imgHeight * scale;
-				imgWidth = imgWidth * scale;          
-			}
-
-			dContext.drawImage(hudImage, 0, 0, hudImage.naturalWidth, hudImage.naturalHeight, 0,0, imgWidth, imgHeight);
-		}
-
 		function drawHud() {
 			dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
 		}
@@ -193,13 +171,16 @@ const sprite = require('./sprite');
 				}
 			});
 
+			drawHud();
+			
 			uiElements.each(function (uiElement, i) {
 				if (uiElement.draw) {
 					uiElement.draw(dContext, 'main');
 				}
 			});
 			
-			isMobile ? drawMobileHud() : drawHud();
+			
+			//isMobile ? drawMobileHud() : drawHud();
 		};
 
 		this.start = function () {

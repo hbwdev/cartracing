@@ -32,7 +32,8 @@ const Hammer = require('hammerjs');
 
 var pixelsPerMetre = 18;
 var monsterDistanceThreshold = 2000;
-var livesLeft = 5;
+const totalLives = 5;
+var livesLeft = totalLives;
 var highScore = 0;
 
 const score = {
@@ -114,9 +115,13 @@ function startNeverEndingGame (images) {
 	function detectEnd () {
 		if (!game.isPaused()) {
 			highScore = localStorage.setItem('highScore', score.distance);
+			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
 			infoBox.setLines([
-				'Game over!',
-				'Hit space to restart'
+				('Cash $' + score.money).padEnd(26) + 'Level ' + level,
+				('Points' + score.money).padEnd(26) + 'Life 0%',
+				('Tokens ' + score.tokens).padEnd(26) + 'Awake 100/100',
+				('Distance ' + score.distance + 'm').padEnd(26) + 'Game over! Hit space to restart.',
+				loseLifeOnObstacleHit ? '' : 'God Mode'
 			]);
 			game.pause();
 			game.cycle();
@@ -170,16 +175,16 @@ function startNeverEndingGame (images) {
 
 	infoBox = new InfoBox({
 		initialLines : [
-			infoBoxControls,
-			'Distance: 0m',
-			'High Score: ' + highScore,
-			'Carts left: ' + livesLeft,
-			'Brought to you by Serious Business',
+			'Cash $0                   Level 1',
+			'Points 0                  Life 0%',
+			'Tokens 0                  Awake 100/100',
+			'Distance 0m',
 			loseLifeOnObstacleHit ? '' : 'God Mode'
 		],
 		position: {
-			top: isMobileDevice() ? 90 : 130, // TODO: Need dynamic positioning
-			right: 10
+			//top: isMobileDevice() ? 90 : 130, // TODO: Need dynamic positioning
+			top: 15,
+			left: 115
 		}
 	});
 
@@ -213,18 +218,13 @@ function startNeverEndingGame (images) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
 
+			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
 			infoBox.setLines([
-				infoBoxControls,
-				'Distance: ' + score.distance + 'm',
-				'Carts left: ' + livesLeft,
-				'High Score: ' + highScore,
-				'Brought to you by Serious Business',
-				'Current Speed: ' + player.getSpeed(),
-				'Money: ' + score.money,
-				'Tokens: ' + score.tokens,
-				loseLifeOnObstacleHit ? '' : 'GOD MODE'/*,
-				'Cart Map Position: ' + player.mapPosition[0].toFixed(1) + ', ' + player.mapPosition[1].toFixed(1),
-				'Cart Map Position: ' + mouseMapPosition[0].toFixed(1) + ', ' + mouseMapPosition[1].toFixed(1)*/
+				('Cash $' + score.money).padEnd(26) + 'Level ' + level,
+				('Points' + score.money).padEnd(26) + 'Life ' + livesLeft / totalLives * 100 + '%',
+				('Tokens ' + score.tokens).padEnd(26) + 'Awake 100/100',
+				'Distance ' + score.distance + 'm',
+				loseLifeOnObstacleHit ? '' : 'God Mode'
 			]);
 		}
 	});
