@@ -113,11 +113,21 @@ const game = require("./lib/game");
 			hitBehaviour: {}
 		},
 		'emptyChairLift': {
-			$imageFile : 'assets/skifree-objects.png',
+			$imageFile: 'assets/skifree-objects.png',
 			parts: {
 				main : [ 92, 136, 26, 30 ]
 			},
 			zIndexesOccupied : [1],
+		},
+		'milkshake': {
+			name: 'milkshake',
+			$imageFile: 'assets/milkshake-sprite.png',
+			collectible: true,
+			pointValues: [125, 150, 175, 200, 250, 300, 350, 400, 450, 500],
+			parts: {
+				main : [ 0, 0, 25, 43 ]
+			},
+			hitBehaviour: {}
 		}
 	};
 
@@ -185,11 +195,14 @@ const game = require("./lib/game");
 	}
 	sprites.snowboarder.hitBehaviour.player = snowboarderHitsPlayerBehaviour;
 
-	function playerHitsTokenBehaviour(token, player) {
-		player.hasHitCollectible(token);
-		token.deleteOnNextCycle();
+	function playerHitsCollectibleBehaviour(item, player) {
+		player.hasHitCollectible(item);
+		item.deleteOnNextCycle();
 	}
-	sprites.token.hitBehaviour.player = playerHitsTokenBehaviour;
+	sprites.token.hitBehaviour.player = playerHitsCollectibleBehaviour;
+	sprites.milkshake.hitBehaviour.player = playerHitsCollectibleBehaviour;
+
+	
 
 	global.spriteInfo = sprites;
 })( this );

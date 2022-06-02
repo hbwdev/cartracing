@@ -23,7 +23,8 @@ var Game = require('./lib/game');
 var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
-var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 'assets/token-sprites.png' ];
+var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
+	'assets/token-sprites.png', 'assets/milkshake-sprite.png' ];
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
@@ -42,6 +43,7 @@ const score = {
 	tokens: 0,
 	points: 0,
 	cans: 0,
+	levelBoost: 0,
 
 	reset() {
 		distance = 0;
@@ -53,7 +55,7 @@ const score = {
 };
 
 var loseLifeOnObstacleHit = true;
-var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 4};
+var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 4, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -115,7 +117,7 @@ function startNeverEndingGame (images) {
 	function detectEnd () {
 		if (!game.isPaused()) {
 			highScore = localStorage.setItem('highScore', score.distance);
-			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
+			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100) + score.levelBoost;
 			infoBox.setLines([
 				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
 				('Points' + score.money).padEnd(22) + 'Life 0%',
@@ -172,6 +174,12 @@ function startNeverEndingGame (images) {
 			case 'token':
 				score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
 				break;
+			case 'milkshake':
+				if (livesLeft < totalLives) {
+					livesLeft += 1;
+				}
+				score.levelBoost += 1;
+				break;
 		}
 	});
 
@@ -206,6 +214,7 @@ function startNeverEndingGame (images) {
 				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
 				{ sprite: sprites.rock, dropRate: dropRates.rock },
 				{ sprite: sprites.token, dropRate: dropRates.token },
+				{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
 			], {
 				rateModifier: Math.max(800 - mainCanvas.width, 0),
 				position: function () {
@@ -226,7 +235,7 @@ function startNeverEndingGame (images) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
 
-			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
+			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100) + score.levelBoost;
 			infoBox.setLines([
 				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
 				('Points ' + score.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
