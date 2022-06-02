@@ -1,6 +1,5 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
-var isMobileDevice = require('../lib/isMobileDevice');
 const sprite = require('./sprite');
 
 (function (global) {
@@ -11,20 +10,11 @@ const sprite = require('./sprite');
 		var dContext = mainCanvas.getContext('2d');
 		var showHitBoxes = false;
 		
-		var isMobile = isMobileDevice();
-
 		// Scrolling background
 		var backgroundImage = new Image();
 		backgroundImage.src = 'assets/background.png';
 		var backgroundX = 0;
 		var backgroundY = 0;
-
-		// Hud mockup
-		var hudImage = new Image();
-		if (isMobile)
-			hudImage.src = 'assets/top-bar.png';
-		else
-			hudImage.src = 'assets/top-bar.png';
 
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
@@ -145,10 +135,6 @@ const sprite = require('./sprite');
 			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
 		}
 
-		function drawHud() {
-			dContext.drawImage(hudImage, 0, 0, mainCanvas.width, hudImage.height, 0, 0, mainCanvas.width, hudImage.height);
-		}
-
 		that.draw = function () {
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
@@ -170,17 +156,12 @@ const sprite = require('./sprite');
 					staticObject.draw(dContext, 'main');
 				}
 			});
-
-			drawHud();
 			
 			uiElements.each(function (uiElement, i) {
 				if (uiElement.draw) {
 					uiElement.draw(dContext, 'main');
 				}
 			});
-			
-			
-			//isMobile ? drawMobileHud() : drawHud();
 		};
 
 		this.start = function () {

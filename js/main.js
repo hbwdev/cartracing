@@ -53,7 +53,7 @@ const score = {
 };
 
 var loseLifeOnObstacleHit = true;
-var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 5};
+var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 4};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -117,11 +117,11 @@ function startNeverEndingGame (images) {
 			highScore = localStorage.setItem('highScore', score.distance);
 			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
 			infoBox.setLines([
-				('Cash $' + score.money).padEnd(26) + 'Level ' + level,
-				('Points' + score.money).padEnd(26) + 'Life 0%',
-				('Tokens ' + score.tokens).padEnd(26) + 'Awake 100/100',
-				('Distance ' + score.distance + 'm').padEnd(26) + 'Game over! Hit space to restart.',
-				loseLifeOnObstacleHit ? '' : 'God Mode'
+				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
+				('Points' + score.money).padEnd(22) + 'Life 0%',
+				('Tokens ' + score.tokens).padEnd(22) + 'Awake 100/100',
+				('Distance ' + score.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
+				(loseLifeOnObstacleHit ? '' : 'God Mode').padEnd(22) + 'Game over! Hit space to restart.'
 			]);
 			game.pause();
 			game.cycle();
@@ -183,14 +183,13 @@ function startNeverEndingGame (images) {
 
 	infoBox = new InfoBox({
 		initialLines : [
-			'Cash $0                   Level 1',
-			'Points 0                  Life 0%',
-			'Tokens 0                  Awake 100/100',
-			'Distance 0m',
+			'Cash $0'.padEnd(22) + 'Level 1',
+			'Points 0'.padEnd(22) + 'Life 0%',
+			'Tokens 0'.padEnd(22) + 'Awake 100/100',
+			'Distance 0m'.padEnd(22) + 'Speed 0',
 			loseLifeOnObstacleHit ? '' : 'God Mode'
 		],
 		position: {
-			//top: isMobileDevice() ? 90 : 130, // TODO: Need dynamic positioning
 			top: 15,
 			left: 115
 		}
@@ -200,8 +199,8 @@ function startNeverEndingGame (images) {
 		var newObjects = [];
 		if (player.isMoving) {
 			newObjects = Sprite.createObjects([
-				{ sprite: sprites.smallTree, dropRate: dropRates.smallTree },
-				{ sprite: sprites.tallTree, dropRate: dropRates.tallTree },
+				//{ sprite: sprites.smallTree, dropRate: dropRates.smallTree },
+				//{ sprite: sprites.tallTree, dropRate: dropRates.tallTree },
 				{ sprite: sprites.jump, dropRate: dropRates.jump },
 				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
 				{ sprite: sprites.rock, dropRate: dropRates.rock },
@@ -228,10 +227,10 @@ function startNeverEndingGame (images) {
 
 			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100);
 			infoBox.setLines([
-				('Cash $' + score.money).padEnd(26) + 'Level ' + level,
-				('Points ' + score.money).padEnd(26) + 'Life ' + livesLeft / totalLives * 100 + '%',
-				('Tokens ' + score.tokens).padEnd(26) + 'Awake 100/100',
-				'Distance ' + score.distance + 'm',
+				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
+				('Points ' + score.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
+				('Tokens ' + score.tokens).padEnd(22) + 'Awake 100/100',
+				('Distance ' + score.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
 				loseLifeOnObstacleHit ? '' : 'God Mode'
 			]);
 		}

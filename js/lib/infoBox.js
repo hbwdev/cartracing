@@ -1,6 +1,9 @@
 function InfoBox(data) {
 	var that = this;
 
+	var hudImage = new Image();
+	hudImage.src = 'assets/top-bar.png';
+
 	that.lines = data.initialLines;
 
 	that.top = data.position.top;
@@ -15,29 +18,31 @@ function InfoBox(data) {
 		that.lines = lines;
 	};
 
-	that.draw = function (dContext) {
-		dContext.font = '12px monospace';
+	that.draw = function (ctx) {
+		ctx.drawImage(hudImage, 0, 0, ctx.canvas.width, hudImage.height, 0, 0, ctx.canvas.width, hudImage.height);
+		
+		ctx.font = '12px monospace';
 		var yOffset = 0;
 		that.lines.each(function (line) {
-			var fontSize = +dContext.font.slice(0,2);
-			var textWidth = dContext.measureText(line).width;
+			var fontSize = +ctx.font.slice(0, 2);
+			var textWidth = ctx.measureText(line).width;
 			var textHeight = fontSize * 1.3;
 			var xPos, yPos;
 			if (that.top) {
 				yPos = that.top + yOffset;
 			} else if (that.bottom) {
-				yPos = dContext.canvas.height - that.top - textHeight + yOffset;
+				yPos = ctx.canvas.height - that.top - textHeight + yOffset;
 			}
 
 			if (that.right) {
-				xPos = dContext.canvas.width - that.right - textWidth;
+				xPos = ctx.canvas.width - that.right - textWidth;
 			} else if (that.left) {
 				xPos = that.left;
 			}
 
 			yOffset += textHeight;
-			dContext.fillStyle = "#FFFFFF";
-			dContext.fillText(line, xPos, yPos);
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillText(line, xPos, yPos);
 		});
 	};
 
