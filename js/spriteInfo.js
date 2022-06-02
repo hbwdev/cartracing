@@ -26,7 +26,7 @@ const game = require("./lib/game");
 			hitBehaviour: {}
 		},
 		'token' : {
-			name: 'Token',
+			name: 'token',
 			$imageFile: 'assets/token-sprites.png',
 			animated: true,
 			collectible: true,

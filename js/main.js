@@ -167,7 +167,7 @@ function startNeverEndingGame (images) {
 	});
 
 	player.setCollectItemCb(function(item) {
-		if (item.data.name == 'Token')
+		if (item.data.name == 'token')
 		{
 			// Pick a random token value
 			score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
