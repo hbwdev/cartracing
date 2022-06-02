@@ -167,10 +167,11 @@ function startNeverEndingGame (images) {
 	});
 
 	player.setCollectItemCb(function(item) {
-		if (item.data.name == 'token')
+		switch (item.data.name)
 		{
-			// Pick a random token value
-			score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+			case 'token':
+				score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+				break;
 		}
 	});
 

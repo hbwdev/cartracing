@@ -340,7 +340,29 @@
 		};
 
 		this.hits = function (other) {
-			var verticalIntersect = false;
+
+			var rect1x = other.getLeftHitBoxEdge(that.mapPosition[2]);
+			var rect1w = other.getRightHitBoxEdge(that.mapPosition[2]) - rect1x;
+
+			var rect1y = other.getTopHitBoxEdge(that.mapPosition[2]);
+			var rect1h = other.getBottomHitBoxEdge(that.mapPosition[2]) - rect1y;
+
+			var rect2x = that.getLeftHitBoxEdge(that.mapPosition[2]);
+			var rect2w = that.getRightHitBoxEdge(that.mapPosition[2]) - rect2x;
+			var rect2y = that.getTopHitBoxEdge(that.mapPosition[2]);
+			var rect2h = that.getBottomHitBoxEdge(that.mapPosition[2]) - rect2y;
+
+			if (rect1x < rect2x + rect2w &&
+				rect1x + rect1w > rect2x &&
+				rect1y < rect2y + rect2h &&
+				rect1h + rect1y > rect2y) {
+				return true;
+			}
+			
+			return false;
+
+			// Original collision detection:
+			/* var verticalIntersect = false;
 			var horizontalIntersect = false;
 
 			// Test that THIS has a bottom edge inside of the other object
@@ -363,7 +385,7 @@
 				horizontalIntersect = true;
 			}
 
-			return verticalIntersect && horizontalIntersect;
+			return verticalIntersect && horizontalIntersect; */
 		};
 
 		this.isAboveOnCanvas = function (cy) {
