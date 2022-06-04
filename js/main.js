@@ -255,19 +255,19 @@ function startNeverEndingGame (images) {
 	game.addUIElement(infoBox);
 	
 	$(mainCanvas)
-	.mousemove(function (e) {
-		game.setMouseX(e.pageX);
-		game.setMouseY(e.pageY);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	})
-	.bind('click', function (e) {
-		game.setMouseX(e.pageX);
-		game.setMouseY(e.pageY);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	})
-	.focus(); // So we can listen to events immediately
+		.mousemove(function (e) {
+			game.setMouseX(e.pageX);
+			game.setMouseY(e.pageY);
+			player.resetDirection();
+			player.startMovingIfPossible();
+		})
+		.bind('click', function (e) {
+			game.setMouseX(e.pageX);
+			game.setMouseY(e.pageY);
+			player.resetDirection();
+			player.startMovingIfPossible();
+		})
+		.focus(); // So we can listen to events immediately
 
 	Mousetrap.bind('f', player.speedBoost);
 	Mousetrap.bind('t', player.attemptTrick);
@@ -293,24 +293,32 @@ function startNeverEndingGame (images) {
 		}
 	});
 	Mousetrap.bind('m', spawnMonster);
-	Mousetrap.bind('b', spawnBoarder);
+	//Mousetrap.bind('b', spawnBoarder);
 	Mousetrap.bind('space', resetGame);
 	Mousetrap.bind('g', toggleGodMode);
 	Mousetrap.bind('h', game.toggleHitBoxes);
 
-	var hammertime = new Hammer(mainCanvas).on('press', function (e) {
+	var hammertime = new Hammer(mainCanvas);
+	hammertime.on('press', function (e) {
+		console.log(e);
 		e.preventDefault();
 		game.setMouseX(e.gesture.center.x);
 		game.setMouseY(e.gesture.center.y);
-	}).on('tap', function (e) {
+	});
+	hammertime.on('tap', function (e) {
+		console.log(e);
 		game.setMouseX(e.gesture.center.x);
 		game.setMouseY(e.gesture.center.y);
-	}).on('pan', function (e) {
+	});
+	hammertime.on('pan', function (e) {
+		console.log(e);
 		game.setMouseX(e.gesture.center.x);
 		game.setMouseY(e.gesture.center.y);
 		player.resetDirection();
 		player.startMovingIfPossible();
-	}).on('doubletap', function (e) {
+	})
+	hammertime.on('doubletap', function (e) {
+		console.log(e);
 		player.speedBoost();
 	});
 

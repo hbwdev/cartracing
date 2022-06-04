@@ -94,6 +94,7 @@ if (typeof navigator !== 'undefined') {
 
 		function setJumping() {
 			var currentSpeed = that.getSpeed();
+			setDiscreteDirection('south');
 			that.setSpeed(currentSpeed + 2);
 			that.setSpeedY(currentSpeed + 2);
 			that.isMoving = true;
