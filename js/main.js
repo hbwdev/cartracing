@@ -25,6 +25,8 @@ var dContext = mainCanvas.getContext('2d');
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png' ];
+
+var sounds = { 'bg': 'assets/bg.ogg' };
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
@@ -75,6 +77,32 @@ function loadImages (sources, next) {
 		im.src = src;
 		dContext.storeLoadedImage(src, im);
 	});
+}
+
+function _checkAudioState(sound) {
+	/* if (sounds[sound].status === 'loading' && sounds[sound].readyState === 4) {
+		assetLoaded.call(this, 'sounds', sound);
+	} */
+}
+
+function loadSounds () {
+	for (var sound in sounds) {
+		if (sounds.hasOwnProperty(sound)) {
+			src = sounds[sound];
+			// create a closure for event binding
+			(function(sound) {
+				sounds[sound] = new Audio();
+				sounds[sound].status = 'loading';
+				sounds[sound].name = sound;
+				sounds[sound].addEventListener('canplay', function() {
+					_checkAudioState.call(sound);
+				});
+				sounds[sound].src = src;
+				sounds[sound].preload = 'auto';
+				sounds[sound].load();
+			})(sound);
+		}
+	}
 }
 
 function monsterHitsPlayerBehaviour(monster, player) {
@@ -329,6 +357,7 @@ function startNeverEndingGame (images) {
 		$('#menu').hide();
 		mainCanvas.style.display = '';
 		game.start();
+		sounds.bg.play();
 	  });
 
 	showMainMenu();
@@ -354,6 +383,11 @@ $('.back').click(function() {
 window.addEventListener('resize', resizeCanvas, false);
 
 resizeCanvas();
+
+loadSounds();
+
+sounds.bg.currentTime = 0;
+sounds.bg.loop = true;
 
 loadImages(imageSources, startNeverEndingGame);
 

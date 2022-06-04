@@ -201,9 +201,7 @@ const game = require("./lib/game");
 	}
 	sprites.token.hitBehaviour.player = playerHitsCollectibleBehaviour;
 	sprites.milkshake.hitBehaviour.player = playerHitsCollectibleBehaviour;
-
 	
-
 	global.spriteInfo = sprites;
 })( this );
 
