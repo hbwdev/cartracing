@@ -9,8 +9,7 @@
       "version": "0.0.1",
       "dependencies": {
         "br-mousetrap": "~1.1.3",
-        "eventedloop": "~1.0.1",
-        "hammerjs": "git://github.com/EightMedia/hammer.js"
+        "eventedloop": "~1.0.1"
       },
       "devDependencies": {
         "browserify": "^17.0.0",
@@ -878,14 +877,6 @@
       "resolved": "https://registry.npmjs.org/growl/-/growl-1.7.0.tgz",
       "integrity": "sha1-3i1mE20ALhErpw8/EMMc98NQsto=",
       "dev": true
-    },
-    "node_modules/hammerjs": {
-      "version": "2.0.8",
-      "resolved": "git+ssh://git@github.com/EightMedia/hammer.js.git#ff687ea0daa3c806b9accd2ecb1a46165ea3c00a",
-      "license": "MIT",
-      "engines": {
-        "node": ">=0.8.0"
-      }
     },
     "node_modules/has": {
       "version": "1.0.3",
@@ -3006,10 +2997,6 @@
       "resolved": "https://registry.npmjs.org/growl/-/growl-1.7.0.tgz",
       "integrity": "sha1-3i1mE20ALhErpw8/EMMc98NQsto=",
       "dev": true
-    },
-    "hammerjs": {
-      "version": "git+ssh://git@github.com/EightMedia/hammer.js.git#ff687ea0daa3c806b9accd2ecb1a46165ea3c00a",
-      "from": "hammerjs@git://github.com/EightMedia/hammer.js"
     },
     "has": {
       "version": "1.0.3",

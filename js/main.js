@@ -32,7 +32,7 @@ var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
-const Hammer = require('hammerjs');
+//const Hammer = require('hammerjs');
 
 var pixelsPerMetre = 18;
 var monsterDistanceThreshold = 2000;
@@ -336,25 +336,21 @@ function startNeverEndingGame (images) {
 
 	var hammertime = new Hammer(mainCanvas);
 	hammertime.on('press', function (e) {
-		console.log(e);
 		e.preventDefault();
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
+		game.setMouseX(e.center.x);
+		game.setMouseY(e.center.y);
 	});
 	hammertime.on('tap', function (e) {
-		console.log(e);
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
+		game.setMouseX(e.center.x);
+		game.setMouseY(e.center.y);
 	});
 	hammertime.on('pan', function (e) {
-		console.log(e);
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
+		game.setMouseX(e.center.x);
+		game.setMouseY(e.center.y);
 		player.resetDirection();
 		player.startMovingIfPossible();
 	})
 	hammertime.on('doubletap', function (e) {
-		console.log(e);
 		player.speedBoost();
 	});
 
