@@ -26,6 +26,7 @@ var dContext = mainCanvas.getContext('2d');
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png' ];
 
+var playSound;
 var sounds = { 'bg': 'assets/bg.ogg' };
 var global = this;
 var infoBoxControls = 'Use the mouse or WASD to control the cart';
@@ -125,8 +126,15 @@ function startNeverEndingGame (images) {
 	var game;
 
 	function showMainMenu(images) {
+		for (var sound in sounds) {
+			if (sounds.hasOwnProperty(sound)) {
+				sounds[sound].muted = !playSound;
+			}
+		}
 		mainCanvas.style.display = 'none';
 		$('#main').show();
+		$('#menu').addClass('main');
+		$('.sound').show();
 	}
 
 	function toggleGodMode() {
@@ -378,6 +386,41 @@ $('.back').click(function() {
 	$('#credits').hide();
 	$('#main').show();
 	$('#menu').removeClass('credits');
+  });
+
+// set the sound preference
+var canUseLocalStorage = 'localStorage' in window && window.localStorage !== null;
+if (canUseLocalStorage) {
+	playSound = (localStorage.getItem('hbwCartRacing.playSound') === "true")
+	if (playSound) {
+		$('.sound').addClass('sound-on').removeClass('sound-off');
+	}
+	else {
+		$('.sound').addClass('sound-off').removeClass('sound-on');
+	}
+}
+
+$('.sound').click(function() {
+	var $this = $(this);
+	// sound off
+	if ($this.hasClass('sound-on')) {
+	  $this.removeClass('sound-on').addClass('sound-off');
+	  playSound = false;
+	}
+	// sound on
+	else {
+	  $this.removeClass('sound-off').addClass('sound-on');
+	  playSound = true;
+	}
+	if (canUseLocalStorage) {
+	  localStorage.setItem('hbwCartRacing.playSound', playSound);
+	}
+	// mute or unmute all sounds
+	for (var sound in sounds) {
+	  if (sounds.hasOwnProperty(sound)) {
+		sounds[sound].muted = !playSound;
+	  }
+	}
   });
 
 window.addEventListener('resize', resizeCanvas, false);
