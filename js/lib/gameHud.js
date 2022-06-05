@@ -1,4 +1,4 @@
-function InfoBox(data) {
+function GameHud(data) {
 	var that = this;
 
 	var hudImage = new Image();
@@ -50,5 +50,5 @@ function InfoBox(data) {
 }
 
 if (typeof module !== 'undefined') {
-	module.exports = InfoBox;
+	module.exports = GameHud;
 }

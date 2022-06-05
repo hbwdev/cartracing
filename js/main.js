@@ -16,7 +16,7 @@ var AnimatedSprite = require('./lib/animatedSprite');
 var Sprite = require('./lib/sprite');
 var Snowboarder = require('./lib/snowboarder');
 var Player = require('./lib/player');
-var InfoBox = require('./lib/infoBox');
+var GameHud = require('./lib/gameHud');
 var Game = require('./lib/game');
 
 // Local variables for starting the game
@@ -29,8 +29,8 @@ var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 
 var playSound;
 var sounds = { 'bg': 'assets/bg.ogg' };
 var global = this;
-var infoBoxControls = 'Use the mouse or WASD to control the cart';
-if (isMobileDevice()) infoBoxControls = 'Tap or drag on the road to control the cart';
+var gameHudControls = 'Use the mouse or WASD to control the cart';
+if (isMobileDevice()) gameHudControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
 //const Hammer = require('hammerjs');
 
@@ -40,13 +40,15 @@ const totalLives = 5;
 var livesLeft = totalLives;
 var highScore = 0;
 
-const score = {
+const gameInfo = {
 	distance: 0,
 	money: 0,
 	tokens: 0,
 	points: 0,
 	cans: 0,
 	levelBoost: 0,
+
+	god: false,
 
 	reset() {
 		distance = 0;
@@ -57,7 +59,6 @@ const score = {
 	}
 };
 
-var loseLifeOnObstacleHit = true;
 var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1, token: 4, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
@@ -122,7 +123,7 @@ function monsterHitsPlayerBehaviour(monster, player) {
 function startNeverEndingGame (images) {
 	var player;
 	var startSign;
-	var infoBox;
+	var gameHud;
 	var game;
 
 	function showMainMenu(images) {
@@ -138,8 +139,7 @@ function startNeverEndingGame (images) {
 	}
 
 	function toggleGodMode() {
-		loseLifeOnObstacleHit = !loseLifeOnObstacleHit;
-		console.log('God mode changed: ' + !loseLifeOnObstacleHit);
+		gameInfo.god = !gameInfo.god;
 	}
 
 	function resetGame () {
@@ -147,19 +147,19 @@ function startNeverEndingGame (images) {
 		highScore = localStorage.getItem('highScore');
 		game.reset();
 		game.addStaticObject(startSign);
-		score.reset();
+		gameInfo.reset();
 	}
 
 	function detectEnd () {
 		if (!game.isPaused()) {
-			highScore = localStorage.setItem('highScore', score.distance);
-			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100) + score.levelBoost;
-			infoBox.setLines([
-				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
-				('Points' + score.money).padEnd(22) + 'Life 0%',
-				('Tokens ' + score.tokens).padEnd(22) + 'Awake 100/100',
-				('Distance ' + score.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
-				(loseLifeOnObstacleHit ? '' : 'God Mode').padEnd(22) + 'Game over! Hit space to restart.'
+			highScore = localStorage.setItem('highScore', gameInfo.distance);
+			const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
+			gameHud.setLines([
+				('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
+				('Points' + gameInfo.money).padEnd(22) + 'Life 0%',
+				('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake 100/100',
+				('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
+				(gameInfo.god ? 'God Mode' : '').padEnd(22) + 'Game over! Hit space to restart.'
 			]);
 			game.pause();
 			game.cycle();
@@ -200,21 +200,23 @@ function startNeverEndingGame (images) {
 	player.setMapPositionTarget(0, -10);
 
 	player.setHitObstacleCb(function() {
-		if (loseLifeOnObstacleHit)
-			livesLeft -= 1;
+		if (gameInfo.god)
+			return;
+
+		livesLeft -= 1;
 	});
 
 	player.setCollectItemCb(function(item) {
 		switch (item.data.name)
 		{
 			case 'token':
-				score.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+				gameInfo.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
 				break;
 			case 'milkshake':
 				if (livesLeft < totalLives) {
 					livesLeft += 1;
 				}
-				score.levelBoost += 1;
+				gameInfo.levelBoost += 1;
 				break;
 		}
 	});
@@ -226,13 +228,13 @@ function startNeverEndingGame (images) {
 	startSign.setMapPosition(-50, 0);
 	dContext.followSprite(player);
 
-	infoBox = new InfoBox({
+	gameHud = new GameHud({
 		initialLines : [
 			'Cash $0'.padEnd(22) + 'Level 1',
 			'Points 0'.padEnd(22) + 'Life 0%',
 			'Tokens 0'.padEnd(22) + 'Awake 100/100',
 			'Distance 0m'.padEnd(22) + 'Speed 0',
-			loseLifeOnObstacleHit ? '' : 'God Mode'
+			gameInfo.god ? 'God Mode' : ''
 		],
 		position: {
 			top: 15,
@@ -265,19 +267,19 @@ function startNeverEndingGame (images) {
 			// Disabled snowboarder spawn for cart conversion
 			//randomlySpawnNPC(spawnBoarder, 0.1);
 
-			score.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+			gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
 
-			if (score.distance > monsterDistanceThreshold) {
+			if (gameInfo.distance > monsterDistanceThreshold) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
 
-			const level = score.distance < 100 ? 1 : Math.floor(score.distance / 100) + score.levelBoost;
-			infoBox.setLines([
-				('Cash $' + score.money).padEnd(22) + 'Level ' + level,
-				('Points ' + score.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
-				('Tokens ' + score.tokens).padEnd(22) + 'Awake 100/100',
-				('Distance ' + score.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
-				loseLifeOnObstacleHit ? '' : 'God Mode'
+			const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
+			gameHud.setLines([
+				('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
+				('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
+				('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake 100/100',
+				('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
+				gameInfo.god ? 'God Mode' : ''
 			]);
 		}
 	});
@@ -288,7 +290,7 @@ function startNeverEndingGame (images) {
 		}
 	});
 
-	game.addUIElement(infoBox);
+	game.addUIElement(gameHud);
 	
 	$(mainCanvas)
 		.mousemove(function (e) {
