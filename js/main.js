@@ -32,7 +32,6 @@ var global = this;
 var gameHudControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) gameHudControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
-//const Hammer = require('hammerjs');
 
 var pixelsPerMetre = 18;
 var monsterDistanceThreshold = 2000;
@@ -47,6 +46,7 @@ const gameInfo = {
 	points: 0,
 	cans: 0,
 	levelBoost: 0,
+	awake: 100,
 
 	god: false,
 
@@ -56,6 +56,7 @@ const gameInfo = {
 		tokens = 0;
 		points = 0;
 		cans = 0;
+		awake = 0;
 	}
 };
 
@@ -153,14 +154,7 @@ function startNeverEndingGame (images) {
 	function detectEnd () {
 		if (!game.isPaused()) {
 			highScore = localStorage.setItem('highScore', gameInfo.distance);
-			const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
-			gameHud.setLines([
-				('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
-				('Points' + gameInfo.money).padEnd(22) + 'Life 0%',
-				('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake 100/100',
-				('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
-				(gameInfo.god ? 'God Mode' : '').padEnd(22) + 'Game over! Hit space to restart.'
-			]);
+			updateHud('Game over! Hit space to restart.');
 			game.pause();
 			game.cycle();
 		}
@@ -242,6 +236,19 @@ function startNeverEndingGame (images) {
 		}
 	});
 
+	function updateHud(message) {
+		if (!message) message = '';
+
+		const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
+		gameHud.setLines([
+			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
+			('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
+			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + gameInfo.awake + '/100',
+			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
+			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
+		]);
+	}
+
 	game.beforeCycle(function () {
 		var newObjects = [];
 		if (player.isMoving) {
@@ -273,14 +280,7 @@ function startNeverEndingGame (images) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
 
-			const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
-			gameHud.setLines([
-				('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
-				('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
-				('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake 100/100',
-				('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
-				gameInfo.god ? 'God Mode' : ''
-			]);
+			updateHud();
 		}
 	});
 
