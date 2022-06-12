@@ -63,39 +63,10 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		'smallTree' : {
-			$imageFile : 'assets/skifree-objects.png',
-			parts : {
-				main : [ 0, 28, 30, 34 ]
-			},
-			hitBoxes: {
-				0: [ 0, 18, 30, 34 ]
-			},
-			hitBehaviour: {}
-		},
-		'tallTree' : {
-			$imageFile : 'assets/skifree-objects.png',
-			parts : {
-				main : [ 95, 66, 32, 64 ]
-			},
-			zIndexesOccupied : [0, 1],
-			hitBoxes: {
-				0: [0, 54, 32, 64],
-				1: [0, 10, 32, 54]
-			},
-			hitBehaviour: {}
-		},
 		'thickSnow' : {
 			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 143, 53, 43, 10 ]
-			},
-			hitBehaviour: {}
-		},
-		'rock' : {
-			$imageFile : 'assets/skifree-objects.png',
-			parts : {
-				main : [ 30, 52, 23, 11 ]
 			},
 			hitBehaviour: {}
 		},
@@ -187,19 +158,6 @@ const game = require("./lib/game");
 		}
 	};
 
-/* 	function monsterHitsTreeBehaviour(monster) {
-		monster.deleteOnNextCycle();
-	}
-
-	sprites.monster.hitBehaviour.tree = monsterHitsTreeBehaviour;
-
-	function treeHitsMonsterBehaviour(tree, monster) {
-		monster.deleteOnNextCycle();
-	}
-
-	sprites.smallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
-	sprites.tallTree.hitBehaviour.monster = treeHitsMonsterBehaviour; */
-
 	// Monster hitting static objects doesn't seem to work
 	function monsterHitsObstacleBehavior(monster) {
 		monster.deleteOnNextCycle();
@@ -214,18 +172,6 @@ const game = require("./lib/game");
 	sprites.trafficConeLarge.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 	sprites.trafficConeSmall.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 
-	function treeHitsPlayerBehaviour(tree, player) {
-		player.hasHitObstacle(tree);
-	}
-
-	sprites.smallTree.hitBehaviour.player = treeHitsPlayerBehaviour;
-	sprites.tallTree.hitBehaviour.player = treeHitsPlayerBehaviour;
-
-	function rockHitsPlayerBehaviour(rock, player) {
-		player.hasHitObstacle(rock);
-	}
-	sprites.rock.hitBehaviour.player = rockHitsPlayerBehaviour;
-
 	function jumpHitsPlayerBehaviour(jump, player) {
 		player.hasHitJump(jump);
 	}
@@ -238,8 +184,7 @@ const game = require("./lib/game");
 	sprites.trafficConeSmall.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
-// Really not a fan of this behaviour.
-/*	function playerHitsThickSnowBehaviour(player, thickSnow) {
+	function playerHitsThickSnowBehaviour(player, thickSnow) {
 		// Need to implement this properly
 		player.setSpeed(2);
 		setTimeout(function() {
@@ -253,9 +198,10 @@ const game = require("./lib/game");
 		setTimeout(function() {
 			player.resetSpeed();
 		}, 300);
-	}*/
+	}
 
-	// sprites.thickSnow.hitBehaviour.player = thickSnowHitsPlayerBehaviour;
+	sprites.thickSnow.hitBehaviour.player = thickSnowHitsPlayerBehaviour;
+	sprites.player.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
 
 	function snowboarderHitsPlayerBehaviour(snowboarder, player) {
 		player.hasHitObstacle(snowboarder);

@@ -61,7 +61,7 @@ const gameInfo = {
 	}
 };
 
-var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, thickSnow: 1, rock: 1, 
+var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, thickSnow: 1, 
 				  token: 3, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
@@ -259,11 +259,8 @@ function startNeverEndingGame (images) {
 		var newObjects = [];
 		if (player.isMoving) {
 			newObjects = Sprite.createObjects([
-				//{ sprite: sprites.smallTree, dropRate: dropRates.smallTree },
-				//{ sprite: sprites.tallTree, dropRate: dropRates.tallTree },
 				{ sprite: sprites.jump, dropRate: dropRates.jump },
 				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
-				//{ sprite: sprites.rock, dropRate: dropRates.rock },
 				{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
 				{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
 				{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
