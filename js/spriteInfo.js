@@ -160,7 +160,7 @@ const game = require("./lib/game");
 			},
 			zIndexesOccupied : [0, 1],
 			hitBoxes: {
-				0: [ 0, 36, 39, 48 ],
+				0: [ 0, 26, 39, 48 ],
 				1: [ 12, 0, 28, 20 ]
 			},
 			hitBehaviour: {}
