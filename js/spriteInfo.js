@@ -178,7 +178,10 @@ const game = require("./lib/game");
 		'garbageCan': {
 			$imageFile: 'assets/garbage-can.png',
 			parts: {
-				main : [ 0, 0, 30, 46 ]
+				main : [ 0, 0, 29, 45 ]
+			},
+			hitBoxes: {
+				0: [ 1, 30, 28, 44 ]
 			},
 			hitBehaviour: {}
 		}
