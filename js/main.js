@@ -111,8 +111,6 @@ function loadSounds () {
 
 function monsterHitsPlayerBehaviour(monster, player) {
 	player.isEatenBy(monster, function () {
-		if (!gameInfo.god)
-			livesLeft -= 1;
 		monster.isFull = true;
 		monster.isEating = false;
 		player.isBeingEaten = false;
@@ -198,7 +196,6 @@ function startNeverEndingGame (images) {
 	player.setHitObstacleCb(function() {
 		if (gameInfo.god)
 			return;
-
 		livesLeft -= 1;
 	});
 

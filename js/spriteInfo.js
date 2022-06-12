@@ -169,7 +169,7 @@ const game = require("./lib/game");
 		}
 	};
 
-	function monsterHitsTreeBehaviour(monster) {
+/* 	function monsterHitsTreeBehaviour(monster) {
 		monster.deleteOnNextCycle();
 	}
 
@@ -180,11 +180,18 @@ const game = require("./lib/game");
 	}
 
 	sprites.smallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
-	sprites.tallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
+	sprites.tallTree.hitBehaviour.monster = treeHitsMonsterBehaviour; */
 
-	function playerHitsTreeBehaviour(player, tree) {
-		player.hasHitObstacle(tree);
+	function monsterHitsObstacleBehavior(monster) {
+		monster.deleteOnNextCycle();
 	}
+	sprites.monster.hitBehaviour.garbageCan = monsterHitsObstacleBehavior;
+	sprites.monster.hitBehaviour.trafficCone = monsterHitsObstacleBehavior;
+	function obstacleHitsMonsterBehavior(obstacle, monster) {
+		monster.deleteOnNextCycle();
+	}
+	sprites.garbageCan.hitBehaviour.monster = obstacleHitsMonsterBehavior;
+	sprites.trafficCone.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 
 	function treeHitsPlayerBehaviour(tree, player) {
 		player.hasHitObstacle(tree);
@@ -197,10 +204,6 @@ const game = require("./lib/game");
 		player.hasHitObstacle(rock);
 	}
 	sprites.rock.hitBehaviour.player = rockHitsPlayerBehaviour;
-
-	function playerHitsJumpBehaviour(player, jump) {
-		player.hasHitJump(jump);
-	}
 
 	function jumpHitsPlayerBehaviour(jump, player) {
 		player.hasHitJump(jump);
