@@ -369,8 +369,9 @@
 			const rect1h = other.getBottomHitBoxEdge(that.mapPosition[2]) - rect1y;
 
 			// Get hitbox offset when specified
-			const hitboxOffsetX = that.currentFrame.length > 6 ? that.currentFrame[6] : 0;
-			const hitboxOffsetY = that.currentFrame.length > 7 ? that.currentFrame[7] : 0;
+			const isarray = Array.isArray(that.currentFrame);
+			const hitboxOffsetX =  isarray && that.currentFrame.length > 6 ? that.currentFrame[6] : 0;
+			const hitboxOffsetY = isarray && that.currentFrame.length > 7 ? that.currentFrame[7] : 0;
 
 			const rect2x = that.getLeftHitBoxEdge(that.mapPosition[2]) + hitboxOffsetX;
 			const rect2w = that.getRightHitBoxEdge(that.mapPosition[2]) - rect2x + hitboxOffsetX;
