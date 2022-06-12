@@ -153,10 +153,25 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		'trafficCone': {
-			$imageFile: 'assets/traffic-cone.png',
+		'trafficConeLarge': {
+			$imageFile: 'assets/traffic-cone-large.png',
 			parts: {
-				main : [ 0, 0, 40, 49 ]
+				main : [ 0, 0, 39, 48 ]
+			},
+			zIndexesOccupied : [0, 1],
+			hitBoxes: {
+				0: [ 0, 36, 39, 48 ],
+				1: [ 12, 0, 28, 20 ]
+			},
+			hitBehaviour: {}
+		},
+		'trafficConeSmall': {
+			$imageFile: 'assets/traffic-cone-small.png',
+			parts: {
+				main : [ 0, 0, 19, 24 ]
+			},
+			hitBoxes: {
+				0: [ 0, 13, 19, 24 ]
 			},
 			hitBehaviour: {}
 		},
@@ -182,16 +197,19 @@ const game = require("./lib/game");
 	sprites.smallTree.hitBehaviour.monster = treeHitsMonsterBehaviour;
 	sprites.tallTree.hitBehaviour.monster = treeHitsMonsterBehaviour; */
 
+	// Monster hitting static objects doesn't seem to work
 	function monsterHitsObstacleBehavior(monster) {
 		monster.deleteOnNextCycle();
 	}
 	sprites.monster.hitBehaviour.garbageCan = monsterHitsObstacleBehavior;
-	sprites.monster.hitBehaviour.trafficCone = monsterHitsObstacleBehavior;
+	sprites.monster.hitBehaviour.trafficConeLarge = monsterHitsObstacleBehavior;
+	sprites.monster.hitBehaviour.trafficConeSmall = monsterHitsObstacleBehavior;
 	function obstacleHitsMonsterBehavior(obstacle, monster) {
 		monster.deleteOnNextCycle();
 	}
 	sprites.garbageCan.hitBehaviour.monster = obstacleHitsMonsterBehavior;
-	sprites.trafficCone.hitBehaviour.monster = obstacleHitsMonsterBehavior;
+	sprites.trafficConeLarge.hitBehaviour.monster = obstacleHitsMonsterBehavior;
+	sprites.trafficConeSmall.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 
 	function treeHitsPlayerBehaviour(tree, player) {
 		player.hasHitObstacle(tree);
@@ -213,7 +231,8 @@ const game = require("./lib/game");
 	function obstacleHitsPlayerBehaviour(obstacle, player) {
 		player.hasHitObstacle(obstacle);
 	}
-	sprites.trafficCone.hitBehaviour.player = obstacleHitsPlayerBehaviour;
+	sprites.trafficConeLarge.hitBehaviour.player = obstacleHitsPlayerBehaviour;
+	sprites.trafficConeSmall.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
 // Really not a fan of this behaviour.

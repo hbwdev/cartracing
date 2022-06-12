@@ -25,7 +25,7 @@ var dContext = mainCanvas.getContext('2d');
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png', 'assets/hatguy-sprites.png',
-	'assets/traffic-cone.png', 'assets/garbage-can.png' ];
+	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png' ];
 
 var playSound;
 var sounds = { 'bg': 'assets/bg.ogg' };
@@ -61,7 +61,8 @@ const gameInfo = {
 	}
 };
 
-var dropRates = { trafficCone: 3, garbageCan: 1, jump: 1, thickSnow: 1, rock: 1, token: 3, milkshake: 0.0001};
+var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, thickSnow: 1, rock: 1, 
+				  token: 3, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -257,7 +258,8 @@ function startNeverEndingGame (images) {
 				{ sprite: sprites.jump, dropRate: dropRates.jump },
 				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
 				//{ sprite: sprites.rock, dropRate: dropRates.rock },
-				{ sprite: sprites.trafficCone, dropRate: dropRates.trafficCone },
+				{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
+				{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
 				{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
 				{ sprite: sprites.token, dropRate: dropRates.token },
 				{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
