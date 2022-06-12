@@ -28,23 +28,24 @@ const game = require("./lib/game");
 		'player': {
 			$imageFile : 'assets/hatguy-sprites.png',
 			parts : {
+				// x, y, width, height, canvasOffsetX, canvasOffsetY, hitboxOffsetX, hitboxOffsetY 
 				blank : [ 0, 0, 0, 0 ],
-				east : [ 91, 0, 98, 91 ],
-				esEast : [ 70, 187, 91,99 ],
-				sEast : [ 143, 91, 73, 96 ],
+				east : [ 91, 0, 98, 91, 0, 0, 35, 0 ],
+				esEast : [ 70, 187, 91,99, 0, 0, 31, 0 ],
+				sEast : [ 143, 91, 73, 96, 0, 0, 13, 0 ],
 				south : [ 83, 91, 60, 95 ],
 				sWest : [ 0, 187, 70, 96 ],
 				wsWest : [ 0, 91, 83, 92 ],
 				west : [ 0, 0, 91, 85 ],
 				hit : [ 83, 91, 60, 95 ],
-				jumping : [ 161, 187, 65, 151 ],
+				jumping : [ 161, 187, 65, 151, 0, -45 ],
 				somersault1 : [ 83, 91, 60, 95 ],
 				somersault1 : [ 83, 91, 60, 95 ],
-				boost : [ 161, 187, 65, 151 ]
+				boost : [ 161, 187, 65, 151, 0, -45 ]
 			},
 			hitBoxes: {
 				//Left, Top, Right, Bottom
-				0: [ 5, 10, 55, 90 ]
+				0: [ 5, 20, 55, 90 ]
 			},
 			id : 'player',
 			hitBehaviour: {}
