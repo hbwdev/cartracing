@@ -152,6 +152,20 @@ const game = require("./lib/game");
 				main : [ 0, 0, 25, 43 ]
 			},
 			hitBehaviour: {}
+		},
+		'trafficCone': {
+			$imageFile: 'assets/traffic-cone.png',
+			parts: {
+				main : [ 0, 0, 40, 49 ]
+			},
+			hitBehaviour: {}
+		},
+		'garbageCan': {
+			$imageFile: 'assets/garbage-can.png',
+			parts: {
+				main : [ 0, 0, 30, 46 ]
+			},
+			hitBehaviour: {}
 		}
 	};
 
@@ -182,7 +196,6 @@ const game = require("./lib/game");
 	function rockHitsPlayerBehaviour(rock, player) {
 		player.hasHitObstacle(rock);
 	}
-
 	sprites.rock.hitBehaviour.player = rockHitsPlayerBehaviour;
 
 	function playerHitsJumpBehaviour(player, jump) {
@@ -192,8 +205,13 @@ const game = require("./lib/game");
 	function jumpHitsPlayerBehaviour(jump, player) {
 		player.hasHitJump(jump);
 	}
-
 	sprites.jump.hitBehaviour.player = jumpHitsPlayerBehaviour;
+
+	function obstacleHitsPlayerBehaviour(obstacle, player) {
+		player.hasHitObstacle(obstacle);
+	}
+	sprites.trafficCone.hitBehaviour.player = obstacleHitsPlayerBehaviour;
+	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
 // Really not a fan of this behaviour.
 /*	function playerHitsThickSnowBehaviour(player, thickSnow) {
