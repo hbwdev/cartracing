@@ -76,17 +76,17 @@ const game = require("./lib/game");
 			hitBehaviour: {}
 		},
 		'monster' : {
-			$imageFile : 'assets/sprite-characters.png',
+			$imageFile : 'assets/malord-sprites.png',
 			parts : {
-				sEast1 : [ 64, 112, 26, 43 ],
-				sEast2 : [ 90, 112, 32, 43 ],
-				sWest1 : [ 64, 158, 26, 43 ],
-				sWest2 : [ 90, 158, 32, 43 ],
-				eating1 : [ 122, 112, 34, 43 ],
-				eating2 : [ 156, 112, 31, 43 ],
-				eating3 : [ 187, 112, 31, 43 ],
-				eating4 : [ 219, 112, 25, 43 ],
-				eating5 : [ 243, 112, 26, 43 ]
+				sEast1 : [ 332, 0, 166, 149 ],
+				sEast2 : [ 498, 0, 166, 149 ],
+				sWest1 : [ 0, 0, 166, 149 ],
+				sWest2 : [ 166, 0, 166, 149 ],
+				eating1 : [ 332, 0, 166, 149 ],
+				eating2 : [ 498, 0, 166, 149 ],
+				eating3 : [ 0, 0, 166, 149 ],
+				eating4 : [ 166, 0, 166, 149 ],
+				eating5 : [ 0, 0, 166, 149 ],
 			},
 			hitBehaviour: {}
 		},
