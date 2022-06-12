@@ -28,7 +28,13 @@ var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 
 	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png' ];
 
 var playSound;
-var sounds = { 'bg': 'assets/bg.ogg' };
+var sounds = { 'track1': 'assets/music/track1.ogg',
+			   'track2': 'assets/music/track2.ogg',
+			   'track3': 'assets/music/track3.ogg',
+			   'gameOver': 'assets/music/gameover.ogg' };
+var currentTrack;
+var playingplayingTrackNumber = 1;
+
 var global = this;
 var gameHudControls = 'Use the mouse or WASD to control the cart';
 if (isMobileDevice()) gameHudControls = 'Tap or drag on the road to control the cart';
@@ -122,6 +128,24 @@ function monsterHitsPlayerBehaviour(monster, player) {
 	});
 }
 
+function playMusicTrack(nextTrack) {
+	if (!playSound) playingTrackNumber = nextTrack
+	if (nextTrack === playingTrackNumber) return;
+
+	currentTrack.muted = true;
+	playingTrackNumber = nextTrack;
+	if (nextTrack > sounds.length - 1)
+		playingTrackNumber = 1;
+	currentTrack = sounds["track" + nextTrack];
+	currentTrack.currentTime = 0;
+	currentTrack.loop = true;
+
+	if (playSound) {
+		currentTrack.play();
+		currentTrack.muted = false;
+	}
+}
+
 function startNeverEndingGame (images) {
 	var player;
 	var startSign;
@@ -131,7 +155,8 @@ function startNeverEndingGame (images) {
 	function showMainMenu(images) {
 		for (var sound in sounds) {
 			if (sounds.hasOwnProperty(sound)) {
-				sounds[sound].muted = !playSound;
+				sounds[sound].muted = true;
+				currentTrack.muted = !playSound;
 			}
 		}
 		mainCanvas.style.display = 'none';
@@ -158,6 +183,16 @@ function startNeverEndingGame (images) {
 			updateHud('Game over! Hit space to restart.');
 			game.pause();
 			game.cycle();
+
+			playingTrackNumber = 0;
+			currentTrack.muted = true;
+			currentTrack = sounds.gameOver;
+			currentTrack.currentTime = 0;
+			currentTrack.loop = true;
+			if (playSound) {
+				currentTrack.play();
+				currentTrack.muted = false;
+			}
 		}
 	}
 
@@ -211,6 +246,7 @@ function startNeverEndingGame (images) {
 					livesLeft += 1;
 				}
 				gameInfo.levelBoost += 1;
+
 				break;
 		}
 	});
@@ -253,6 +289,11 @@ function startNeverEndingGame (images) {
 			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
 			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
 		]);
+
+		if (gameInfo.distance > 1000) {
+			const track = Math.floor(gameInfo.distance / 1000 % 3);
+			playMusicTrack(track === 0 ? 3 : track);
+		}
 	}
 
 	game.beforeCycle(function () {
@@ -285,6 +326,8 @@ function startNeverEndingGame (images) {
 			if (gameInfo.distance > monsterDistanceThreshold) {
 				randomlySpawnNPC(spawnMonster, 0.001);
 			}
+
+			if (gameInfo.distance)
 
 			updateHud();
 		}
@@ -369,7 +412,8 @@ function startNeverEndingGame (images) {
 		$('#menu').hide();
 		mainCanvas.style.display = '';
 		game.start();
-		sounds.bg.play();
+		currentTrack = sounds.track1;
+		currentTrack.play();
 	  });
 
 	showMainMenu();
@@ -421,11 +465,12 @@ $('.sound').click(function() {
 	}
 	// mute or unmute all sounds
 	for (var sound in sounds) {
-	  if (sounds.hasOwnProperty(sound)) {
-		sounds[sound].muted = !playSound;
-	  }
+		if (sounds.hasOwnProperty(sound)) {
+			sounds[sound].muted = true;
+			currentTrack.muted = !playSound;
+		}
 	}
-  });
+});
 
 window.addEventListener('resize', resizeCanvas, false);
 
@@ -433,8 +478,9 @@ resizeCanvas();
 
 loadSounds();
 
-sounds.bg.currentTime = 0;
-sounds.bg.loop = true;
+currentTrack = sounds.track1;
+currentTrack.currentTime = 0;
+currentTrack.loop = true;
 
 loadImages(imageSources, startNeverEndingGame);
 
