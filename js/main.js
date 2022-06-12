@@ -221,23 +221,29 @@ function startNeverEndingGame (images) {
 	game.addStaticObject(startSign);
 	startSign.setMapPosition(-50, 0);
 	dContext.followSprite(player);
+	
+	updateHud();
 
-	gameHud = new GameHud({
-		initialLines : [
-			'Cash $0'.padEnd(22) + 'Level 1',
-			'Points 0'.padEnd(22) + 'Life 0%',
-			'Tokens 0'.padEnd(22) + 'Awake 100/100',
-			'Distance 0m'.padEnd(22) + 'Speed 0',
-			gameInfo.god ? 'God Mode' : ''
-		],
-		position: {
-			top: 15,
-			left: 115
-		}
-	});
 
 	function updateHud(message) {
-		if (!message) message = '';
+		if (!message)
+			message = '';
+
+		if (!gameHud) {
+			gameHud = new GameHud({
+				initialLines : [
+					'Cash $0'.padEnd(22) + 'Level 1',
+					'Points 0'.padEnd(22) + 'Life 0%',
+					'Tokens 0'.padEnd(22) + 'Awake 100/100',
+					'Distance 0m'.padEnd(22) + 'Speed 0',
+					gameInfo.god ? 'God Mode' : ''
+				],
+				position: {
+					top: 15,
+					left: 115
+				}
+			});
+		}
 
 		const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
 		gameHud.setLines([
