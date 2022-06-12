@@ -2,7 +2,7 @@ const game = require("./lib/game");
 
 (function (global) {
 	var sprites = {
-		'player' : {
+		'emptycart' : {
 			$imageFile : 'assets/cart-sprites.png',
 			parts : {
 				blank : [ 0, 0, 0, 0 ],
@@ -21,6 +21,30 @@ const game = require("./lib/game");
 			hitBoxes: {
 				//Left, Top, Right, Bottom
 				0: [ 5, 10, 62, 90 ]
+			},
+			id : 'player',
+			hitBehaviour: {}
+		},
+		'player': {
+			$imageFile : 'assets/hatguy-sprites.png',
+			parts : {
+				blank : [ 0, 0, 0, 0 ],
+				east : [ 91, 0, 98, 91 ],
+				esEast : [ 70, 187, 91,99 ],
+				sEast : [ 143, 91, 73, 96 ],
+				south : [ 83, 91, 60, 95 ],
+				sWest : [ 0, 187, 70, 96 ],
+				wsWest : [ 0, 91, 83, 92 ],
+				west : [ 0, 0, 91, 85 ],
+				hit : [ 83, 91, 60, 95 ],
+				jumping : [ 161, 187, 65, 151 ],
+				somersault1 : [ 83, 91, 60, 95 ],
+				somersault1 : [ 83, 91, 60, 95 ],
+				boost : [ 161, 187, 65, 151 ]
+			},
+			hitBoxes: {
+				//Left, Top, Right, Bottom
+				0: [ 5, 10, 55, 90 ]
 			},
 			id : 'player',
 			hitBehaviour: {}
