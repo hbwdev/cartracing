@@ -2,6 +2,10 @@ html, body {
     height: 100%;
 }
 
+body {
+    overscroll-behavior: contain;
+}
+
 ul {
 	list-style: none;
 	padding: 0;
