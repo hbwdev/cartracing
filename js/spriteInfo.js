@@ -63,7 +63,7 @@ const game = require("./lib/game");
 				wsWest : [ 0, 343, 60, 67 ],
 				west : [ 54, 269, 65, 62 ],
 				hit : [ 60, 343, 67, 71 ],
-				jumping : [ 0, 0, 43, 113, 0, -45 ],//[ 65, 113, 51, 82, 0, -45 ],
+				jumping : [ 65, 113, 51, 82, -3, 10 ], // [ 0, 0, 43, 113, 0, -45 ]
 				somersault1 : [ 0, 195, 43, 68 ], // match south for now
 				somersault1 : [ 0, 195, 43, 68 ], // match south for now
 				boost : [ 0, 0, 43, 113, 0, -45 ]
@@ -111,23 +111,17 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		/* 'jump' : {
-			$imageFile : 'assets/skifree-objects.png',
-			parts : {
-				main : [ 109, 55, 32, 8 ]
-			},
-			hitBehaviour: {}
-		}, */
 		'jump' : {
 			$imageFile : 'assets/ramp-sprite.png',
 			parts : {
-				main : [ 0, 0, 65, 14 ]
+				main : [ 0, 0, 54, 36 ]
 			},
 			hitBoxes: {
 				//Left, Top, Right, Bottom
-				0: [ 19, 3, 48, 10 ]
+				0: [ 6, 3, 48, 10 ]
 			},
-			hitBehaviour: {}
+			hitBehaviour: {},
+			isDrawnUnderPlayer: true
 		},
 		'signStart' : {
 			$imageFile : 'assets/skifree-objects.png',

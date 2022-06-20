@@ -142,6 +142,12 @@ const sprite = require('./sprite');
 			// Update scrolling background
 			drawBackground();
 
+			staticObjects.each(function (staticObject, i) {
+				if (staticObject.isDrawnUnderPlayer && staticObject.draw) {
+						staticObject.draw(dContext, 'main');
+				}
+			});
+
 			player.setHitBoxesVisible(showHitBoxes);
 			player.draw(dContext);
 
@@ -152,7 +158,7 @@ const sprite = require('./sprite');
 			});
 			
 			staticObjects.each(function (staticObject, i) {
-				if (staticObject.draw) {
+				if (!staticObject.isDrawnUnderPlayer && staticObject.draw) {
 					staticObject.draw(dContext, 'main');
 				}
 			});

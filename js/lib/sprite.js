@@ -24,6 +24,7 @@
 			return Object.values(that.data.parts).map(function (p) { return p[3]; }).max();
 		}());
 		that.isMoving = true;
+		that.isDrawnUnderPlayer = data.isDrawnUnderPlayer;
 		
 		if (!that.data.parts) {
 			that.data.parts = {};
@@ -117,6 +118,7 @@
 		
 			drawHitbox(dCtx, fr);
 		};
+
 
 		function drawHitbox(dCtx, spritePart) {
 			if (!showHitBoxes)
