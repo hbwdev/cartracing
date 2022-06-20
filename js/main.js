@@ -24,7 +24,7 @@ var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
-	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png', 'assets/hatguy-sprites.png',
+	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png', 'assets/hatguy-sprites.png', 'assets/pilot-sprites.png',
 	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png' ];
 
 var playSound;

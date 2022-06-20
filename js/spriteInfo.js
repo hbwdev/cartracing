@@ -25,7 +25,7 @@ const game = require("./lib/game");
 			id : 'player',
 			hitBehaviour: {}
 		},
-		'player': {
+		'player-hatguy': {
 			$imageFile : 'assets/hatguy-sprites.png',
 			parts : {
 				// x, y, width, height, canvasOffsetX, canvasOffsetY, hitboxOffsetX, hitboxOffsetY 
@@ -46,6 +46,31 @@ const game = require("./lib/game");
 			hitBoxes: {
 				//Left, Top, Right, Bottom
 				0: [ 5, 20, 55, 90 ]
+			},
+			id : 'player',
+			hitBehaviour: {}
+		},
+		'player': {
+			$imageFile : 'assets/pilot-sprites.png',
+			parts : {
+				// x, y, width, height, canvasOffsetX, canvasOffsetY, hitboxOffsetX, hitboxOffsetY 
+				blank : [ 0, 0, 0, 0 ],
+				east : [ 43, 0, 70, 68, 0, 0, 25, 0 ],
+				esEast : [ 0, 113, 65, 71, 0, 0, 21, 0 ],
+				sEast : [ 43, 195, 57, 74, 0, 0, 13, 0 ],
+				south : [ 0, 195, 43, 68 ],
+				sWest : [ 0, 269, 54, 74, 0 ],
+				wsWest : [ 0, 343, 60, 67 ],
+				west : [ 54, 269, 65, 62 ],
+				hit : [ 60, 343, 67, 71 ],
+				jumping : [ 0, 0, 43, 113, 0, -45 ],//[ 65, 113, 51, 82, 0, -45 ],
+				somersault1 : [ 0, 195, 43, 68 ], // match south for now
+				somersault1 : [ 0, 195, 43, 68 ], // match south for now
+				boost : [ 0, 0, 43, 113, 0, -45 ]
+			},
+			hitBoxes: {
+				//Left, Top, Right, Bottom
+				0: [ 0, 20, 45, 60 ]
 			},
 			id : 'player',
 			hitBehaviour: {}
@@ -74,15 +99,15 @@ const game = require("./lib/game");
 		'monster' : {
 			$imageFile : 'assets/malord-sprites.png',
 			parts : {
-				sEast1 : [ 332, 0, 166, 149 ],
-				sEast2 : [ 498, 0, 166, 149 ],
-				sWest1 : [ 0, 0, 166, 149 ],
-				sWest2 : [ 166, 0, 166, 149 ],
-				eating1 : [ 332, 0, 166, 149 ],
-				eating2 : [ 498, 0, 166, 149 ],
-				eating3 : [ 0, 0, 166, 149 ],
-				eating4 : [ 166, 0, 166, 149 ],
-				eating5 : [ 0, 0, 166, 149 ],
+				sEast1 : [ 332, 149, 166, 149 ],
+				sEast2 : [ 0, 298, 166, 149 ],
+				sWest1 : [ 166, 298, 166, 149 ],
+				sWest2 : [ 332, 298, 166, 149 ],
+				eating1 : [ 0, 0, 166, 149 ],
+				eating2 : [ 166, 0, 166, 149 ],
+				eating3 : [ 332, 0, 166, 149 ],
+				eating4 : [ 0, 149, 166, 149 ],
+				eating5 : [ 166, 149, 166, 149 ],
 			},
 			hitBehaviour: {}
 		},
