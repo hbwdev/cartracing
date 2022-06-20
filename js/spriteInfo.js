@@ -111,10 +111,21 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		'jump' : {
+		/* 'jump' : {
 			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 109, 55, 32, 8 ]
+			},
+			hitBehaviour: {}
+		}, */
+		'jump' : {
+			$imageFile : 'assets/ramp-sprite.png',
+			parts : {
+				main : [ 0, 0, 65, 14 ]
+			},
+			hitBoxes: {
+				//Left, Top, Right, Bottom
+				0: [ 19, 3, 48, 10 ]
 			},
 			hitBehaviour: {}
 		},
