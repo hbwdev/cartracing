@@ -58,6 +58,7 @@ if (typeof navigator !== 'undefined') {
 		that.isJumping = false;
 		that.isPerformingTrick = false;
 		that.isCrashing = false;
+		that.isBoosting = false;
 		that.onHitObstacleCb = function() {};
 		that.onCollectItemCb = function() {};
 		that.setSpeed(standardSpeed);
@@ -308,15 +309,17 @@ if (typeof navigator !== 'undefined') {
 				}
 
 				if (that.isJumping) {
-					if (that.isPerformingTrick) {
+					/* if (that.isPerformingTrick) {
 						return getTrickSprite();
-					}
+					} */
 					return getJumpingSprite();
 				}
 
-				if (that.isCrashing) {
+				if (that.isCrashing)
 					return 'wreck' + crashingFrame;
-				}
+
+				if (that.isBoosting)
+					return 'boost';
 
 				return getDiscreteDirection();
 			};
@@ -345,8 +348,10 @@ if (typeof navigator !== 'undefined') {
 			if (canSpeedBoost) {
 				canSpeedBoost = false;
 				that.setSpeed(that.speed * boostMultiplier);
+				that.isBoosting = true;
 				setTimeout(function () {
 					that.setSpeed(originalSpeed);
+					that.isBoosting = false;
 					setTimeout(function () {
 						canSpeedBoost = true;
 					}, 10000);
@@ -512,6 +517,7 @@ if (typeof navigator !== 'undefined') {
 		function startCrashing() {
 			crashingFrame += 1;
 			that.isCrashing = true;
+			that.isBoosting = false;
 			that.setSpeed(1);
 			if (crashingFrame < 6) {
 				setTimeout(function () {
