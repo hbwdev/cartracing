@@ -55,18 +55,25 @@ const game = require("./lib/game");
 			parts : {
 				// x, y, width, height, canvasOffsetX, canvasOffsetY, hitboxOffsetX, hitboxOffsetY 
 				blank : [ 0, 0, 0, 0 ],
-				east : [ 43, 0, 70, 68, 0, 0, 25, 0 ],
-				esEast : [ 0, 113, 65, 71, 0, 0, 21, 0 ],
-				sEast : [ 43, 195, 57, 74, 0, 0, 13, 0 ],
-				south : [ 0, 195, 43, 68 ],
-				sWest : [ 0, 269, 54, 74, 0 ],
-				wsWest : [ 0, 343, 60, 67 ],
-				west : [ 54, 269, 65, 62 ],
-				hit : [ 60, 343, 67, 71 ],
-				jumping : [ 65, 113, 51, 82, -3, 10 ], // [ 0, 0, 43, 113, 0, -45 ]
-				somersault1 : [ 0, 195, 43, 68 ], // match south for now
-				somersault1 : [ 0, 195, 43, 68 ], // match south for now
-				boost : [ 0, 0, 43, 113, 0, -45 ]
+				east : [ 0, 365, 70, 68, 0, 0, 25, 0 ],
+				esEast : [ 51, 283, 65, 71, 0, 0, 21, 0 ],
+				sEast : [ 0, 209, 57, 74, 0, 0, 13, 0 ],
+				south : [ 0, 0, 43, 68 ],
+				sWest : [ 0, 135, 54, 74, 0 ],
+				wsWest : [ 65, 68, 60, 67 ],
+				west : [ 0, 68, 65, 62 ],
+				jumping : [ 0, 283, 51, 82, -3, 10 ], // [ 0, 0, 43, 113, 0, -45 ]
+				somersault1 : [ 0, 0, 43, 68 ], // match south for now
+				somersault1 : [ 0, 0, 43, 68 ], // match south for now
+				boost : [ 75, 562, 43, 113, 0, -45 ],
+
+				// Wreck sequence
+				wreck1 : [ 0, 433, 68, 70 ],
+				wreck2 : [ 57, 209, 68, 64 ],
+				wreck3 : [ 43, 0, 70, 50 ],
+				wreck4 : [ 0, 562, 75, 73 ],
+				wreck5 : [ 0, 503, 83, 59 ],
+				wreck6 : [ 54, 135, 71, 59 ]
 			},
 			hitBoxes: {
 				//Left, Top, Right, Bottom

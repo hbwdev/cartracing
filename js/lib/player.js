@@ -51,11 +51,13 @@ if (typeof navigator !== 'undefined') {
 		var speedY = 0;
 		var speedYFactor = 1;
 		var trickStep = 0; // There are three of these
+		var crashingFrame = 0; // 6-frame sequence
 
 		that.isMoving = true;
 		that.hasBeenHit = false;
 		that.isJumping = false;
 		that.isPerformingTrick = false;
+		that.isCrashing = false;
 		that.onHitObstacleCb = function() {};
 		that.onCollectItemCb = function() {};
 		that.setSpeed(standardSpeed);
@@ -66,6 +68,7 @@ if (typeof navigator !== 'undefined') {
 			that.isMoving = true;
 			that.hasBeenHit = false;
 			canSpeedBoost = true;
+			that.isCrashing = false;
 			setNormal();
 		};
 
@@ -75,6 +78,7 @@ if (typeof navigator !== 'undefined') {
 			that.hasBeenHit = false;
 			that.isJumping = false;
 			that.isPerformingTrick = false;
+			that.isCrashing = false;
 			if (cancelableStateInterval) {
 				clearInterval(cancelableStateInterval);
 			}
@@ -82,10 +86,11 @@ if (typeof navigator !== 'undefined') {
 		}
 
 		function setCrashed() {
-			that.isMoving = false;
 			that.hasBeenHit = true;
+			that.isCrashing = true;
 			that.isJumping = false;
 			that.isPerformingTrick = false;
+			that.startCrashing();
 			if (cancelableStateInterval) {
 				clearInterval(cancelableStateInterval);
 			}
@@ -309,8 +314,8 @@ if (typeof navigator !== 'undefined') {
 					return getJumpingSprite();
 				}
 
-				if (that.hasBeenHit) {
-					return 'hit';
+				if (that.isCrashing) {
+					return 'wreck' + crashingFrame;
 				}
 
 				return getDiscreteDirection();
@@ -503,6 +508,24 @@ if (typeof navigator !== 'undefined') {
 		that.setCollectItemCb = function (fn) {
 			that.onCollectItemCb = fn || function() {};
 		}
+
+		function startCrashing() {
+			crashingFrame += 1;
+			that.isCrashing = true;
+			that.setSpeed(1);
+			if (crashingFrame < 6) {
+				setTimeout(function () {
+					startCrashing();
+				}, 50);
+			} else {
+				crashingFrame = 0;
+				that.isCrashing = false;
+				that.isMoving = false; // stop moving on last frame
+			}
+		}
+
+		that.startCrashing = startCrashing;
+
 		return that;
 	}
 
