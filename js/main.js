@@ -290,7 +290,7 @@ function startNeverEndingGame (images) {
 			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
 		]);
 
-			playMusicTrack(Math.floor(gameInfo.distance / 1000 % 3) + 1);
+		playMusicTrack(Math.floor(gameInfo.distance / 1000 % 3) + 1);
 	}
 
 	game.beforeCycle(function () {
@@ -405,13 +405,26 @@ function startNeverEndingGame (images) {
 	player.isMoving = false;
 	player.setDirection(270);
 
-	$('.play').click(function() {
+	$('.player1').click(function() {
+		startGame();
+	});
+	$('.player2').click(function() {
+		startGame();
+	});
+	$('.player3').click(function() {
+		startGame();
+	});
+	$('.player4').click(function() {
+		startGame();
+	});
+
+	function startGame(){
 		$('#menu').hide();
 		mainCanvas.style.display = '';
 		game.start();
 		currentTrack = sounds.track1;
 		currentTrack.play();
-	  });
+	}
 
 	showMainMenu();
 }
@@ -421,6 +434,12 @@ function resizeCanvas() {
 	mainCanvas.height = window.innerHeight;
 }
 
+$('.play').click(function() {
+	$('#main').hide();
+	$('#selectPlayer').show();
+	$('#menu').addClass('selectPlayer');
+  });
+
 $('.credits').click(function() {
 	$('#main').hide();
 	$('#credits').show();
@@ -429,6 +448,7 @@ $('.credits').click(function() {
 
 $('.back').click(function() {
 	$('#credits').hide();
+	$('#selectPlayer').hide();
 	$('#main').show();
 	$('#menu').removeClass('credits');
   });

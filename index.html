@@ -38,13 +38,22 @@
             <div class="sound sound-off"></div>
             <div id="menu" class="main">
                 <div id="main">
-                <h1>Unofficial Hobowars<br />Cart Racing</h1>
-                <ul>
-                    <li><a href="#" class="button play">Start Game</a></li>
-                    <li><a href="#" class="button credits">Credits</a></li>
-                </ul>
+                    <h1>Unofficial Hobowars<br />Cart Racing</h1>
+                    <ul>
+                        <li><a href="#" class="button play">Start Game</a></li>
+                        <li><a href="#" class="button credits">Credits</a></li>
+                    </ul>
                 </div>
-            
+                <div id="selectPlayer">
+                    <h1>Select Player</h1>
+                    <div class="player-grid-container">
+                        <div class="grid-item"><a href="#" class="imageButton player1"><img src="assets/select-player1.gif" /><br />Hat Guy</a></div>
+                        <div class="grid-item"><a href="#" class="imageButton player2"><img src="assets/select-player2.gif" /><br />Aviator</a></div>
+                        <div class="grid-item"><a href="#" class="imageButton player3"><img src="assets/select-player3.gif" /><br />Roman</a></div>
+                        <div class="grid-item"><a href="#" class="imageButton player4"><img src="assets/select-player4.gif" /><br />Skeleton</a></div>
+                    </div>
+                    <a href="javascript:void(0)" class="button back">Back</a>
+                </div>
                 <div id="credits">
                     <h1>Credits</h1>
                     <ul>
@@ -62,6 +71,7 @@
                     <a href="javascript:void(0)" class="button back">Back</a>
                 </div>
             </div>
+            
             <canvas id="game-canvas" tabindex="0"></canvas>
         </div>
 

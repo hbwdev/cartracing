@@ -63,9 +63,10 @@ a {
 	top: 0; left: 0; bottom: 0; right: 0;
 }
 
-#main h1 {
+h1 {
 	color: white;
-	text-shadow: -1px -1px 0 darkred, 1px -1px 0 darkred, -1px 1px 0 darkred, 1px 1px 0 darkred;
+	text-shadow: black 1px 0 7px;
+	font-size: xx-large;
 }
 
 .button {
@@ -99,13 +100,17 @@ a {
 	top: 0; left: 0; bottom: 0; right: 0;
 }
 
-#credits h1 {
-	color: white;
-	text-shadow: -1px -1px 0 darkred, 1px -1px 0 darkred, -1px 1px 0 darkred, 1px 1px 0 darkred;
-}
-
 #credits li {
 	padding: 5px 0;
+}
+
+#selectPlayer {
+	height: 80%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
 }
 
 .artwork, .music, .developer {
@@ -137,6 +142,40 @@ a {
 	height: 25px;
 	cursor: pointer;
 	z-index: 3;
+}
+
+.player-grid-container {
+	display: grid;
+	grid-template-areas:
+	  'item item'
+	  'item item';
+	gap: 20px;
+	padding: 10px;
+	width: min-content;
+	margin: auto;
+  }
+  
+.player-grid-container > div {
+	text-align: center;
+	font-size: large;
+}
+
+.imageButton {
+	display: block;
+	margin: 0 auto;
+	color: white;
+	font-weight: bold;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	background-color: red;
+	background-image: -webkit-linear-gradient(bottom, red 0%, darkred 100%);
+	background-image:         linear-gradient(to bottom, red 0%, darkred 100%);
+	border-radius: 5px;
+}
+
+.imageButton:hover {
+	background-color: darkred;
+	background-image: -webkit-linear-gradient(bottom, darkred 0%, red 100%);
+	background-image:         linear-gradient(to bottom, darkred 0%, red 100%);
 }
 
 .sound-on {
