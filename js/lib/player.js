@@ -516,7 +516,7 @@ if (typeof navigator !== 'undefined') {
 			if (crashingFrame < 6) {
 				setTimeout(function () {
 					startCrashing();
-				}, 50);
+				}, 100);
 			} else {
 				crashingFrame = 0;
 				that.isCrashing = false;

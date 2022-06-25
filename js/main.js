@@ -24,7 +24,8 @@ var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
-	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png', 'assets/hatguy-sprites.png', 'assets/pilot-sprites.png',
+	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png',
+	'assets/hatguy-sprites.png', 'assets/pilot-sprites.png', 'assets/romansoldier-sprites.png', 'assets/skeleton-sprites.png',
 	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png', 'assets/ramp-sprite.png' ];
 
 var playSound;
@@ -196,71 +197,6 @@ function startNeverEndingGame (images) {
 		}
 	}
 
-	function randomlySpawnNPC(spawnFunction, dropRate) {
-		var rateModifier = Math.max(800 - mainCanvas.width, 0);
-		if (Number.random(1000 + rateModifier) <= dropRate) {
-			spawnFunction();
-		}
-	}
-
-	function spawnMonster () {
-		var newMonster = new Monster(sprites.monster);
-		var randomPosition = dContext.getRandomMapPositionAboveViewport();
-		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
-		newMonster.follow(player);
-		newMonster.setSpeed(player.getStandardSpeed());
-		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
-
-		game.addMovingObject(newMonster, 'monster');
-	}
-
-	function spawnBoarder () {
-		var newBoarder = new Snowboarder(sprites.snowboarder);
-		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
-		var randomPositionBelow = dContext.getRandomMapPositionBelowViewport();
-		newBoarder.setMapPosition(randomPositionAbove[0], randomPositionAbove[1]);
-		newBoarder.setMapPositionTarget(randomPositionBelow[0], randomPositionBelow[1]);
-		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.player);
-
-		game.addMovingObject(newBoarder);
-	}
-
-	player = new Player(sprites.player);
-	player.setMapPosition(0, 0);
-	player.setMapPositionTarget(0, -10);
-
-	player.setHitObstacleCb(function() {
-		if (gameInfo.god)
-			return;
-		livesLeft -= 1;
-	});
-
-	player.setCollectItemCb(function(item) {
-		switch (item.data.name)
-		{
-			case 'token':
-				gameInfo.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
-				break;
-			case 'milkshake':
-				if (livesLeft < totalLives) {
-					livesLeft += 1;
-				}
-				gameInfo.levelBoost += 1;
-
-				break;
-		}
-	});
-
-	game = new Game(mainCanvas, player);
-
-	startSign = new Sprite(sprites.signStart);
-	game.addStaticObject(startSign);
-	startSign.setMapPosition(-50, 0);
-	dContext.followSprite(player);
-	
-	updateHud();
-
-
 	function updateHud(message) {
 		if (!message)
 			message = '';
@@ -293,135 +229,206 @@ function startNeverEndingGame (images) {
 		playMusicTrack(Math.floor(gameInfo.distance / 1000 % 3) + 1);
 	}
 
-	game.beforeCycle(function () {
-		var newObjects = [];
-		if (player.isMoving) {
-			newObjects = Sprite.createObjects([
-				{ sprite: sprites.jump, dropRate: dropRates.jump },
-				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
-				{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
-				{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
-				{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
-				{ sprite: sprites.token, dropRate: dropRates.token },
-				{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
-			], {
-				rateModifier: Math.max(800 - mainCanvas.width, 0),
-				position: function () {
-					return dContext.getRandomMapPositionBelowViewport();
-				},
-				player: player
-			});
+	function randomlySpawnNPC(spawnFunction, dropRate) {
+		var rateModifier = Math.max(800 - mainCanvas.width, 0);
+		if (Number.random(1000 + rateModifier) <= dropRate) {
+			spawnFunction();
 		}
-		if (!game.isPaused()) {
-			game.addStaticObjects(newObjects);
+	}
 
-			// Disabled snowboarder spawn for cart conversion
-			//randomlySpawnNPC(spawnBoarder, 0.1);
+	function spawnMonster () {
+		var newMonster = new Monster(sprites.monster);
+		var randomPosition = dContext.getRandomMapPositionAboveViewport();
+		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
+		newMonster.follow(player);
+		newMonster.setSpeed(player.getStandardSpeed());
+		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
-			gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+		game.addMovingObject(newMonster, 'monster');
+	}
 
-			if (gameInfo.distance > monsterDistanceThreshold) {
-				randomlySpawnNPC(spawnMonster, 0.001);
-			}
+	function spawnBoarder () {
+		var newBoarder = new Snowboarder(sprites.snowboarder);
+		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
+		var randomPositionBelow = dContext.getRandomMapPositionBelowViewport();
+		newBoarder.setMapPosition(randomPositionAbove[0], randomPositionAbove[1]);
+		newBoarder.setMapPositionTarget(randomPositionBelow[0], randomPositionBelow[1]);
+		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.player);
 
-			if (gameInfo.distance)
-
-			updateHud();
-		}
-	});
-
-	game.afterCycle(function() {
-		if (livesLeft === 0) {
-			detectEnd();
-		}
-	});
-
-	game.addUIElement(gameHud);
-	
-	$(mainCanvas)
-		.mousemove(function (e) {
-			game.setMouseX(e.pageX);
-			game.setMouseY(e.pageY);
-			player.resetDirection();
-			player.startMovingIfPossible();
-		})
-		.bind('click', function (e) {
-			game.setMouseX(e.pageX);
-			game.setMouseY(e.pageY);
-			player.resetDirection();
-			player.startMovingIfPossible();
-		})
-		.focus(); // So we can listen to events immediately
-
-	Mousetrap.bind('f', player.speedBoost);
-	Mousetrap.bind('t', player.attemptTrick);
-	Mousetrap.bind(['w', 'up'], function () {
-		player.stop();
-	});
-	Mousetrap.bind(['a', 'left'], function () {
-		if (player.direction === 270) {
-			player.stepWest();
-		} else {
-			player.turnWest();
-		}
-	});
-	Mousetrap.bind(['s', 'down'], function () {
-		player.setDirection(180);
-		player.startMovingIfPossible();
-	});
-	Mousetrap.bind(['d', 'right'], function () {
-		if (player.direction === 90) {
-			player.stepEast();
-		} else {
-			player.turnEast();
-		}
-	});
-	Mousetrap.bind('m', spawnMonster);
-	//Mousetrap.bind('b', spawnBoarder);
-	Mousetrap.bind('space', resetGame);
-	Mousetrap.bind('g', toggleGodMode);
-	Mousetrap.bind('h', game.toggleHitBoxes);
-
-	var hammertime = new Hammer(mainCanvas);
-	hammertime.on('press', function (e) {
-		e.preventDefault();
-		game.setMouseX(e.center.x);
-		game.setMouseY(e.center.y);
-	});
-	hammertime.on('tap', function (e) {
-		game.setMouseX(e.center.x);
-		game.setMouseY(e.center.y);
-	});
-	hammertime.on('pan', function (e) {
-		game.setMouseX(e.center.x);
-		game.setMouseY(e.center.y);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	})
-	hammertime.on('doubletap', function (e) {
-		player.speedBoost();
-	});
-
-	player.isMoving = false;
-	player.setDirection(270);
+		game.addMovingObject(newBoarder);
+	}
 
 	$('.player1').click(function() {
+		sprites.player = sprites.player1;
 		startGame();
 	});
 	$('.player2').click(function() {
+		sprites.player = sprites.player2;
 		startGame();
 	});
 	$('.player3').click(function() {
+		sprites.player = sprites.player3;
 		startGame();
 	});
 	$('.player4').click(function() {
+		sprites.player = sprites.player4;
 		startGame();
 	});
 
 	function startGame(){
 		$('#menu').hide();
 		mainCanvas.style.display = '';
+		
+		player = new Player(sprites.player);
+		player.setMapPosition(0, 0);
+		player.setMapPositionTarget(0, -10);
+
+		player.setHitObstacleCb(function() {
+			if (gameInfo.god)
+				return;
+			livesLeft -= 1;
+		});
+
+		player.setCollectItemCb(function(item) {
+			switch (item.data.name)
+			{
+				case 'token':
+					gameInfo.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+					break;
+				case 'milkshake':
+					if (livesLeft < totalLives) {
+						livesLeft += 1;
+					}
+					gameInfo.levelBoost += 1;
+
+					break;
+			}
+		});
+
+		game = new Game(mainCanvas, player);
+
+		startSign = new Sprite(sprites.signStart);
+		game.addStaticObject(startSign);
+		startSign.setMapPosition(-50, 0);
+		dContext.followSprite(player);
+		
+		updateHud();
+
+		game.beforeCycle(function () {
+			var newObjects = [];
+			if (player.isMoving) {
+				newObjects = Sprite.createObjects([
+					{ sprite: sprites.jump, dropRate: dropRates.jump },
+					{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
+					{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
+					{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
+					{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
+					{ sprite: sprites.token, dropRate: dropRates.token },
+					{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
+				], {
+					rateModifier: Math.max(800 - mainCanvas.width, 0),
+					position: function () {
+						return dContext.getRandomMapPositionBelowViewport();
+					},
+					player: player
+				});
+			}
+			if (!game.isPaused()) {
+				game.addStaticObjects(newObjects);
+
+				// Disabled snowboarder spawn for cart conversion
+				//randomlySpawnNPC(spawnBoarder, 0.1);
+
+				gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+
+				if (gameInfo.distance > monsterDistanceThreshold) {
+					randomlySpawnNPC(spawnMonster, 0.001);
+				}
+
+				if (gameInfo.distance)
+
+				updateHud();
+			}
+		});
+
+		game.afterCycle(function() {
+			if (livesLeft === 0) {
+				detectEnd();
+			}
+		});
+
+		game.addUIElement(gameHud);
+		
+		$(mainCanvas)
+			.mousemove(function (e) {
+				game.setMouseX(e.pageX);
+				game.setMouseY(e.pageY);
+				player.resetDirection();
+				player.startMovingIfPossible();
+			})
+			.bind('click', function (e) {
+				game.setMouseX(e.pageX);
+				game.setMouseY(e.pageY);
+				player.resetDirection();
+				player.startMovingIfPossible();
+			})
+			.focus(); // So we can listen to events immediately
+
+		Mousetrap.bind('f', player.speedBoost);
+		Mousetrap.bind('t', player.attemptTrick);
+		Mousetrap.bind(['w', 'up'], function () {
+			player.stop();
+		});
+		Mousetrap.bind(['a', 'left'], function () {
+			if (player.direction === 270) {
+				player.stepWest();
+			} else {
+				player.turnWest();
+			}
+		});
+		Mousetrap.bind(['s', 'down'], function () {
+			player.setDirection(180);
+			player.startMovingIfPossible();
+		});
+		Mousetrap.bind(['d', 'right'], function () {
+			if (player.direction === 90) {
+				player.stepEast();
+			} else {
+				player.turnEast();
+			}
+		});
+		Mousetrap.bind('m', spawnMonster);
+		//Mousetrap.bind('b', spawnBoarder);
+		Mousetrap.bind('space', resetGame);
+		Mousetrap.bind('g', toggleGodMode);
+		Mousetrap.bind('h', game.toggleHitBoxes);
+
+		var hammertime = new Hammer(mainCanvas);
+		hammertime.on('press', function (e) {
+			e.preventDefault();
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+		});
+		hammertime.on('tap', function (e) {
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+		});
+		hammertime.on('pan', function (e) {
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+			player.resetDirection();
+			player.startMovingIfPossible();
+		})
+		hammertime.on('doubletap', function (e) {
+			player.speedBoost();
+		});
+
+		player.isMoving = false;
+		player.setDirection(270);
+		
+		
 		game.start();
+
 		currentTrack = sounds.track1;
 		currentTrack.play();
 	}
