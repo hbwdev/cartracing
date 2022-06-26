@@ -91,6 +91,20 @@ h1 {
 	background-image:         linear-gradient(to bottom, darkred 0%, red 100%);
 }
 
+#instructions {
+	height: 60%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#instructions li {
+	padding: 5px 0;
+	color: white;
+}
+
 #credits {
 	height: 60%;
 	display: none;

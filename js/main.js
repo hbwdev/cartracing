@@ -36,8 +36,6 @@ var currentTrack;
 var playingTrackNumber = 1;
 
 var global = this;
-var gameHudControls = 'Use the mouse or WASD to control the cart';
-if (isMobileDevice()) gameHudControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
 
 var pixelsPerMetre = 18;
@@ -431,6 +429,12 @@ $('.play').click(function() {
 	$('#menu').addClass('selectPlayer');
   });
 
+$('.instructions').click(function() {
+	$('#main').hide();
+	$('#instructions').show();
+	$('#menu').addClass('instructions');
+  });
+
 $('.credits').click(function() {
 	$('#main').hide();
 	$('#credits').show();
@@ -440,8 +444,11 @@ $('.credits').click(function() {
 $('.back').click(function() {
 	$('#credits').hide();
 	$('#selectPlayer').hide();
+	$('#instructions').hide();
 	$('#main').show();
 	$('#menu').removeClass('credits');
+	$('#menu').removeClass('selectPlayer');
+	$('#menu').removeClass('instructions');
   });
 
 // set the sound preference
