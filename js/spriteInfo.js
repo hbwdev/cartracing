@@ -144,9 +144,9 @@ const game = require("./lib/game");
 			hitBehaviour: {}
 		},
 		'oilSlick' : {
-			$imageFile : 'assets/skifree-objects.png',
+			$imageFile : 'assets/oilslick-sprite.png',
 			parts : {
-				main : [ 143, 53, 43, 10 ]
+				main : [ 0, 0, 39, 18 ]
 			},
 			hitBehaviour: {}
 		},
@@ -254,27 +254,10 @@ const game = require("./lib/game");
 	sprites.trafficConeSmall.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
-	function playerHitsOilSlickBehaviour(player, oilSlick) {
-		// Need to implement this properly
-		player.setSpeed(2);
-		setTimeout(function() {
-			player.resetSpeed();
-		}, 700);
-	}
-
 	function oilSlickHitsPlayerBehaviour(oilSlick, player) {
-		// Need to implement this properly
-		player.setSpeed(2);
-		setTimeout(function() {
-			player.resetSpeed();
-		}, 300);
+		player.hasHitOilSlick(oilSlick);
 	}
-
 	sprites.oilSlick.hitBehaviour.player = oilSlickHitsPlayerBehaviour;
-	sprites.player1.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
-	sprites.player2.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
-	sprites.player3.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
-	sprites.player4.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
 
 	function playerHitsCollectibleBehaviour(item, player) {
 		player.hasHitCollectible(item);
