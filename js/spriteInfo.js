@@ -146,7 +146,7 @@ const game = require("./lib/game");
 		'oilSlick' : {
 			$imageFile : 'assets/oilslick-sprite.png',
 			parts : {
-				main : [ 0, 0, 39, 18 ]
+				main : [ 0, 0, 40, 19 ]
 			},
 			hitBehaviour: {},
 			isDrawnUnderPlayer: true
