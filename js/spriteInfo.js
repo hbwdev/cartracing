@@ -148,7 +148,8 @@ const game = require("./lib/game");
 			parts : {
 				main : [ 0, 0, 39, 18 ]
 			},
-			hitBehaviour: {}
+			hitBehaviour: {},
+			isDrawnUnderPlayer: true
 		},
 		'monster' : {
 			$imageFile : 'assets/malord-sprites.png',
