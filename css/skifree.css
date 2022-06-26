@@ -1,69 +1,189 @@
-#skifree-canvas {
-	width:100%;
-	height:100%;
-	overflow:hidden;
+html, body {
+    height: 100%;
+}
+
+body {
+    overscroll-behavior: contain;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0
+}
+
+li {
+	padding: 10px 0;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.wrapper {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+}
+
+#game-canvas {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
     vertical-align: top;
 }
 
-#banner{
-	height: 149px;
-	width: 149px;
-	overflow:hidden;
-	padding: 0;
-	margin: 0;
+*, *:before, *:after {
+	box-sizing: border-box;
 }
 
-#banner a{
-	
-	display: block;
-	width: 190px;
-	font-size: 14px;
-	font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", 
-		"Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, 
-		Geneva, "Helvetica Neue", Helvetica, Arial, sans serif;
-	background-color: #333;
-	color: #FFF;
-	word-spacing: 2px;
-	text-decoration: none;
-	padding: 5px 15px 5px 25px;
-	
-	position:relative;
-	left: 20px;
-	top: -37px;
+#menu {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	z-index: 2;
 	text-align: center;
-	
-	-moz-transform-origin: 0 0 ;
-	-moz-transform:rotate(45deg);
-	-moz-box-shadow:    1px 1px 5px 1px #666;
-	
-	-webkit-transform-origin: 0 0 ;	
-	-webkit-transform:rotate(45deg);
-	-webkit-box-shadow: 1px 1px 5px 1px #666;
-	
-	-ms-transform-origin: 0 0 ;	
-	-ms-transform:rotate(45deg);
-	-ms-box-shadow: 1px 1px 5px 1px #666;
-	
-	transform-origin: 0 0 ;	
-	transform:rotate(45deg);
-	box-shadow: 1px 1px 5px 1px #666;
-	
-	background-image: linear-gradient(bottom, #000000 3%, #666666 5%, #000000 7%, #000000 93%, #666666 95%, #000000 97%);
-	background-image: -o-linear-gradient(bottom, #000000 3%, #666666 5%, #000000 7%, #000000 93%, #666666 95%, #000000 97%);
-	background-image: -moz-linear-gradient(bottom, #000000 3%, #666666 5%, #000000 7%, #000000 93%, #666666 95%, #000000 97%);
-	background-image: -webkit-linear-gradient(bottom, #000000 3%, #666666 5%, #000000 7%, #000000 93%, #666666 95%, #000000 97%);
-	background-image: -ms-linear-gradient(bottom, #000000 3%, #666666 5%, #000000 7%, #000000 93%, #666666 95%, #000000 97%);
-	
-	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.03, #000000),
-		color-stop(0.05, #666666),
-		color-stop(0.07, #000000),
-		color-stop(0.93, #000000),
-		color-stop(0.95, #666666),
-		color-stop(0.97, #000000)
-	);	
-	
+	background-color: grey;
+}
+
+#menu.main {
+	background-image: url('../assets/background.png');
+	background-repeat: repeat;
+}
+
+#main {
+	display: none;
+	height: 60%;
+	overflow: auto;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+h1 {
+	color: white;
+	text-shadow: black 1px 0 7px;
+	font-size: xx-large;
+}
+
+.button {
+	display: block;
+	width: 150px;
+	margin: 0 auto;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid red;
+	color: white;
+	font-weight: bold;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	background-color: red;
+	background-image: -webkit-linear-gradient(bottom, red 0%, darkred 100%);
+	background-image:         linear-gradient(to bottom, red 0%, darkred 100%);
+	border-radius: 5px;
+}
+
+.button:hover {
+	background-color: darkred;
+	background-image: -webkit-linear-gradient(bottom, darkred 0%, red 100%);
+	background-image:         linear-gradient(to bottom, darkred 0%, red 100%);
+}
+
+#credits {
+	height: 60%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#credits li {
+	padding: 5px 0;
+}
+
+#selectPlayer {
+	height: 80%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.artwork, .music, .developer {
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.artwork {
+	color: white;
+}
+
+.music {
+	color: white;
+}
+
+.developer {
+	color: white;
+}
+
+.back, .back:hover {
+	margin-top: 10px;
+}
+
+.sound {
+	display: none;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 30px;
+	height: 25px;
+	cursor: pointer;
+	z-index: 3;
+}
+
+.player-grid-container {
+	display: grid;
+	grid-template-areas:
+	  'item item'
+	  'item item';
+	gap: 20px;
+	padding: 10px;
+	width: min-content;
+	margin: auto;
+  }
+  
+.player-grid-container > div {
+	text-align: center;
+	font-size: large;
+}
+
+.imageButton {
+	display: block;
+	margin: 0 auto;
+	color: white;
+	font-weight: bold;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	background-color: red;
+	background-image: -webkit-linear-gradient(bottom, red 0%, darkred 100%);
+	background-image:         linear-gradient(to bottom, red 0%, darkred 100%);
+	border-radius: 5px;
+}
+
+.imageButton:hover {
+	background-color: darkred;
+	background-image: -webkit-linear-gradient(bottom, darkred 0%, red 100%);
+	background-image:         linear-gradient(to bottom, darkred 0%, red 100%);
+}
+
+.sound-on {
+	background-image: url('../assets/menus/soundOn.png');
+	background-repeat: no-repeat;
+}
+
+.sound-off {
+	background-image: url('../assets/menus/soundOff.png');
+	background-repeat: no-repeat;
 }

@@ -5,6 +5,8 @@
 		var zIndexesOccupied = [ 0 ];
 		var that = this;
 		var trackedSpriteToMoveToward;
+		var showHitBoxes = false;
+
 		that.direction = undefined;
 		that.mapPosition = [0, 0, 0];
 		that.id = GUID();
@@ -22,9 +24,13 @@
 			return Object.values(that.data.parts).map(function (p) { return p[3]; }).max();
 		}());
 		that.isMoving = true;
-
+		that.isDrawnUnderPlayer = data.isDrawnUnderPlayer;
+		
 		if (!that.data.parts) {
 			that.data.parts = {};
+			that.currentFrame = undefined;
+		} else {
+			that.currentFrame = that.data.parts[0];
 		}
 
 		if (data && data.id){
@@ -61,8 +67,8 @@
 				return;
 			}
 
-			var currentX = that.mapPosition[0];
-			var currentY = that.mapPosition[1];
+			let currentX = that.mapPosition[0];
+			let currentY = that.mapPosition[1];
 
 			if (typeof that.direction !== 'undefined') {
 				// For this we need to modify the that.direction so it relates to the horizontal
@@ -91,16 +97,49 @@
 			that.setMapPosition(currentX, currentY);
 		}
 
+		this.setHitBoxesVisible = function(show) {
+			showHitBoxes = show;
+		}
+
 		this.draw = function (dCtx, spriteFrame) {
-			var fr = that.data.parts[spriteFrame];
+			that.currentFrame = that.data.parts[spriteFrame];
+			let fr = that.currentFrame;// that.data.parts[spriteFrame];
 			that.height = fr[3];
 			that.width = fr[2];
 
-			var newCanvasPosition = dCtx.mapPositionToCanvasPosition(that.mapPosition);
+			const newCanvasPosition = dCtx.mapPositionToCanvasPosition(that.mapPosition);
 			that.setCanvasPosition(newCanvasPosition[0], newCanvasPosition[1]);
 
-			dCtx.drawImage(dCtx.getLoadedImage(that.data.$imageFile), fr[0], fr[1], fr[2], fr[3], that.canvasX, that.canvasY, fr[2], fr[3]);
+			// Sprite offset for keeping sprite frame centered (for sprite frames of various sizes)
+			const offsetX = fr.length > 4 ? fr[4] : 0;
+			const offsetY = fr.length > 5 ? fr[5] : 0;
+
+			dCtx.drawImage(dCtx.getLoadedImage(that.data.$imageFile), fr[0], fr[1], fr[2], fr[3], that.canvasX + offsetX, that.canvasY + offsetY, fr[2], fr[3]);
+		
+			drawHitbox(dCtx, fr);
 		};
+
+
+		function drawHitbox(dCtx, spritePart) {
+			if (!showHitBoxes)
+				return;
+		
+			const hitboxOffsetX = spritePart.length > 6 ? spritePart[6] : 0;
+			const hitboxOffsetY = spritePart.length > 7 ? spritePart[7] : 0;
+
+			// Draw hitboxes
+			for (const box in that.data.hitBoxes) {
+				if (Object.hasOwnProperty.call(that.data.hitBoxes, box)) {
+					const hitBox = that.data.hitBoxes[box];
+					const left = hitBox[0] + hitboxOffsetX;
+					const top = hitBox[1] + hitboxOffsetY;
+					const right = hitBox[2] + hitboxOffsetX;
+					const bottom = hitBox[3] + hitboxOffsetY;
+					dCtx.strokeStyle = 'yellow';
+					dCtx.strokeRect(that.canvasX + left, that.canvasY + top, right - left, bottom - top);
+				}
+			}
+		}
 
 		this.setMapPosition = function (x, y, z) {
 			if (typeof x === 'undefined') {
@@ -139,18 +178,20 @@
 
 		this.getLeftHitBoxEdge = function (zIndex) {
 			zIndex = zIndex || 0;
-			var lhbe = this.getCanvasPositionX();
-			if (getHitBox(zIndex)) {
-				lhbe += getHitBox(zIndex)[0];
+			let lhbe = this.getCanvasPositionX();
+			const hitbox = getHitBox(zIndex);
+			if (hitbox) {
+				lhbe += hitbox[0];
 			}
 			return lhbe;
 		};
 
 		this.getTopHitBoxEdge = function (zIndex) {
 			zIndex = zIndex || 0;
-			var thbe = this.getCanvasPositionY();
-			if (getHitBox(zIndex)) {
-				thbe += getHitBox(zIndex)[1];
+			let thbe = this.getCanvasPositionY();
+			const hitbox = getHitBox(zIndex);
+			if (hitbox) {
+				thbe += hitbox[1];
 			}
 			return thbe;
 		};
@@ -158,8 +199,9 @@
 		this.getRightHitBoxEdge = function (zIndex) {
 			zIndex = zIndex || 0;
 
-			if (getHitBox(zIndex)) {
-				return that.canvasX + getHitBox(zIndex)[2];
+			const hitbox = getHitBox(zIndex);
+			if (hitbox) {
+				return that.canvasX + hitbox[2];
 			}
 
 			return that.canvasX + that.width;
@@ -168,8 +210,9 @@
 		this.getBottomHitBoxEdge = function (zIndex) {
 			zIndex = zIndex || 0;
 
-			if (getHitBox(zIndex)) {
-				return that.canvasY + getHitBox(zIndex)[3];
+			const hitbox = getHitBox(zIndex);
+			if (hitbox) {
+				return that.canvasY + hitbox[3];
 			}
 
 			return that.canvasY + that.height;
@@ -320,7 +363,34 @@
 		};
 
 		this.hits = function (other) {
-			var verticalIntersect = false;
+			
+			const rect1x = other.getLeftHitBoxEdge(that.mapPosition[2]);
+			const rect1w = other.getRightHitBoxEdge(that.mapPosition[2]) - rect1x;
+
+			const rect1y = other.getTopHitBoxEdge(that.mapPosition[2]);
+			const rect1h = other.getBottomHitBoxEdge(that.mapPosition[2]) - rect1y;
+
+			// Get hitbox offset when specified
+			const isarray = Array.isArray(that.currentFrame);
+			const hitboxOffsetX =  isarray && that.currentFrame.length > 6 ? that.currentFrame[6] : 0;
+			const hitboxOffsetY = isarray && that.currentFrame.length > 7 ? that.currentFrame[7] : 0;
+
+			const rect2x = that.getLeftHitBoxEdge(that.mapPosition[2]) + hitboxOffsetX;
+			const rect2w = that.getRightHitBoxEdge(that.mapPosition[2]) - rect2x + hitboxOffsetX;
+			const rect2y = that.getTopHitBoxEdge(that.mapPosition[2]) + hitboxOffsetY;
+			const rect2h = that.getBottomHitBoxEdge(that.mapPosition[2]) - rect2y + hitboxOffsetY;
+
+			if (rect1x < rect2x + rect2w &&
+				rect1x + rect1w > rect2x &&
+				rect1y < rect2y + rect2h &&
+				rect1h + rect1y > rect2y) {
+				return true;
+			}
+			
+			return false;
+
+			// Original collision detection:
+			/* var verticalIntersect = false;
 			var horizontalIntersect = false;
 
 			// Test that THIS has a bottom edge inside of the other object
@@ -343,7 +413,7 @@
 				horizontalIntersect = true;
 			}
 
-			return verticalIntersect && horizontalIntersect;
+			return verticalIntersect && horizontalIntersect; */
 		};
 
 		this.isAboveOnCanvas = function (cy) {
@@ -365,10 +435,17 @@
 			position: [0, 0]
 		}, false, false);
 
+		var AnimatedSprite = require('./animatedSprite');
 		function createOne (spriteInfo) {
 			var position = opts.position;
 			if (Number.random(100 + opts.rateModifier) <= spriteInfo.dropRate) {
-				var sprite = new Sprite(spriteInfo.sprite);
+				var sprite;
+				if (spriteInfo.sprite.animated) {
+					sprite = new AnimatedSprite(spriteInfo.sprite);
+				} else {
+					sprite = new Sprite(spriteInfo.sprite);
+				}	
+
 				sprite.setSpeed(0);
 
 				if (Object.isFunction(position)) {
@@ -377,8 +454,8 @@
 
 				sprite.setMapPosition(position[0], position[1]);
 
-				if (spriteInfo.sprite.hitBehaviour && spriteInfo.sprite.hitBehaviour.skier && opts.player) {
-					sprite.onHitting(opts.player, spriteInfo.sprite.hitBehaviour.skier);
+				if (spriteInfo.sprite.hitBehaviour && spriteInfo.sprite.hitBehaviour.player && opts.player) {
+					sprite.onHitting(opts.player, spriteInfo.sprite.hitBehaviour.player);
 				}
 
 				return sprite;

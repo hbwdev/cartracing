@@ -1,5 +1,6 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
+const sprite = require('./sprite');
 
 (function (global) {
 	function Game (mainCanvas, player) {
@@ -7,6 +8,14 @@ var EventedLoop = require('eventedloop');
 		var movingObjects = new SpriteArray();
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
+		var showHitBoxes = false;
+		
+		// Scrolling background
+		var backgroundImage = new Image();
+		backgroundImage.src = 'assets/background.png';
+		var backgroundX = 0;
+		var backgroundY = 0;
+
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
 		var paused = false;
@@ -15,7 +24,15 @@ var EventedLoop = require('eventedloop');
 		var afterCycleCallbacks = [];
 		var gameLoop = new EventedLoop();
 
+		this.toggleHitBoxes = function() {
+			showHitBoxes = !showHitBoxes;
+			staticObjects.each(function (sprite) {
+				sprite.setHitBoxesVisible(showHitBoxes);
+			});
+		};
+
 		this.addStaticObject = function (sprite) {
+			sprite.setHitBoxesVisible(showHitBoxes);
 			staticObjects.push(sprite);
 		};
 
@@ -32,6 +49,7 @@ var EventedLoop = require('eventedloop');
 				}, true);
 			}
 
+			movingObject.setHitBoxesVisible(showHitBoxes);
 			movingObjects.push(movingObject);
 		};
 
@@ -62,6 +80,7 @@ var EventedLoop = require('eventedloop');
 		var intervalNum = 0;
 
 		this.cycle = function () {
+
 			beforeCycleCallbacks.each(function(c) {
 				c();
 			});
@@ -99,10 +118,37 @@ var EventedLoop = require('eventedloop');
 			});
 		};
 
+		function drawBackground() {
+			// Stretch background image to canvas size
+			backgroundImage.width = mainCanvas.width;
+			backgroundImage.height = mainCanvas.height;
+			
+			backgroundX = player.mapPosition[0] % backgroundImage.width * -1;
+			backgroundY = player.mapPosition[1] % backgroundImage.height * -1;
+
+			// Redraw background
+			dContext.drawImage(backgroundImage, backgroundX, backgroundY, mainCanvas.width, backgroundImage.height);
+			dContext.drawImage(backgroundImage, backgroundX + mainCanvas.width, backgroundY, mainCanvas.width, backgroundImage.height);
+			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY, mainCanvas.width, backgroundImage.height);
+			dContext.drawImage(backgroundImage, backgroundX, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
+			dContext.drawImage(backgroundImage, backgroundX + mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
+			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
+		}
+
 		that.draw = function () {
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
+			
+			// Update scrolling background
+			drawBackground();
 
+			staticObjects.each(function (staticObject, i) {
+				if (staticObject.isDrawnUnderPlayer && staticObject.draw) {
+						staticObject.draw(dContext, 'main');
+				}
+			});
+
+			player.setHitBoxesVisible(showHitBoxes);
 			player.draw(dContext);
 
 			player.cycle();
@@ -112,11 +158,11 @@ var EventedLoop = require('eventedloop');
 			});
 			
 			staticObjects.each(function (staticObject, i) {
-				if (staticObject.draw) {
+				if (!staticObject.isDrawnUnderPlayer && staticObject.draw) {
 					staticObject.draw(dContext, 'main');
 				}
 			});
-
+			
 			uiElements.each(function (uiElement, i) {
 				if (uiElement.draw) {
 					uiElement.draw(dContext, 'main');

@@ -16,6 +16,7 @@ test:
 
 compile:
 	browserify js/main.js -d -o dist/skifree.js
-	uglifyjs dist/skifree.js -d -c > dist/skifree.min.js
+	uglifyjs dist/skifree.js --source-map --compress --output dist/skifree.min.js
+
 serve:
 	ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 3000, :DocumentRoot => Dir.pwd).start'

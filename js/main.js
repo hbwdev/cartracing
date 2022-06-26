@@ -4,7 +4,6 @@ require('./lib/extenders');
 require('./lib/plugins');
 
 // External dependencies
-var Hammer = require('hammerjs');
 var Mousetrap = require('br-mousetrap');
 
 // Method modules
@@ -13,28 +12,64 @@ var isMobileDevice = require('./lib/isMobileDevice');
 // Game Objects
 var SpriteArray = require('./lib/spriteArray');
 var Monster = require('./lib/monster');
+var AnimatedSprite = require('./lib/animatedSprite');
 var Sprite = require('./lib/sprite');
 var Snowboarder = require('./lib/snowboarder');
-var Skier = require('./lib/skier');
-var InfoBox = require('./lib/infoBox');
+var Player = require('./lib/player');
+var GameHud = require('./lib/gameHud');
 var Game = require('./lib/game');
 
 // Local variables for starting the game
-var mainCanvas = document.getElementById('skifree-canvas');
+var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
-var imageSources = [ 'sprite-characters.png', 'skifree-objects.png' ];
+
+var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
+	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png',
+	'assets/hatguy-sprites.png', 'assets/pilot-sprites.png', 'assets/romansoldier-sprites.png', 'assets/skeleton-sprites.png',
+	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png', 'assets/ramp-sprite.png' ];
+
+var playSound;
+var sounds = { 'track1': 'assets/music/track1.ogg',
+			   'track2': 'assets/music/track2.ogg',
+			   'track3': 'assets/music/track3.ogg',
+			   'gameOver': 'assets/music/gameover.ogg' };
+var currentTrack;
+var playingTrackNumber = 1;
+
 var global = this;
-var infoBoxControls = 'Use the mouse or WASD to control the player';
-if (isMobileDevice()) infoBoxControls = 'Tap or drag on the piste to control the player';
+var gameHudControls = 'Use the mouse or WASD to control the cart';
+if (isMobileDevice()) gameHudControls = 'Tap or drag on the road to control the cart';
 var sprites = require('./spriteInfo');
 
 var pixelsPerMetre = 18;
-var distanceTravelledInMetres = 0;
 var monsterDistanceThreshold = 2000;
-var livesLeft = 5;
+const totalLives = 5;
+var livesLeft = totalLives;
 var highScore = 0;
-var loseLifeOnObstacleHit = false;
-var dropRates = {smallTree: 4, tallTree: 2, jump: 1, thickSnow: 1, rock: 1};
+
+const gameInfo = {
+	distance: 0,
+	money: 0,
+	tokens: 0,
+	points: 0,
+	cans: 0,
+	levelBoost: 0,
+	awake: 100,
+
+	god: false,
+
+	reset() {
+		distance = 0;
+		money = 0;
+		tokens = 0;
+		points = 0;
+		cans = 0;
+		awake = 0;
+	}
+};
+
+var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, thickSnow: 1, 
+				  token: 3, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -56,43 +91,142 @@ function loadImages (sources, next) {
 	});
 }
 
-function monsterHitsSkierBehaviour(monster, skier) {
-	skier.isEatenBy(monster, function () {
-		livesLeft -= 1;
+function _checkAudioState(sound) {
+	/* if (sounds[sound].status === 'loading' && sounds[sound].readyState === 4) {
+		assetLoaded.call(this, 'sounds', sound);
+	} */
+}
+
+function loadSounds () {
+	for (var sound in sounds) {
+		if (sounds.hasOwnProperty(sound)) {
+			src = sounds[sound];
+			// create a closure for event binding
+			(function(sound) {
+				sounds[sound] = new Audio();
+				sounds[sound].status = 'loading';
+				sounds[sound].name = sound;
+				sounds[sound].addEventListener('canplay', function() {
+					_checkAudioState.call(sound);
+				});
+				sounds[sound].src = src;
+				sounds[sound].preload = 'auto';
+				sounds[sound].load();
+			})(sound);
+		}
+	}
+}
+
+function monsterHitsPlayerBehaviour(monster, player) {
+	player.isEatenBy(monster, function () {
 		monster.isFull = true;
 		monster.isEating = false;
-		skier.isBeingEaten = false;
-		monster.setSpeed(skier.getSpeed());
+		player.isBeingEaten = false;
+		monster.setSpeed(player.getSpeed());
 		monster.stopFollowing();
 		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
 		monster.setMapPositionTarget(randomPositionAbove[0], randomPositionAbove[1]);
 	});
 }
 
+function playMusicTrack(nextTrack) {
+	if (nextTrack === playingTrackNumber) return;
+
+	currentTrack.muted = true;
+	playingTrackNumber = nextTrack;
+	if (nextTrack > sounds.length - 1)
+		playingTrackNumber = 1;
+	currentTrack = sounds["track" + nextTrack];
+	currentTrack.currentTime = 0;
+	currentTrack.loop = true;
+
+	if (playSound) {
+		currentTrack.play();
+		currentTrack.muted = false;
+	}
+}
+
 function startNeverEndingGame (images) {
 	var player;
 	var startSign;
-	var infoBox;
+	var gameHud;
 	var game;
 
+	function showMainMenu(images) {
+		for (var sound in sounds) {
+			if (sounds.hasOwnProperty(sound)) {
+				sounds[sound].muted = true;
+				currentTrack.muted = !playSound;
+			}
+		}
+		mainCanvas.style.display = 'none';
+		$('#main').show();
+		$('#menu').addClass('main');
+		$('.sound').show();
+	}
+
+	function toggleGodMode() {
+		gameInfo.god = !gameInfo.god;
+	}
+
 	function resetGame () {
-		distanceTravelledInMetres = 0;
 		livesLeft = 5;
 		highScore = localStorage.getItem('highScore');
 		game.reset();
 		game.addStaticObject(startSign);
+		gameInfo.reset();
+		playMusicTrack(1);
 	}
 
 	function detectEnd () {
 		if (!game.isPaused()) {
-			highScore = localStorage.setItem('highScore', distanceTravelledInMetres);
-			infoBox.setLines([
-				'Game over!',
-				'Hit space to restart'
-			]);
+			highScore = localStorage.setItem('highScore', gameInfo.distance);
+			updateHud('Game over! Hit space to restart.');
 			game.pause();
 			game.cycle();
+
+			playingTrackNumber = 0;
+			currentTrack.muted = true;
+			currentTrack = sounds.gameOver;
+			currentTrack.currentTime = 0;
+			currentTrack.loop = true;
+			if (playSound) {
+				currentTrack.play();
+				currentTrack.muted = false;
+			}
 		}
+	}
+
+	function updateHud(message) {
+		if (!message)
+			message = '';
+
+		if (!gameHud) {
+			gameHud = new GameHud({
+				initialLines : [
+					'Cash $0'.padEnd(22) + 'Level 1',
+					'Points 0'.padEnd(22) + 'Life 0%',
+					'Tokens 0'.padEnd(22) + 'Awake 100/100',
+					'Distance 0m'.padEnd(22) + 'Speed 0',
+					gameInfo.god ? 'God Mode' : ''
+				],
+				position: {
+					top: 15,
+					left: 115
+				}
+			});
+		}
+
+		const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
+		gameHud.setLines([
+			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
+			('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
+			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + gameInfo.awake + '/100',
+			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
+			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
+		]);
+
+		playMusicTrack(Math.floor(gameInfo.distance / 1000 % 3) + 1);
 	}
 
 	function randomlySpawnNPC(spawnFunction, dropRate) {
@@ -108,7 +242,7 @@ function startNeverEndingGame (images) {
 		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
 		newMonster.follow(player);
 		newMonster.setSpeed(player.getStandardSpeed());
-		newMonster.onHitting(player, monsterHitsSkierBehaviour);
+		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
 		game.addMovingObject(newMonster, 'monster');
 	}
@@ -119,153 +253,187 @@ function startNeverEndingGame (images) {
 		var randomPositionBelow = dContext.getRandomMapPositionBelowViewport();
 		newBoarder.setMapPosition(randomPositionAbove[0], randomPositionAbove[1]);
 		newBoarder.setMapPositionTarget(randomPositionBelow[0], randomPositionBelow[1]);
-		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.skier);
+		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.player);
 
 		game.addMovingObject(newBoarder);
 	}
 
-	player = new Skier(sprites.skier);
-	player.setMapPosition(0, 0);
-	player.setMapPositionTarget(0, -10);
-	if ( loseLifeOnObstacleHit ) {
+	$('.player1').click(function() {
+		sprites.player = sprites.player1;
+		startGame();
+	});
+	$('.player2').click(function() {
+		sprites.player = sprites.player2;
+		startGame();
+	});
+	$('.player3').click(function() {
+		sprites.player = sprites.player3;
+		startGame();
+	});
+	$('.player4').click(function() {
+		sprites.player = sprites.player4;
+		startGame();
+	});
+
+	function startGame(){
+		$('#menu').hide();
+		mainCanvas.style.display = '';
+		
+		player = new Player(sprites.player);
+		player.setMapPosition(0, 0);
+		player.setMapPositionTarget(0, -10);
+
 		player.setHitObstacleCb(function() {
+			if (gameInfo.god)
+				return;
 			livesLeft -= 1;
 		});
+
+		player.setCollectItemCb(function(item) {
+			switch (item.data.name)
+			{
+				case 'token':
+					gameInfo.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
+					break;
+				case 'milkshake':
+					if (livesLeft < totalLives) {
+						livesLeft += 1;
+					}
+					gameInfo.levelBoost += 1;
+
+					break;
+			}
+		});
+
+		game = new Game(mainCanvas, player);
+
+		startSign = new Sprite(sprites.signStart);
+		game.addStaticObject(startSign);
+		startSign.setMapPosition(-50, 0);
+		dContext.followSprite(player);
+		
+		updateHud();
+
+		game.beforeCycle(function () {
+			var newObjects = [];
+			if (player.isMoving) {
+				newObjects = Sprite.createObjects([
+					{ sprite: sprites.jump, dropRate: dropRates.jump },
+					{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
+					{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
+					{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
+					{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
+					{ sprite: sprites.token, dropRate: dropRates.token },
+					{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
+				], {
+					rateModifier: Math.max(800 - mainCanvas.width, 0),
+					position: function () {
+						return dContext.getRandomMapPositionBelowViewport();
+					},
+					player: player
+				});
+			}
+			if (!game.isPaused()) {
+				game.addStaticObjects(newObjects);
+
+				// Disabled snowboarder spawn for cart conversion
+				//randomlySpawnNPC(spawnBoarder, 0.1);
+
+				gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+
+				if (gameInfo.distance > monsterDistanceThreshold) {
+					randomlySpawnNPC(spawnMonster, 0.001);
+				}
+
+				if (gameInfo.distance)
+
+				updateHud();
+			}
+		});
+
+		game.afterCycle(function() {
+			if (livesLeft === 0) {
+				detectEnd();
+			}
+		});
+
+		game.addUIElement(gameHud);
+		
+		$(mainCanvas)
+			.mousemove(function (e) {
+				game.setMouseX(e.pageX);
+				game.setMouseY(e.pageY);
+				player.resetDirection();
+				player.startMovingIfPossible();
+			})
+			.bind('click', function (e) {
+				game.setMouseX(e.pageX);
+				game.setMouseY(e.pageY);
+				player.resetDirection();
+				player.startMovingIfPossible();
+			})
+			.focus(); // So we can listen to events immediately
+
+		Mousetrap.bind('f', player.speedBoost);
+		Mousetrap.bind('t', player.attemptTrick);
+		Mousetrap.bind(['w', 'up'], function () {
+			player.stop();
+		});
+		Mousetrap.bind(['a', 'left'], function () {
+			if (player.direction === 270) {
+				player.stepWest();
+			} else {
+				player.turnWest();
+			}
+		});
+		Mousetrap.bind(['s', 'down'], function () {
+			player.setDirection(180);
+			player.startMovingIfPossible();
+		});
+		Mousetrap.bind(['d', 'right'], function () {
+			if (player.direction === 90) {
+				player.stepEast();
+			} else {
+				player.turnEast();
+			}
+		});
+		Mousetrap.bind('m', spawnMonster);
+		//Mousetrap.bind('b', spawnBoarder);
+		Mousetrap.bind('space', resetGame);
+		Mousetrap.bind('g', toggleGodMode);
+		Mousetrap.bind('h', game.toggleHitBoxes);
+
+		var hammertime = new Hammer(mainCanvas);
+		hammertime.on('press', function (e) {
+			e.preventDefault();
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+		});
+		hammertime.on('tap', function (e) {
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+		});
+		hammertime.on('pan', function (e) {
+			game.setMouseX(e.center.x);
+			game.setMouseY(e.center.y);
+			player.resetDirection();
+			player.startMovingIfPossible();
+		})
+		hammertime.on('doubletap', function (e) {
+			player.speedBoost();
+		});
+
+		player.isMoving = false;
+		player.setDirection(270);
+		
+		
+		game.start();
+
+		currentTrack = sounds.track1;
+		currentTrack.play();
 	}
 
-	game = new Game(mainCanvas, player);
-
-	startSign = new Sprite(sprites.signStart);
-	game.addStaticObject(startSign);
-	startSign.setMapPosition(-50, 0);
-	dContext.followSprite(player);
-
-	infoBox = new InfoBox({
-		initialLines : [
-			'SkiFree.js',
-			infoBoxControls,
-			'Travelled 0m',
-			'High Score: ' + highScore,
-			'Skiers left: ' + livesLeft,
-			'Created by Dan Hough (@basicallydan)'
-		],
-		position: {
-			top: 15,
-			right: 10
-		}
-	});
-
-	game.beforeCycle(function () {
-		var newObjects = [];
-		if (player.isMoving) {
-			newObjects = Sprite.createObjects([
-				{ sprite: sprites.smallTree, dropRate: dropRates.smallTree },
-				{ sprite: sprites.tallTree, dropRate: dropRates.tallTree },
-				{ sprite: sprites.jump, dropRate: dropRates.jump },
-				{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
-				{ sprite: sprites.rock, dropRate: dropRates.rock },
-			], {
-				rateModifier: Math.max(800 - mainCanvas.width, 0),
-				position: function () {
-					return dContext.getRandomMapPositionBelowViewport();
-				},
-				player: player
-			});
-		}
-		if (!game.isPaused()) {
-			game.addStaticObjects(newObjects);
-
-			randomlySpawnNPC(spawnBoarder, 0.1);
-			distanceTravelledInMetres = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
-
-			if (distanceTravelledInMetres > monsterDistanceThreshold) {
-				randomlySpawnNPC(spawnMonster, 0.001);
-			}
-
-			infoBox.setLines([
-				'SkiFree.js',
-				infoBoxControls,
-				'Travelled ' + distanceTravelledInMetres + 'm',
-				'Skiers left: ' + livesLeft,
-				'High Score: ' + highScore,
-				'Created by Dan Hough (@basicallydan)',
-				'Current Speed: ' + player.getSpeed()/*,
-				'Skier Map Position: ' + player.mapPosition[0].toFixed(1) + ', ' + player.mapPosition[1].toFixed(1),
-				'Mouse Map Position: ' + mouseMapPosition[0].toFixed(1) + ', ' + mouseMapPosition[1].toFixed(1)*/
-			]);
-		}
-	});
-
-	game.afterCycle(function() {
-		if (livesLeft === 0) {
-			detectEnd();
-		}
-	});
-
-	game.addUIElement(infoBox);
-	
-	$(mainCanvas)
-	.mousemove(function (e) {
-		game.setMouseX(e.pageX);
-		game.setMouseY(e.pageY);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	})
-	.bind('click', function (e) {
-		game.setMouseX(e.pageX);
-		game.setMouseY(e.pageY);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	})
-	.focus(); // So we can listen to events immediately
-
-	Mousetrap.bind('f', player.speedBoost);
-	Mousetrap.bind('t', player.attemptTrick);
-	Mousetrap.bind(['w', 'up'], function () {
-		player.stop();
-	});
-	Mousetrap.bind(['a', 'left'], function () {
-		if (player.direction === 270) {
-			player.stepWest();
-		} else {
-			player.turnWest();
-		}
-	});
-	Mousetrap.bind(['s', 'down'], function () {
-		player.setDirection(180);
-		player.startMovingIfPossible();
-	});
-	Mousetrap.bind(['d', 'right'], function () {
-		if (player.direction === 90) {
-			player.stepEast();
-		} else {
-			player.turnEast();
-		}
-	});
-	Mousetrap.bind('m', spawnMonster);
-	Mousetrap.bind('b', spawnBoarder);
-	Mousetrap.bind('space', resetGame);
-
-	var hammertime = Hammer(mainCanvas).on('press', function (e) {
-		e.preventDefault();
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
-	}).on('tap', function (e) {
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
-	}).on('pan', function (e) {
-		game.setMouseX(e.gesture.center.x);
-		game.setMouseY(e.gesture.center.y);
-		player.resetDirection();
-		player.startMovingIfPossible();
-	}).on('doubletap', function (e) {
-		player.speedBoost();
-	});
-
-	player.isMoving = false;
-	player.setDirection(270);
-
-	game.start();
+	showMainMenu();
 }
 
 function resizeCanvas() {
@@ -273,9 +441,71 @@ function resizeCanvas() {
 	mainCanvas.height = window.innerHeight;
 }
 
+$('.play').click(function() {
+	$('#main').hide();
+	$('#selectPlayer').show();
+	$('#menu').addClass('selectPlayer');
+  });
+
+$('.credits').click(function() {
+	$('#main').hide();
+	$('#credits').show();
+	$('#menu').addClass('credits');
+  });
+
+$('.back').click(function() {
+	$('#credits').hide();
+	$('#selectPlayer').hide();
+	$('#main').show();
+	$('#menu').removeClass('credits');
+  });
+
+// set the sound preference
+var canUseLocalStorage = 'localStorage' in window && window.localStorage !== null;
+if (canUseLocalStorage) {
+	playSound = (localStorage.getItem('hbwCartRacing.playSound') === "true")
+	if (playSound) {
+		$('.sound').addClass('sound-on').removeClass('sound-off');
+	}
+	else {
+		$('.sound').addClass('sound-off').removeClass('sound-on');
+	}
+}
+
+$('.sound').click(function() {
+	var $this = $(this);
+	// sound off
+	if ($this.hasClass('sound-on')) {
+	  $this.removeClass('sound-on').addClass('sound-off');
+	  playSound = false;
+	}
+	// sound on
+	else {
+	  $this.removeClass('sound-off').addClass('sound-on');
+	  playSound = true;
+	}
+	if (canUseLocalStorage) {
+	  localStorage.setItem('hbwCartRacing.playSound', playSound);
+	}
+	// mute or unmute all sounds
+	for (var sound in sounds) {
+		if (sounds.hasOwnProperty(sound)) {
+			sounds[sound].muted = true;
+			currentTrack.muted = !playSound;
+		}
+	}
+	if (playSound) currentTrack.play();
+});
+
 window.addEventListener('resize', resizeCanvas, false);
 
 resizeCanvas();
+
+loadSounds();
+
+currentTrack = sounds.track1;
+currentTrack.currentTime = 0;
+currentTrack.loop = true;
 
 loadImages(imageSources, startNeverEndingGame);
 
