@@ -59,6 +59,7 @@ if (typeof navigator !== 'undefined') {
 		that.isPerformingTrick = false;
 		that.isCrashing = false;
 		that.isBoosting = false;
+		that.isSlowed = false;
 		that.onHitObstacleCb = function() {};
 		that.onCollectItemCb = function() {};
 		that.setSpeed(standardSpeed);
@@ -80,6 +81,8 @@ if (typeof navigator !== 'undefined') {
 			that.isJumping = false;
 			that.isPerformingTrick = false;
 			that.isCrashing = false;
+			that.isBoosted = false;
+			that.isSlowed = false;
 			if (cancelableStateInterval) {
 				clearInterval(cancelableStateInterval);
 			}
@@ -107,6 +110,13 @@ if (typeof navigator !== 'undefined') {
 			that.hasBeenHit = false;
 			that.isJumping = true;
 			that.setMapPosition(undefined, undefined, 1);
+		}
+
+		function setSlowDown() {
+			that.setSpeed(1);
+			that.setSpeedY(1);
+			that.isMoving = true;
+			that.isSlowed = true;
 		}
 
 		function getDiscreteDirection() {
@@ -170,17 +180,6 @@ if (typeof navigator !== 'undefined') {
 
 		function getJumpingSprite() {
 			return 'jumping';
-		}
-
-		function getTrickSprite() {
-			console.log('Trick step is', trickStep);
-			if (trickStep === 0) {
-				return 'jumping';
-			} else if (trickStep === 1) {
-				return 'somersault1';
-			} else {
-				return 'somersault2';
-			}
 		}
 
 		that.stop = function () {
@@ -483,6 +482,17 @@ if (typeof navigator !== 'undefined') {
 				setNormal();
 			}, 1000);
 		};
+
+		that.hasHitOilSlick = function () {
+			setSlowDown();
+
+			if (cancelableStateTimeout) {
+				clearTimeout(cancelableStateTimeout);
+			}
+			cancelableStateTimeout = setTimeout(function() {
+				setNormal();
+			}, 300);
+		}
 
 		that.hasHitCollectible = function (item) {
 			console.log('Hit item:', item.data.name)

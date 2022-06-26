@@ -19,8 +19,10 @@ function GameHud(data) {
 	};
 
 	that.draw = function (ctx) {
+		ctx.globalAlpha = 0.75;
 		ctx.drawImage(hudImage, 0, 0, ctx.canvas.width, hudImage.height, 0, 0, ctx.canvas.width, hudImage.height);
-		
+		ctx.restore();
+
 		ctx.font = '12px monospace';
 		var yOffset = 0;
 		that.lines.each(function (line) {

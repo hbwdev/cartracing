@@ -19,7 +19,7 @@ CanvasRenderingContext2D.prototype.followSprite = function (sprite) {
 CanvasRenderingContext2D.prototype.getCentralPosition = function () {
 	return {
 		map: this.centralSprite.mapPosition,
-		canvas: [ Math.round(this.canvas.width * 0.5), Math.round(this.canvas.height * 0.5), 0]
+		canvas: [ Math.round(this.canvas.width * 0.5), Math.round(this.canvas.height * 0.33), 0]
 	};
 };
 

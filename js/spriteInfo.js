@@ -143,12 +143,13 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		'thickSnow' : {
-			$imageFile : 'assets/skifree-objects.png',
+		'oilSlick' : {
+			$imageFile : 'assets/oilslick-sprite.png',
 			parts : {
-				main : [ 143, 53, 43, 10 ]
+				main : [ 0, 0, 40, 19 ]
 			},
-			hitBehaviour: {}
+			hitBehaviour: {},
+			isDrawnUnderPlayer: true
 		},
 		'monster' : {
 			$imageFile : 'assets/malord-sprites.png',
@@ -178,26 +179,11 @@ const game = require("./lib/game");
 			isDrawnUnderPlayer: true
 		},
 		'signStart' : {
-			$imageFile : 'assets/skifree-objects.png',
+			$imageFile : 'assets/startsign-sprite.png',
 			parts : {
-				main : [ 260, 103, 42, 27 ]
+				main : [ 0, 0, 42, 27 ]
 			},
 			hitBehaviour: {}
-		},
-		'snowboarder' : {
-			$imageFile : 'assets/sprite-characters.png',
-			parts : {
-				sEast : [ 73, 229, 20, 29 ],
-				sWest : [ 95, 228, 26, 30 ]
-			},
-			hitBehaviour: {}
-		},
-		'emptyChairLift': {
-			$imageFile: 'assets/skifree-objects.png',
-			parts: {
-				main : [ 92, 136, 26, 30 ]
-			},
-			zIndexesOccupied : [1],
 		},
 		'milkshake': {
 			name: 'milkshake',
@@ -269,32 +255,10 @@ const game = require("./lib/game");
 	sprites.trafficConeSmall.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
-	function playerHitsThickSnowBehaviour(player, thickSnow) {
-		// Need to implement this properly
-		player.setSpeed(2);
-		setTimeout(function() {
-			player.resetSpeed();
-		}, 700);
+	function oilSlickHitsPlayerBehaviour(oilSlick, player) {
+		player.hasHitOilSlick(oilSlick);
 	}
-
-	function thickSnowHitsPlayerBehaviour(thickSnow, player) {
-		// Need to implement this properly
-		player.setSpeed(2);
-		setTimeout(function() {
-			player.resetSpeed();
-		}, 300);
-	}
-
-	sprites.thickSnow.hitBehaviour.player = thickSnowHitsPlayerBehaviour;
-	sprites.player1.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player2.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player3.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player4.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-
-	function snowboarderHitsPlayerBehaviour(snowboarder, player) {
-		player.hasHitObstacle(snowboarder);
-	}
-	sprites.snowboarder.hitBehaviour.player = snowboarderHitsPlayerBehaviour;
+	sprites.oilSlick.hitBehaviour.player = oilSlickHitsPlayerBehaviour;
 
 	function playerHitsCollectibleBehaviour(item, player) {
 		player.hasHitCollectible(item);
