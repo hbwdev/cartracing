@@ -179,9 +179,9 @@ const game = require("./lib/game");
 			isDrawnUnderPlayer: true
 		},
 		'signStart' : {
-			$imageFile : 'assets/skifree-objects.png',
+			$imageFile : 'assets/startsign-sprite.png',
 			parts : {
-				main : [ 260, 103, 42, 27 ]
+				main : [ 0, 0, 42, 27 ]
 			},
 			hitBehaviour: {}
 		},

@@ -22,7 +22,7 @@ var Game = require('./lib/game');
 var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
-var imageSources = [ 'assets/cart-sprites.png', 'assets/skifree-objects.png', 'assets/oilslick-sprite.png', 
+var imageSources = [ 'assets/cart-sprites.png', 'assets/startsign-sprite.png', 'assets/oilslick-sprite.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png',
 	'assets/hatguy-sprites.png', 'assets/pilot-sprites.png', 'assets/romansoldier-sprites.png', 'assets/skeleton-sprites.png',
 	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png', 'assets/ramp-sprite.png' ];
