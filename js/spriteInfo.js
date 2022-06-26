@@ -143,7 +143,7 @@ const game = require("./lib/game");
 			},
 			hitBehaviour: {}
 		},
-		'thickSnow' : {
+		'oilSlick' : {
 			$imageFile : 'assets/skifree-objects.png',
 			parts : {
 				main : [ 143, 53, 43, 10 ]
@@ -183,21 +183,6 @@ const game = require("./lib/game");
 				main : [ 260, 103, 42, 27 ]
 			},
 			hitBehaviour: {}
-		},
-		'snowboarder' : {
-			$imageFile : 'assets/sprite-characters.png',
-			parts : {
-				sEast : [ 73, 229, 20, 29 ],
-				sWest : [ 95, 228, 26, 30 ]
-			},
-			hitBehaviour: {}
-		},
-		'emptyChairLift': {
-			$imageFile: 'assets/skifree-objects.png',
-			parts: {
-				main : [ 92, 136, 26, 30 ]
-			},
-			zIndexesOccupied : [1],
 		},
 		'milkshake': {
 			name: 'milkshake',
@@ -269,7 +254,7 @@ const game = require("./lib/game");
 	sprites.trafficConeSmall.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 	sprites.garbageCan.hitBehaviour.player = obstacleHitsPlayerBehaviour;
 
-	function playerHitsThickSnowBehaviour(player, thickSnow) {
+	function playerHitsOilSlickBehaviour(player, oilSlick) {
 		// Need to implement this properly
 		player.setSpeed(2);
 		setTimeout(function() {
@@ -277,7 +262,7 @@ const game = require("./lib/game");
 		}, 700);
 	}
 
-	function thickSnowHitsPlayerBehaviour(thickSnow, player) {
+	function oilSlickHitsPlayerBehaviour(oilSlick, player) {
 		// Need to implement this properly
 		player.setSpeed(2);
 		setTimeout(function() {
@@ -285,16 +270,11 @@ const game = require("./lib/game");
 		}, 300);
 	}
 
-	sprites.thickSnow.hitBehaviour.player = thickSnowHitsPlayerBehaviour;
-	sprites.player1.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player2.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player3.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-	sprites.player4.hitBehaviour.thickSnow = playerHitsThickSnowBehaviour;
-
-	function snowboarderHitsPlayerBehaviour(snowboarder, player) {
-		player.hasHitObstacle(snowboarder);
-	}
-	sprites.snowboarder.hitBehaviour.player = snowboarderHitsPlayerBehaviour;
+	sprites.oilSlick.hitBehaviour.player = oilSlickHitsPlayerBehaviour;
+	sprites.player1.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
+	sprites.player2.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
+	sprites.player3.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
+	sprites.player4.hitBehaviour.oilSlick = playerHitsOilSlickBehaviour;
 
 	function playerHitsCollectibleBehaviour(item, player) {
 		player.hasHitCollectible(item);

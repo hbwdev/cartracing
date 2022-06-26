@@ -14,7 +14,6 @@ var SpriteArray = require('./lib/spriteArray');
 var Monster = require('./lib/monster');
 var AnimatedSprite = require('./lib/animatedSprite');
 var Sprite = require('./lib/sprite');
-var Snowboarder = require('./lib/snowboarder');
 var Player = require('./lib/player');
 var GameHud = require('./lib/gameHud');
 var Game = require('./lib/game');
@@ -23,7 +22,7 @@ var Game = require('./lib/game');
 var mainCanvas = document.getElementById('game-canvas');
 var dContext = mainCanvas.getContext('2d');
 
-var imageSources = [ 'assets/cart-sprites.png', 'assets/sprite-characters.png', 'assets/skifree-objects.png', 
+var imageSources = [ 'assets/cart-sprites.png', 'assets/skifree-objects.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png',
 	'assets/hatguy-sprites.png', 'assets/pilot-sprites.png', 'assets/romansoldier-sprites.png', 'assets/skeleton-sprites.png',
 	'assets/traffic-cone-large.png', 'assets/traffic-cone-small.png', 'assets/garbage-can.png', 'assets/ramp-sprite.png' ];
@@ -68,7 +67,7 @@ const gameInfo = {
 	}
 };
 
-var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, thickSnow: 1, 
+var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, oilSlick: 1, 
 				  token: 3, milkshake: 0.0001};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
@@ -247,17 +246,6 @@ function startNeverEndingGame (images) {
 		game.addMovingObject(newMonster, 'monster');
 	}
 
-	function spawnBoarder () {
-		var newBoarder = new Snowboarder(sprites.snowboarder);
-		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
-		var randomPositionBelow = dContext.getRandomMapPositionBelowViewport();
-		newBoarder.setMapPosition(randomPositionAbove[0], randomPositionAbove[1]);
-		newBoarder.setMapPositionTarget(randomPositionBelow[0], randomPositionBelow[1]);
-		newBoarder.onHitting(player, sprites.snowboarder.hitBehaviour.player);
-
-		game.addMovingObject(newBoarder);
-	}
-
 	$('.player1').click(function() {
 		sprites.player = sprites.player1;
 		startGame();
@@ -319,7 +307,7 @@ function startNeverEndingGame (images) {
 			if (player.isMoving) {
 				newObjects = Sprite.createObjects([
 					{ sprite: sprites.jump, dropRate: dropRates.jump },
-					{ sprite: sprites.thickSnow, dropRate: dropRates.thickSnow },
+					{ sprite: sprites.oilSlick, dropRate: dropRates.oilSlick },
 					{ sprite: sprites.trafficConeLarge, dropRate: dropRates.trafficConeLarge },
 					{ sprite: sprites.trafficConeSmall, dropRate: dropRates.trafficConeSmall },
 					{ sprite: sprites.garbageCan, dropRate: dropRates.garbageCan },
@@ -335,9 +323,6 @@ function startNeverEndingGame (images) {
 			}
 			if (!game.isPaused()) {
 				game.addStaticObjects(newObjects);
-
-				// Disabled snowboarder spawn for cart conversion
-				//randomlySpawnNPC(spawnBoarder, 0.1);
 
 				gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
 
@@ -398,7 +383,6 @@ function startNeverEndingGame (images) {
 			}
 		});
 		Mousetrap.bind('m', spawnMonster);
-		//Mousetrap.bind('b', spawnBoarder);
 		Mousetrap.bind('space', resetGame);
 		Mousetrap.bind('g', toggleGodMode);
 		Mousetrap.bind('h', game.toggleHitBoxes);
