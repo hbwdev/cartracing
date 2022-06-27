@@ -46,12 +46,16 @@ a {
 	border: 1px solid black;
 	z-index: 2;
 	text-align: center;
-	background-color: grey;
+	//background-color: grey;
 }
 
 #menu.main {
 	background-image: url('../assets/background.png');
 	background-repeat: repeat;
+}
+
+.hide-bg {
+    background-image: none;
 }
 
 #main {
@@ -118,15 +122,6 @@ h1 {
 	padding: 5px 0;
 }
 
-#selectPlayer {
-	height: 80%;
-	display: none;
-	line-height: 20px;
-	margin: auto;
-	position: absolute;
-	top: 0; left: 0; bottom: 0; right: 0;
-}
-
 .artwork, .music, .developer {
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
@@ -145,6 +140,31 @@ h1 {
 
 .back, .back:hover {
 	margin-top: 10px;
+}
+
+#selectPlayer {
+	height: 80%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#gameover {
+	height: 40%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	width: 60%;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+	background-color: rgba(128, 0, 0, 0.5) ;
+}
+
+#gameover li {
+	padding: 5px 0;
+	color: white;
 }
 
 .sound {

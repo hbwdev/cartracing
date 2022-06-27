@@ -44,6 +44,19 @@ const totalLives = 5;
 var livesLeft = totalLives;
 var highScore = 0;
 
+//source: https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
+const cyrb53 = function(str, s = 0) {
+	let h1 = 0xdeadbeef ^ s, h2 = 0x41c6ce57 ^ s;
+	for (let i = 0, ch; i < str.length; i++) {
+		ch = str.charCodeAt(i);
+		h1 = Math.imul(h1 ^ ch, 2654435761);
+		h2 = Math.imul(h2 ^ ch, 1597334677);
+	}
+	h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
+	h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
+	return 4294967296 * (2097151 & h2) + (h1>>>0);
+};
+
 const gameInfo = {
 	distance: 0,
 	money: 0,
@@ -52,6 +65,7 @@ const gameInfo = {
 	cans: 0,
 	levelBoost: 0,
 	awake: 100,
+	gameEndDateTime: null,
 
 	god: false,
 
@@ -62,7 +76,31 @@ const gameInfo = {
 		points = 0;
 		cans = 0;
 		awake = 0;
-	}
+	},
+
+	getLevel() {
+		return this.distance < 100 ? 1 
+			: Math.floor(this.distance / 100) + this.levelBoost;
+	},
+
+	getScore() {
+		return (this.getLevel() * 100)
+			+ (this.tokens * 10)
+			+ (this.distance * 10);
+	},
+
+	getFormattedScore() {
+		const d = this.gameEndDateTime;
+		return '🛒 Serious Shopper 🛒'
+			+ '\nDate: ' + d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear() + ' '
+				+ d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
+			+ '\nLevel: ' + this.getLevel()
+			+ '\nTokens: ' + this.tokens
+			+ '\nDistance: ' + this.distance + 'm'
+			+ '\nTotal Score: ' + this.getScore()
+			+ '\n\nConfirmation Code: ' + cyrb53(this.getLevel() + this.tokens + this.distance + this.getScore(), 
+				d.getDate() + d.getMonth() + d.getFullYear() + d.getHours() + d.getMinutes());
+	},
 };
 
 var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, oilSlick: 1, 
@@ -162,6 +200,17 @@ function startNeverEndingGame (images) {
 		$('.sound').show();
 	}
 
+	function showGameOverMenu() {
+		$('#menu').removeClass('main');
+		$('#menu').show();
+		$('#gameover').show();
+		$('#menu').addClass('gameover');
+		$('#level').text('Level: ' + gameInfo.getLevel().toLocaleString() + ' x100');
+		$('#tokens').text('Tokens: ' + gameInfo.tokens.toLocaleString() + ' x10');
+		$('#distance').text('Distance: ' + gameInfo.distance.toLocaleString() + 'm x10');
+		$('#score').text('Score: ' + gameInfo.getScore().toLocaleString());
+	}
+
 	function toggleGodMode() {
 		gameInfo.god = !gameInfo.god;
 	}
@@ -177,8 +226,9 @@ function startNeverEndingGame (images) {
 
 	function detectEnd () {
 		if (!game.isPaused()) {
+			gameInfo.gameEndDateTime = new Date();
 			highScore = localStorage.setItem('highScore', gameInfo.distance);
-			updateHud('Game over! Hit space to restart.');
+			updateHud('Game over!');
 			game.pause();
 			game.cycle();
 
@@ -191,6 +241,8 @@ function startNeverEndingGame (images) {
 				currentTrack.play();
 				currentTrack.muted = false;
 			}
+			
+			showGameOverMenu();
 		}
 	}
 
@@ -214,9 +266,8 @@ function startNeverEndingGame (images) {
 			});
 		}
 
-		const level = gameInfo.distance < 100 ? 1 : Math.floor(gameInfo.distance / 100) + gameInfo.levelBoost;
 		gameHud.setLines([
-			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + level,
+			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + gameInfo.getLevel(),
 			('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
 			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + gameInfo.awake + '/100',
 			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
@@ -262,9 +313,13 @@ function startNeverEndingGame (images) {
 	});
 
 	function startGame(){
+		$('#gameover').hide();
+		$('#selectPlayer').hide();
+		$('#menu').removeClass('gameover');
+		$('#menu').removeClass('selectPlayer');
 		$('#menu').hide();
 		mainCanvas.style.display = '';
-		
+
 		player = new Player(sprites.player);
 		player.setMapPosition(0, 0);
 		player.setMapPositionTarget(0, -10);
@@ -408,12 +463,20 @@ function startNeverEndingGame (images) {
 		player.isMoving = false;
 		player.setDirection(270);
 		
-		
 		game.start();
 
 		currentTrack = sounds.track1;
 		currentTrack.play();
 	}
+
+	$('.copyscore').click(function() {
+		navigator.clipboard.writeText(gameInfo.getFormattedScore());
+	});
+	$('.restart').click(function() {
+		$('#gameover').hide();
+		$('#menu').hide();
+		resetGame();
+	});
 
 	showMainMenu();
 }
