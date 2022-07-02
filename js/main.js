@@ -208,7 +208,7 @@ function validateCode() {
 			s += parseInt(d[i]);
 		}
 		const c = cyrb53(val, s);
-		if (c.toString(36) == getValue('confirmation code:')) { 
+		if (c.toString(36) == getValue('code:')) { 
 			alert('Code is valid!');
 			return;
 		}
