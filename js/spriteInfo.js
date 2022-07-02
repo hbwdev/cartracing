@@ -152,6 +152,7 @@ const game = require("./lib/game");
 			isDrawnUnderPlayer: true
 		},
 		'monster' : {
+			name: 'monster',
 			$imageFile : 'assets/malord-sprites.png',
 			parts : {
 				sEast1 : [ 332, 149, 166, 149 ],
