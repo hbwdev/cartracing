@@ -64,7 +64,6 @@ const gameInfo = {
 	points: 0,
 	cans: 0,
 	levelBoost: 0,
-	awake: 100,
 	gameEndDateTime: null,
 
 	god: false,
@@ -75,7 +74,6 @@ const gameInfo = {
 		tokens = 0;
 		points = 0;
 		cans = 0;
-		awake = 0;
 	},
 
 	getLevel() {
@@ -307,7 +305,7 @@ function startNeverEndingGame (images) {
 		gameHud.setLines([
 			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + gameInfo.getLevel(),
 			('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
-			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + gameInfo.awake + '/100',
+			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + player.availableAwake + '/100',
 			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
 			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
 		]);
