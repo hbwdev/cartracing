@@ -39,7 +39,7 @@ if (typeof navigator !== 'undefined') {
 		var cancelableStateTimeout;
 		var cancelableStateInterval;
 
-		var canSpeedBoost = true;
+		var awakeInterval;
 
 		var obstaclesHit = [];
 		var pixelsTravelled = 0;
@@ -60,19 +60,32 @@ if (typeof navigator !== 'undefined') {
 		that.isCrashing = false;
 		that.isBoosting = false;
 		that.isSlowed = false;
+		that.availableAwake = 100;
 		that.onHitObstacleCb = function() {};
 		that.onCollectItemCb = function() {};
 		that.setSpeed(standardSpeed);
+
+		// Increase awake by 5 every second
+		awakeInterval = setInterval(() => {
+			if (that.isMoving && !that.isBoosting)
+				that.availableAwake = that.availableAwake >= 95 ? 100 : that.availableAwake + 5
+		}, 3000);
 
 		that.reset = function () {
 			obstaclesHit = [];
 			pixelsTravelled = 0;
 			that.isMoving = true;
 			that.hasBeenHit = false;
-			canSpeedBoost = true;
+			that.availableAwake = 100;
 			that.isCrashing = false;
 			setNormal();
 		};
+
+		function canSpeedBoost() {
+			return !that.isCrashing 
+				&& that.isMoving
+				&& that.availableAwake >= 50;
+		}
 
 		function setNormal() {
 			that.setSpeed(standardSpeed);
@@ -343,17 +356,14 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.speedBoost = function () {
-			var originalSpeed = that.speed;
-			if (canSpeedBoost) {
-				canSpeedBoost = false;
+			if (!that.isBoosting && canSpeedBoost()) {
+				that.availableAwake -= 50;
 				that.setSpeed(that.speed * boostMultiplier);
 				that.isBoosting = true;
+
 				setTimeout(function () {
-					that.setSpeed(originalSpeed);
+					that.setSpeed(standardSpeed);
 					that.isBoosting = false;
-					setTimeout(function () {
-						canSpeedBoost = true;
-					}, 10000);
 				}, 2000);
 			}
 		};
@@ -495,7 +505,6 @@ if (typeof navigator !== 'undefined') {
 		}
 
 		that.hasHitCollectible = function (item) {
-			console.log('Hit item:', item.data.name)
 			that.onCollectItemCb(item);
 		}
 
@@ -513,7 +522,7 @@ if (typeof navigator !== 'undefined') {
 			that.isMoving = true;
 			that.isJumping = false;
 			that.hasBeenHit = false;
-			canSpeedBoost = true;
+			that.availableAwake = 100;
 		};
 
 		that.setHitObstacleCb = function (fn) {
