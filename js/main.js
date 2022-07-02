@@ -91,15 +91,16 @@ const gameInfo = {
 
 	getFormattedScore() {
 		const d = this.gameEndDateTime;
-		return '🛒 Serious Shopper 🛒'
+		return '🛒 CartWars - Serious Shopper 🛒'
 			+ '\nDate: ' + d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear() + ' '
 				+ d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
 			+ '\nLevel: ' + this.getLevel()
 			+ '\nTokens: ' + this.tokens
 			+ '\nDistance: ' + this.distance + 'm'
 			+ '\nTotal Score: ' + this.getScore()
-			+ '\n\nConfirmation Code: ' + cyrb53(this.getLevel() + this.tokens + this.distance + this.getScore(), 
-				d.getDate() + d.getMonth() + d.getFullYear() + d.getHours() + d.getMinutes());
+			+ '\nCode: ' + cyrb53(this.getLevel().toString() + this.tokens.toString()
+				+ this.distance.toString() + this.getScore().toString(), 
+				d.getDate() + d.getMonth() + d.getFullYear() + d.getHours() + d.getMinutes()).toString(36);
 	},
 };
 
@@ -181,6 +182,42 @@ function playMusicTrack(nextTrack) {
 	}
 }
 
+function showValidateCodeMenu() {
+	$('#main').hide();
+	$('#validatecode').show();
+	$('#menu').addClass('validatecode');
+}
+
+function validateCode() {
+	let tokens = $("#validatetext").val().toLowerCase().split(/\r?\n/).filter(function(token) {
+		return token.startsWith('date:') ||
+			token.startsWith('level:') ||
+			token.startsWith('tokens:') ||
+			token.startsWith('distance:') ||
+			token.startsWith('total score:') ||
+			token.startsWith('code:');
+	});
+	function getValue(token) {
+		return tokens.find(i => i.startsWith(token))?.split(": ")[1];
+	}
+	let val = getValue('level:') + getValue('tokens:') + getValue('distance:')?.replace('m', '') + getValue('total score:');
+	let d = getValue('date:')?.replaceAll(' ', '/')?.replaceAll(':', '/')?.split('/');
+	if (val != null && d != null) {
+		let s = 0;
+		for (let i = 0; i < d.length - 1; i++) {
+			s += parseInt(d[i]);
+		}
+		const c = cyrb53(val, s);
+		if (c.toString(36) == getValue('confirmation code:')) { 
+			alert('Code is valid!');
+			return;
+		}
+	}
+	alert('Code is NOT valid!');	
+}
+
+$('.validate').click(validateCode);
+
 function startNeverEndingGame (images) {
 	var player;
 	var startSign;
@@ -205,6 +242,7 @@ function startNeverEndingGame (images) {
 		$('#menu').show();
 		$('#gameover').show();
 		$('#menu').addClass('gameover');
+		$('#copypaste').hide();
 		$('#level').text('Level: ' + gameInfo.getLevel().toLocaleString() + ' x100');
 		$('#tokens').text('Tokens: ' + gameInfo.tokens.toLocaleString() + ' x10');
 		$('#distance').text('Distance: ' + gameInfo.distance.toLocaleString() + 'm x10');
@@ -312,6 +350,8 @@ function startNeverEndingGame (images) {
 		startGame();
 	});
 
+	Mousetrap.bind('shift+v', showValidateCodeMenu);
+
 	function startGame(){
 		$('#gameover').hide();
 		$('#selectPlayer').hide();
@@ -411,7 +451,8 @@ function startNeverEndingGame (images) {
 				player.startMovingIfPossible();
 			})
 			.focus(); // So we can listen to events immediately
-
+		
+		Mousetrap.unbind('v');
 		Mousetrap.bind('f', player.speedBoost);
 		Mousetrap.bind('t', player.attemptTrick);
 		Mousetrap.bind(['w', 'up'], function () {
@@ -470,7 +511,10 @@ function startNeverEndingGame (images) {
 	}
 
 	$('.copyscore').click(function() {
-		navigator.clipboard.writeText(gameInfo.getFormattedScore());
+		$('#copypaste').show();
+		const s = gameInfo.getFormattedScore();
+		$('#copypastetext').text(s).select();
+		navigator.clipboard.writeText(s);
 	});
 	$('.restart').click(function() {
 		$('#gameover').hide();
@@ -508,10 +552,12 @@ $('.back').click(function() {
 	$('#credits').hide();
 	$('#selectPlayer').hide();
 	$('#instructions').hide();
+	$('#validatecode').hide();
 	$('#main').show();
 	$('#menu').removeClass('credits');
 	$('#menu').removeClass('selectPlayer');
 	$('#menu').removeClass('instructions');
+	$('#menu').removeClass('validatecode');
   });
 
 // set the sound preference

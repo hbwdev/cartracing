@@ -54,10 +54,6 @@ a {
 	background-repeat: repeat;
 }
 
-.hide-bg {
-    background-image: none;
-}
-
 #main {
 	display: none;
 	height: 60%;
@@ -152,17 +148,32 @@ h1 {
 }
 
 #gameover {
-	height: 40%;
+	height: fit-content;
 	display: none;
 	line-height: 20px;
 	margin: auto;
-	width: 60%;
+	width: fit-content;
 	position: absolute;
+	padding: 20px;
 	top: 0; left: 0; bottom: 0; right: 0;
 	background-color: rgba(128, 0, 0, 0.5) ;
 }
 
 #gameover li {
+	padding: 5px 0;
+	color: white;
+}
+
+#validatecode {
+	height: 80%;
+	display: none;
+	line-height: 20px;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#validatecode li {
 	padding: 5px 0;
 	color: white;
 }
