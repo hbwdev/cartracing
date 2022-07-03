@@ -113,7 +113,7 @@ const sprite = require('./sprite');
 				}
 			});
 
-			isShaking = movingObjects.some(item => item.data.name == 'monster' && !item.isFull);
+			isShaking = movingObjects.some(item => item.data.name == 'monster' && !item.isFull && !item.isEating);
 
 			afterCycleCallbacks.each(function(c) {
 				c();
