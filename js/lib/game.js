@@ -141,12 +141,14 @@ const sprite = require('./sprite');
 		var isShaking = false;
 		var shakeDuration = 200;
 		var shakeStartTime = -1;
+		var playerShift = 0;
+		const playerMaxShift = 50;
 		function preShake(ctx) {
 			if (!isShaking) shakeStartTime = -1;
 
 			if (shakeStartTime == -1) return;
 			var dt = Date.now() - shakeStartTime;
-			if (dt>shakeDuration) {
+			if (dt > shakeDuration) {
 				shakeStartTime = -1; 
 				return;
 			}
@@ -205,6 +207,13 @@ const sprite = require('./sprite');
 			});
 
 			postShake(dContext);
+			if (isShaking) {
+				if (playerShift < playerMaxShift) playerShift += 2;
+			} else {
+				// TODO: Ease this back after monster finishes eating
+				if (playerShift > 0) playerShift -= 1;
+			}
+			dContext.setCentralPositionOffset(0, playerShift);
 		};
 
 		this.start = function () {
