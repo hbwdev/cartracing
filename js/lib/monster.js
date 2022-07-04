@@ -6,11 +6,15 @@ var Sprite = require('./sprite');
 		var super_draw = that.superior('draw');
 		var spriteVersion = 1;
 		var eatingStage = 0;
-		var standardSpeed = 6;
+		var standardSpeed = 8;
 
 		that.isEating = false;
 		that.isFull = false;
 		that.setSpeed(standardSpeed);
+
+		that.setStandardSpeed = function () {
+			that.setSpeed(standardSpeed);
+		}
 
 		that.draw = function(dContext) {
 			var spritePartToUse = function () {
@@ -31,7 +35,6 @@ var Sprite = require('./sprite');
 					return 'sWest' + Math.ceil(spriteVersion);
 				}
 			};
-
 			return super_draw(dContext, spritePartToUse());
 		};
 

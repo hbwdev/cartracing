@@ -17,10 +17,21 @@ CanvasRenderingContext2D.prototype.followSprite = function (sprite) {
 };
 
 CanvasRenderingContext2D.prototype.getCentralPosition = function () {
-	return {
+	if (!this.centralOffsetX) this.centralOffsetX = 0;
+	if (!this.centralOffsetY) this.centralOffsetY = 0;
+
+	let position = {
 		map: this.centralSprite.mapPosition,
-		canvas: [ Math.round(this.canvas.width * 0.5), Math.round(this.canvas.height * 0.33), 0]
+		canvas: [ Math.round(this.canvas.width * 0.5) + this.centralOffsetX,
+			      Math.round(this.canvas.height * 0.33) + this.centralOffsetY, 0]
 	};
+
+	return position;
+};
+
+CanvasRenderingContext2D.prototype.setCentralPositionOffset = function (offsetX, offsetY) {
+	this.centralOffsetX = offsetX;
+	this.centralOffsetY = offsetY;
 };
 
 CanvasRenderingContext2D.prototype.mapPositionToCanvasPosition = function (position) {

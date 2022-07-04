@@ -113,6 +113,8 @@ const sprite = require('./sprite');
 				}
 			});
 
+			isShaking = movingObjects.some(item => item.data.name == 'monster' && !item.isFull && !item.isEating);
+
 			afterCycleCallbacks.each(function(c) {
 				c();
 			});
@@ -135,12 +137,48 @@ const sprite = require('./sprite');
 			dContext.drawImage(backgroundImage, backgroundX - mainCanvas.width, backgroundY + mainCanvas.height, mainCanvas.width, backgroundImage.height);
 		}
 
+		// Shaking effect: https://stackoverflow.com/questions/28023696/html-canvas-animation-which-incorporates-a-shaking-effect
+		var isShaking = false;
+		var shakeDuration = 200;
+		var shakeStartTime = -1;
+		
+		var playerShift = 0; // Experimental view shift when monster active
+
+		function preShake(ctx) {
+			if (!isShaking) shakeStartTime = -1;
+
+			if (shakeStartTime == -1) return;
+			var dt = Date.now() - shakeStartTime;
+			if (dt > shakeDuration) {
+				shakeStartTime = -1; 
+				return;
+			}
+			var easingCoef = dt / shakeDuration;
+			var easing = Math.pow(easingCoef - 1, 3) + 1;
+			ctx.save();  
+			var dx = easing * (Math.cos(dt * 0.1 ) + Math.cos(dt * 0.3115)) * 3;
+			var dy = easing * (Math.sin(dt * 0.05) + Math.sin(dt * 0.057113)) * 3;
+			ctx.translate(dx, dy);  
+		}
+
+		function postShake(ctx) {
+			if (shakeStartTime == -1) return;
+			ctx.restore();
+		}
+
+		function startShake() {
+			if (!isShaking) return;
+			shakeStartTime = Date.now();
+		}
+
 		that.draw = function () {
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
 			
 			// Update scrolling background
 			drawBackground();
+			
+			preShake(dContext);
 
 			staticObjects.each(function (staticObject, i) {
 				if (staticObject.isDrawnUnderPlayer && staticObject.draw) {
@@ -168,6 +206,17 @@ const sprite = require('./sprite');
 					uiElement.draw(dContext, 'main');
 				}
 			});
+
+			postShake(dContext);
+
+			// Experimenting with view shift when monster active
+		/* 	if (isShaking) {
+				if (playerShift < 50) playerShift += 2;
+			} else {
+				// TODO: Ease this back after monster finishes eating
+				if (playerShift > 0) playerShift -= 1;
+			}
+			dContext.setCentralPositionOffset(0, playerShift); */
 		};
 
 		this.start = function () {
@@ -196,6 +245,9 @@ const sprite = require('./sprite');
 
 		gameLoop.on('20', this.cycle);
 		gameLoop.on('20', this.draw);
+
+		startShake(mainCanvas);
+		setInterval(startShake, 300, dContext);
 	}
 
 	global.game = Game;
