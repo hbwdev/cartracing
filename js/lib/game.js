@@ -141,8 +141,9 @@ const sprite = require('./sprite');
 		var isShaking = false;
 		var shakeDuration = 200;
 		var shakeStartTime = -1;
-		var playerShift = 0;
-		const playerMaxShift = 50;
+		
+		var playerShift = 0; // Experimental view shift when monster active
+
 		function preShake(ctx) {
 			if (!isShaking) shakeStartTime = -1;
 
@@ -207,13 +208,15 @@ const sprite = require('./sprite');
 			});
 
 			postShake(dContext);
-			if (isShaking) {
-				if (playerShift < playerMaxShift) playerShift += 2;
+
+			// Experimenting with view shift when monster active
+		/* 	if (isShaking) {
+				if (playerShift < 50) playerShift += 2;
 			} else {
 				// TODO: Ease this back after monster finishes eating
 				if (playerShift > 0) playerShift -= 1;
 			}
-			dContext.setCentralPositionOffset(0, playerShift);
+			dContext.setCentralPositionOffset(0, playerShift); */
 		};
 
 		this.start = function () {
