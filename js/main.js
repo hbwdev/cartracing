@@ -385,9 +385,13 @@ function startNeverEndingGame (images) {
 		player.setMapPositionTarget(0, -10);
 
 		player.setHitObstacleCb(function() {
-			if (gameInfo.god)
-				return;
-			livesLeft -= 1;
+			if (gameInfo.god) return;
+			if (livesLeft > 0) livesLeft -= 1;
+		});
+
+		player.setHitMonsterCb(() => {
+			if (gameInfo.god) return;
+			livesLeft = 0;
 		});
 
 		player.setCollectItemCb(function(item) {
@@ -496,10 +500,11 @@ function startNeverEndingGame (images) {
 				player.turnEast();
 			}
 		});
-		Mousetrap.bind('m', spawnMonster);
+		
 		Mousetrap.bind('space', resetGame);
-		Mousetrap.bind('g', toggleGodMode);
-		Mousetrap.bind('h', game.toggleHitBoxes);
+		//Mousetrap.bind('m', spawnMonster);
+		//Mousetrap.bind('g', toggleGodMode);
+		//Mousetrap.bind('h', game.toggleHitBoxes);
 
 		var hammertime = new Hammer(mainCanvas);
 		hammertime.on('press', function (e) {

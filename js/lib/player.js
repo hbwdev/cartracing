@@ -62,6 +62,7 @@ if (typeof navigator !== 'undefined') {
 		that.isSlowed = false;
 		that.onHitObstacleCb = function() {};
 		that.onCollectItemCb = function() {};
+		that.onHitMonsterCb = function() {};
 		that.setSpeed(standardSpeed);
 
 		that.reset = function () {
@@ -472,6 +473,10 @@ if (typeof navigator !== 'undefined') {
 			}, 1500);
 		};
 
+		that.hasHitMonster = function (monster) {
+			// TODO
+		};
+
 		that.hasHitJump = function () {
 			setJumping();
 
@@ -495,12 +500,12 @@ if (typeof navigator !== 'undefined') {
 		}
 
 		that.hasHitCollectible = function (item) {
-			console.log('Hit item:', item.data.name)
 			that.onCollectItemCb(item);
 		}
 
 		that.isEatenBy = function (monster, whenEaten) {
-			that.hasHitObstacle(monster);
+			that.onHitMonsterCb();
+			that.hasHitMonster(monster);
 			monster.startEating(whenEaten);
 			obstaclesHit.push(monster.id);
 			that.isMoving = false;
@@ -520,9 +525,13 @@ if (typeof navigator !== 'undefined') {
 			that.onHitObstacleCb = fn || function() {};
 		};
 
+		that.setHitMonsterCb = function (fn) {
+			that.onHitMonsterCb = fn || function() {};
+		}
+
 		that.setCollectItemCb = function (fn) {
 			that.onCollectItemCb = fn || function() {};
-		}
+		};
 
 		function startCrashing() {
 			crashingFrame += 1;
