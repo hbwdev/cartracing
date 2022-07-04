@@ -37,6 +37,7 @@ var playingTrackNumber = 1;
 
 var global = this;
 var sprites = require('./spriteInfo');
+const monster = require('./lib/monster');
 
 var pixelsPerMetre = 18;
 var monsterDistanceThreshold = 2000;
@@ -267,9 +268,7 @@ function startNeverEndingGame (images) {
 			gameInfo.gameEndDateTime = new Date();
 			highScore = localStorage.setItem('highScore', gameInfo.distance);
 			updateHud('Game over!');
-			game.pause();
-			game.cycle();
-
+			
 			playingTrackNumber = 0;
 			currentTrack.muted = true;
 			currentTrack = sounds.gameOver;
@@ -279,9 +278,19 @@ function startNeverEndingGame (images) {
 				currentTrack.play();
 				currentTrack.muted = false;
 			}
-			
-			showGameOverMenu();
+
+			// Let the monster finish eating
+			if (player.isBeingEaten)
+				setTimeout(stopGame, 3000);
+			else
+				stopGame();
 		}
+	}
+
+	function stopGame() {
+		game.pause();
+		game.cycle();
+		showGameOverMenu();
 	}
 
 	function updateHud(message) {
@@ -327,7 +336,6 @@ function startNeverEndingGame (images) {
 		var randomPosition = dContext.getRandomMapPositionAboveViewport();
 		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
 		newMonster.follow(player);
-		//newMonster.setSpeed(player.getStandardSpeed());
 		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
 		game.addMovingObject(newMonster, 'monster');
