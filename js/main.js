@@ -338,6 +338,18 @@ function startNeverEndingGame (images) {
 		newMonster.follow(player);
 		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
+		// Stop chasing after timeout
+		setTimeout(() => {
+			if (newMonster) {
+				if (newMonster.isEating || newMonster.isFull) return;
+				newMonster.isFull = true;
+				newMonster.setSpeed(player.getSpeed());
+				newMonster.stopFollowing();
+				var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
+				newMonster.setMapPositionTarget(randomPositionAbove[0], randomPositionAbove[1]);
+			}
+		}, 20000);
+
 		game.addMovingObject(newMonster, 'monster');
 	}
 
