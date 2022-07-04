@@ -267,6 +267,7 @@ const sprite = require('./sprite');
 
 			player.cycle();
 
+			movingObjects.cull();
 			movingObjects.each(function (movingObject, i) {
 				movingObject.cycle(dContext);
 			});
@@ -1101,14 +1102,24 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.hasHitOilSlick = function () {
-			setSlowDown();
+			that.setSpeed(6);
+			that.isMoving = true;
+			
+			// Experimenting with losing control
+			/* const direction = Math.floor(Math.random() * 4);
+			switch (direction) {
+				case 0: setDiscreteDirection('sEast');
+				case 1: setDiscreteDirection('sWest');
+				case 2: setDiscreteDirection('sEast');
+				case 3: setDiscreteDirection('sWest');
+			} */
 
 			if (cancelableStateTimeout) {
 				clearTimeout(cancelableStateTimeout);
 			}
 			cancelableStateTimeout = setTimeout(function() {
 				setNormal();
-			}, 300);
+			}, 200);
 		}
 
 		that.hasHitCollectible = function (item) {
@@ -1540,6 +1551,9 @@ if (typeof module !== 'undefined') {
 
 		this.stopFollowing = function () {
 			trackedSpriteToMoveToward = false;
+
+			// Remove items that are no longer following player
+			setTimeout(that.deleteOnNextCycle, 5000);
 		};
 
 		this.onHitting = function (objectToHit, callback) {
