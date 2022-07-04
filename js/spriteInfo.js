@@ -165,6 +165,10 @@ const game = require("./lib/game");
 				eating4 : [ 0, 149, 166, 149 ],
 				eating5 : [ 166, 149, 166, 149 ],
 			},
+			hitBoxes: {
+				//Left, Top, Right, Bottom
+				0: [ 30, 50, 145, 125 ]
+			},
 			hitBehaviour: {}
 		},
 		'jump' : {
