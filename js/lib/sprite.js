@@ -341,6 +341,9 @@
 
 		this.stopFollowing = function () {
 			trackedSpriteToMoveToward = false;
+
+			// Remove items that are no longer following player
+			setTimeout(that.deleteOnNextCycle, 5000);
 		};
 
 		this.onHitting = function (objectToHit, callback) {

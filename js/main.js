@@ -327,7 +327,6 @@ function startNeverEndingGame (images) {
 		var randomPosition = dContext.getRandomMapPositionAboveViewport();
 		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
 		newMonster.follow(player);
-		//newMonster.setSpeed(player.getStandardSpeed());
 		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
 
 		game.addMovingObject(newMonster, 'monster');

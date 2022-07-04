@@ -96,6 +96,7 @@ const sprite = require('./sprite');
 
 			player.cycle();
 
+			movingObjects.cull();
 			movingObjects.each(function (movingObject, i) {
 				movingObject.cycle(dContext);
 			});
