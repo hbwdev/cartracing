@@ -37,6 +37,7 @@ var playingTrackNumber = 1;
 
 var global = this;
 var sprites = require('./spriteInfo');
+const monster = require('./lib/monster');
 
 var pixelsPerMetre = 18;
 var monsterDistanceThreshold = 2000;
@@ -64,7 +65,6 @@ const gameInfo = {
 	points: 0,
 	cans: 0,
 	levelBoost: 0,
-	awake: 100,
 	gameEndDateTime: null,
 
 	god: false,
@@ -75,7 +75,6 @@ const gameInfo = {
 		tokens = 0;
 		points = 0;
 		cans = 0;
-		awake = 0;
 	},
 
 	getLevel() {
@@ -267,9 +266,7 @@ function startNeverEndingGame (images) {
 			gameInfo.gameEndDateTime = new Date();
 			highScore = localStorage.setItem('highScore', gameInfo.distance);
 			updateHud('Game over!');
-			game.pause();
-			game.cycle();
-
+			
 			playingTrackNumber = 0;
 			currentTrack.muted = true;
 			currentTrack = sounds.gameOver;
@@ -279,9 +276,19 @@ function startNeverEndingGame (images) {
 				currentTrack.play();
 				currentTrack.muted = false;
 			}
-			
-			showGameOverMenu();
+
+			// Let the monster finish eating
+			if (player.isBeingEaten)
+				setTimeout(stopGame, 3000);
+			else
+				stopGame();
 		}
+	}
+
+	function stopGame() {
+		game.pause();
+		game.cycle();
+		showGameOverMenu();
 	}
 
 	function updateHud(message) {
@@ -307,7 +314,7 @@ function startNeverEndingGame (images) {
 		gameHud.setLines([
 			('Cash $' + gameInfo.money).padEnd(22) + 'Level ' + gameInfo.getLevel(),
 			('Points ' + gameInfo.money).padEnd(22) + 'Life ' + livesLeft / totalLives * 100 + '%',
-			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + gameInfo.awake + '/100',
+			('Tokens ' + gameInfo.tokens).padEnd(22) + 'Awake ' + player.availableAwake + '/100',
 			('Distance ' + gameInfo.distance + 'm').padEnd(22) + 'Speed ' + player.getSpeed(),
 			(gameInfo.god ? 'God Mode' : '').padEnd(22) + message
 		]);
@@ -328,6 +335,18 @@ function startNeverEndingGame (images) {
 		newMonster.setMapPosition(randomPosition[0], randomPosition[1]);
 		newMonster.follow(player);
 		newMonster.onHitting(player, monsterHitsPlayerBehaviour);
+
+		// Stop chasing after timeout
+		setTimeout(() => {
+			if (newMonster) {
+				if (newMonster.isEating || newMonster.isFull) return;
+				newMonster.isFull = true;
+				newMonster.setSpeed(player.getSpeed());
+				newMonster.stopFollowing();
+				var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
+				newMonster.setMapPositionTarget(randomPositionAbove[0], randomPositionAbove[1]);
+			}
+		}, 20000);
 
 		game.addMovingObject(newMonster, 'monster');
 	}
@@ -364,9 +383,13 @@ function startNeverEndingGame (images) {
 		player.setMapPositionTarget(0, -10);
 
 		player.setHitObstacleCb(function() {
-			if (gameInfo.god)
-				return;
-			livesLeft -= 1;
+			if (gameInfo.god) return;
+			if (livesLeft > 0) livesLeft -= 1;
+		});
+
+		player.setHitMonsterCb(() => {
+			if (gameInfo.god) return;
+			livesLeft = 0;
 		});
 
 		player.setCollectItemCb(function(item) {
@@ -475,10 +498,11 @@ function startNeverEndingGame (images) {
 				player.turnEast();
 			}
 		});
-		Mousetrap.bind('m', spawnMonster);
+		
 		Mousetrap.bind('space', resetGame);
-		Mousetrap.bind('g', toggleGodMode);
-		Mousetrap.bind('h', game.toggleHitBoxes);
+		//Mousetrap.bind('m', spawnMonster);
+		//Mousetrap.bind('g', toggleGodMode);
+		//Mousetrap.bind('h', game.toggleHitBoxes);
 
 		var hammertime = new Hammer(mainCanvas);
 		hammertime.on('press', function (e) {

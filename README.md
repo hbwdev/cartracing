@@ -1,4 +1,4 @@
-# Unofficial Hobowars Cart Racing
+# CartWars - The Lost Update
 
 This is a work in progress based on the SkiFree.Js project by @basicallydan / Daniel Hough [SkiFree.js](https://github.com/basicallydan/skifree.js), which is a port of the popular 1991 PC game [SkiFree](http://en.wikipedia.org/wiki/Skifree) by [Chris Pirih](http://ski.ihoc.net/).
 
