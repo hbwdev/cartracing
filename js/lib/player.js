@@ -499,7 +499,7 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.hasHitOilSlick = function () {
-			that.setSpeed(6);
+			that.setSpeed(7);
 			that.isMoving = true;
 			
 			// Experimenting with losing control
