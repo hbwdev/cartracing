@@ -234,19 +234,17 @@ const game = require("./lib/game");
 		}
 	};
 
-	// Monster hitting static objects doesn't seem to work
-	function monsterHitsObstacleBehavior(monster) {
-		monster.deleteOnNextCycle();
-	}
-	sprites.monster.hitBehaviour.garbageCan = monsterHitsObstacleBehavior;
-	sprites.monster.hitBehaviour.trafficConeLarge = monsterHitsObstacleBehavior;
-	sprites.monster.hitBehaviour.trafficConeSmall = monsterHitsObstacleBehavior;
 	function obstacleHitsMonsterBehavior(obstacle, monster) {
-		monster.deleteOnNextCycle();
+		// Remove obstacles as monster hits them, slow monster
+		monster.setSpeed(5);
+		setTimeout(monster.setStandardSpeed, 300);
+		obstacle.deleteOnNextCycle();
 	}
 	sprites.garbageCan.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 	sprites.trafficConeLarge.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 	sprites.trafficConeSmall.hitBehaviour.monster = obstacleHitsMonsterBehavior;
+	sprites.jump.hitBehaviour.monster = obstacleHitsMonsterBehavior;
+	sprites.oilSlick.hitBehaviour.monster = obstacleHitsMonsterBehavior;
 
 	function jumpHitsPlayerBehaviour(jump, player) {
 		player.hasHitJump(jump);
