@@ -70,11 +70,13 @@ const gameInfo = {
 	god: false,
 
 	reset() {
-		distance = 0;
-		money = 0;
-		tokens = 0;
-		points = 0;
-		cans = 0;
+		this.distance = 0;
+		this.money = 0;
+		this.tokens = 0;
+		this.points = 0;
+		this.cans = 0;
+		this.levelBoost = 0;
+		this.gameEndDateTime = null;
 	},
 
 	getLevel() {
