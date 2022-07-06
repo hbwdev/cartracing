@@ -236,8 +236,7 @@ const game = require("./lib/game");
 
 	function obstacleHitsMonsterBehavior(obstacle, monster) {
 		// Remove obstacles as monster hits them, slow monster
-		monster.setSpeed(5);
-		setTimeout(monster.setStandardSpeed, 300);
+		monster.setObstacleHitSpeed();
 		obstacle.deleteOnNextCycle();
 	}
 	sprites.garbageCan.hitBehaviour.monster = obstacleHitsMonsterBehavior;

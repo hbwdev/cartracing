@@ -1,6 +1,5 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
-const sprite = require('./sprite');
 
 (function (global) {
 	function Game (mainCanvas, player) {
@@ -19,6 +18,7 @@ const sprite = require('./sprite');
 		var mouseX = dContext.getCentreOfViewport();
 		var mouseY = 0;
 		var paused = false;
+		var gameEnding = false;
 		var that = this;
 		var beforeCycleCallbacks = [];
 		var afterCycleCallbacks = [];
@@ -77,10 +77,7 @@ const sprite = require('./sprite');
 		player.setMapPositionTarget(0, -10);
 		dContext.followSprite(player);
 
-		var intervalNum = 0;
-
 		this.cycle = function () {
-
 			beforeCycleCallbacks.each(function(c) {
 				c();
 			});
@@ -91,8 +88,6 @@ const sprite = require('./sprite');
 			if (!player.isJumping) {
 				player.setMapPositionTarget(mouseMapPosition[0], mouseMapPosition[1]);
 			}
-
-			intervalNum++;
 
 			player.cycle();
 
@@ -229,12 +224,21 @@ const sprite = require('./sprite');
 			gameLoop.stop();
 		};
 
+		this.gameOver = function() {
+			gameEnding = true;
+		}
+
 		this.isPaused = function () {
 			return paused;
 		};
 
+		this.isGameEnding = function() {
+			return gameEnding;
+		};
+
 		this.reset = function () {
 			paused = false;
+			gameEnding = false;
 			staticObjects = new SpriteArray();
 			movingObjects = new SpriteArray();
 			mouseX = dContext.getCentreOfViewport();

@@ -156,7 +156,7 @@ function monsterHitsPlayerBehaviour(monster, player) {
 	player.isEatenBy(monster, function () {
 		monster.isFull = true;
 		monster.isEating = false;
-		player.isBeingEaten = false;
+		//player.isBeingEaten = false;
 		monster.setSpeed(player.getSpeed());
 		monster.stopFollowing();
 		var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
@@ -262,30 +262,29 @@ function startNeverEndingGame (images) {
 	}
 
 	function detectEnd () {
-		if (!game.isPaused()) {
-			gameInfo.gameEndDateTime = new Date();
-			highScore = localStorage.setItem('highScore', gameInfo.distance);
-			updateHud('Game over!');
-			
-			playingTrackNumber = 0;
-			currentTrack.muted = true;
-			currentTrack = sounds.gameOver;
-			currentTrack.currentTime = 0;
-			currentTrack.loop = true;
-			if (playSound) {
-				currentTrack.play();
-				currentTrack.muted = false;
-			}
+		if (game.isGameEnding()) return;
 
-			// Let the monster finish eating
-			if (player.isBeingEaten)
-				setTimeout(stopGame, 3000);
-			else
-				stopGame();
+		game.gameOver();
+		gameInfo.gameEndDateTime = new Date();
+		highScore = localStorage.setItem('highScore', gameInfo.distance);
+		updateHud('Game over!');
+		
+		playingTrackNumber = 0;
+		currentTrack.muted = true;
+		currentTrack = sounds.gameOver;
+		currentTrack.currentTime = 0;
+		currentTrack.loop = true;
+		if (playSound) {
+			currentTrack.play();
+			currentTrack.muted = false;
 		}
+
+		// Let the monster finish eating
+		player.isBeingEaten ? setTimeout(endGame, 2000)
+			: endGame();
 	}
 
-	function stopGame() {
+	function endGame() {
 		game.pause();
 		game.cycle();
 		showGameOverMenu();
@@ -346,7 +345,7 @@ function startNeverEndingGame (images) {
 				var randomPositionAbove = dContext.getRandomMapPositionAboveViewport();
 				newMonster.setMapPositionTarget(randomPositionAbove[0], randomPositionAbove[1]);
 			}
-		}, 20000);
+		}, 15000);
 
 		game.addMovingObject(newMonster, 'monster');
 	}
@@ -439,7 +438,7 @@ function startNeverEndingGame (images) {
 			if (!game.isPaused()) {
 				game.addStaticObjects(newObjects);
 
-				gameInfo.distance = parseFloat(player.getPixelsTravelledDownMountain() / pixelsPerMetre).toFixed(1);
+				gameInfo.distance = parseFloat(player.getPixelsTravelledDownRoad() / pixelsPerMetre).toFixed(1);
 
 				if (gameInfo.distance > monsterDistanceThreshold) {
 					randomlySpawnNPC(spawnMonster, 0.001);
@@ -476,7 +475,7 @@ function startNeverEndingGame (images) {
 		
 		Mousetrap.unbind('v');
 		Mousetrap.bind('f', player.speedBoost);
-		Mousetrap.bind('t', player.attemptTrick);
+		//Mousetrap.bind('t', player.attemptTrick);
 		Mousetrap.bind(['w', 'up'], function () {
 			player.stop();
 		});
@@ -500,7 +499,7 @@ function startNeverEndingGame (images) {
 		});
 		
 		Mousetrap.bind('space', resetGame);
-		//Mousetrap.bind('m', spawnMonster);
+		Mousetrap.bind('m', spawnMonster);
 		//Mousetrap.bind('g', toggleGodMode);
 		//Mousetrap.bind('h', game.toggleHitBoxes);
 

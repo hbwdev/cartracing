@@ -6,15 +6,35 @@ var Sprite = require('./sprite');
 		var super_draw = that.superior('draw');
 		var spriteVersion = 1;
 		var eatingStage = 0;
-		var standardSpeed = 8;
+		const standardSpeed = 8;
+		const slowSpeed = 5;
+		const chasingSpeed = 12;
 
 		that.isEating = false;
 		that.isFull = false;
-		that.setSpeed(standardSpeed);
+		that.isChasing = false;
 
-		that.setStandardSpeed = function () {
+		that.resetSpeed = function() {
+			if (that.isChasing)
+				that.setSpeed(chasingSpeed);
+			else
+				that.setSpeed(standardSpeed);
+		};
+		that.setStandardSpeed = function() {
+			that.isChasing = false;
 			that.setSpeed(standardSpeed);
-		}
+		};
+		that.setObstacleHitSpeed = function() {
+			that.setSpeed(slowSpeed);
+			setTimeout(that.resetSpeed, 300);
+		};
+		that.startChasing = function() {
+			that.isChasing = true;
+			that.setSpeed(chasingSpeed);
+			// Reset the speed after rushing in
+			setTimeout(that.setStandardSpeed, 2000);
+		};
+		that.startChasing();
 
 		that.draw = function(dContext) {
 			var spritePartToUse = function () {
@@ -35,6 +55,7 @@ var Sprite = require('./sprite');
 					return 'sWest' + Math.ceil(spriteVersion);
 				}
 			};
+
 			return super_draw(dContext, spritePartToUse());
 		};
 

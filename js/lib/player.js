@@ -39,12 +39,10 @@ if (typeof navigator !== 'undefined') {
 		var cancelableStateTimeout;
 		var cancelableStateInterval;
 
-		var awakeInterval;
-
 		var obstaclesHit = [];
 		var pixelsTravelled = 0;
-		var standardSpeed = 5;
-		var boostMultiplier = 2;
+		const standardSpeed = 5;
+		const boostMultiplier = 2;
 		var turnEaseCycles = 70;
 		var speedX = 0;
 		var speedXFactor = 0;
@@ -67,7 +65,7 @@ if (typeof navigator !== 'undefined') {
 		that.setSpeed(standardSpeed);
 
 		// Increase awake by 5 every second
-		awakeInterval = setInterval(() => {
+		setInterval(() => {
 			if (that.isMoving && !that.isBoosting)
 				that.availableAwake = that.availableAwake >= 95 ? 100 : that.availableAwake + 5
 		}, 3000);
@@ -79,6 +77,7 @@ if (typeof navigator !== 'undefined') {
 			that.hasBeenHit = false;
 			that.availableAwake = 100;
 			that.isCrashing = false;
+			that.isBeingEaten = false;
 			setNormal();
 		};
 
@@ -89,6 +88,7 @@ if (typeof navigator !== 'undefined') {
 		}
 
 		function setNormal() {
+			if (that.isBeingEaten) return;
 			that.setSpeed(standardSpeed);
 			that.isMoving = true;
 			that.hasBeenHit = false;
@@ -290,7 +290,7 @@ if (typeof navigator !== 'undefined') {
 			turnEaseCycles = c;
 		};
 
-		that.getPixelsTravelledDownMountain = function () {
+		that.getPixelsTravelledDownRoad = function () {
 			return pixelsTravelled;
 		};
 
@@ -302,7 +302,9 @@ if (typeof navigator !== 'undefined') {
 			if ( that.getSpeedX() <= 0 && that.getSpeedY() <= 0 ) {
 						that.isMoving = false;
 			}
-			if (that.isMoving) {
+
+			const direction = getDiscreteDirection();
+			if (that.isMoving && direction !== 'east' && direction !== 'west') {
 				pixelsTravelled += that.speed;
 			}
 
@@ -403,22 +405,19 @@ if (typeof navigator !== 'undefined') {
 		}
 
 		that.getSpeedX = function () {
-			if (getDiscreteDirection() === 'esEast' || getDiscreteDirection() === 'wsWest') {
-				speedXFactor = 0.5;
-				speedX = easeSpeedToTargetUsingFactor(speedX, that.getSpeed() * speedXFactor, speedXFactor);
-
-				return speedX;
+			switch (getDiscreteDirection()) {
+				case 'esEast':
+				case 'wsWest':
+					speedXFactor = 0.5;
+					speedX = easeSpeedToTargetUsingFactor(speedX, that.getSpeed() * speedXFactor, speedXFactor);
+					return speedX;
+				case 'sEast':
+				case 'sWest':
+					speedXFactor = 0.33;
+					speedX = easeSpeedToTargetUsingFactor(speedX, that.getSpeed() * speedXFactor, speedXFactor);
+					return speedX;
 			}
-
-			if (getDiscreteDirection() === 'sEast' || getDiscreteDirection() === 'sWest') {
-				speedXFactor = 0.33;
-				speedX = easeSpeedToTargetUsingFactor(speedX, that.getSpeed() * speedXFactor, speedXFactor);
-
-				return speedX;
-			}
-
 			// So it must be south
-
 			speedX = easeSpeedToTargetUsingFactor(speedX, 0, speedXFactor);
 
 			return speedX;
@@ -429,35 +428,31 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.getSpeedY = function () {
-			var targetSpeed;
-
 			if (that.isJumping) {
 				return speedY;
 			}
 
-			if (getDiscreteDirection() === 'esEast' || getDiscreteDirection() === 'wsWest') {
-				speedYFactor = 0.6;
-				speedY = easeSpeedToTargetUsingFactor(speedY, that.getSpeed() * 0.6, 0.6);
+			const direction = getDiscreteDirection();
 
-				return speedY;
-			}
-
-			if (getDiscreteDirection() === 'sEast' || getDiscreteDirection() === 'sWest') {
-				speedYFactor = 0.85;
-				speedY = easeSpeedToTargetUsingFactor(speedY, that.getSpeed() * 0.85, 0.85);
-
-				return speedY;
-			}
-
-			if (getDiscreteDirection() === 'east' || getDiscreteDirection() === 'west') {
-				speedYFactor = 1;
-				speedY = 0;
-
-				return speedY;
+			switch (getDiscreteDirection()) {
+				case 'esEast':
+				case 'wsWest':
+					speedYFactor = 0.6;
+					speedY = easeSpeedToTargetUsingFactor(speedY, that.getSpeed() * 0.6, 0.6);
+					return speedY;
+				case 'esEast':
+				case 'wsWest':
+					speedYFactor = 0.85;
+					speedY = easeSpeedToTargetUsingFactor(speedY, that.getSpeed() * 0.85, 0.85);
+					return speedY;
+				case 'east':
+				case 'west':
+					speedYFactor = 1;
+					speedY = 0;
+					return speedY;
 			}
 
 			// So it must be south
-
 			speedY = easeSpeedToTargetUsingFactor(speedY, that.getSpeed(), speedYFactor);
 
 			return speedY;
@@ -539,6 +534,7 @@ if (typeof navigator !== 'undefined') {
 			that.isJumping = false;
 			that.hasBeenHit = false;
 			that.availableAwake = 100;
+			that.isBeingEaten = false;
 		};
 
 		that.setHitObstacleCb = function (fn) {
@@ -566,6 +562,7 @@ if (typeof navigator !== 'undefined') {
 				crashingFrame = 0;
 				that.isCrashing = false;
 				that.isMoving = false; // stop moving on last frame
+				that.resetSpeed();
 			}
 		}
 

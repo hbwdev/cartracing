@@ -17,7 +17,7 @@
 		that.speed = 0;
 		that.data = data || { parts : {} };
 		that.movingToward = [ 0, 0 ];
-		that.metresDownTheMountain = 0;
+		that.metresDownTheRoad = 0;
 		that.movingWithConviction = false;
 		that.deleted = false;
 		that.maxHeight = (function () {
@@ -223,6 +223,7 @@
 		};
 
 		this.setSpeed = function (s) {
+			that.lastSpeed = that.speed;
 			that.speed = s;
 			that.speedX = s;
 			that.speedY = s;
