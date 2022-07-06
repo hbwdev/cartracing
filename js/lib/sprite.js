@@ -367,7 +367,6 @@
 		};
 
 		this.hits = function (other) {
-			
 			const rect1x = other.getLeftHitBoxEdge(that.mapPosition[2]);
 			const rect1w = other.getRightHitBoxEdge(that.mapPosition[2]) - rect1x;
 
@@ -440,6 +439,7 @@
 		}, false, false);
 
 		var AnimatedSprite = require('./animatedSprite');
+
 		function createOne (spriteInfo) {
 			var position = opts.position;
 			if (Number.random(100 + opts.rateModifier) <= spriteInfo.dropRate) {

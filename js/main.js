@@ -106,7 +106,7 @@ const gameInfo = {
 };
 
 var dropRates = { trafficConeLarge: 1, trafficConeSmall: 1, garbageCan: 1, jump: 1, oilSlick: 1, 
-				  token: 3, milkshake: 0.0001};
+				  token: 3, milkshake: 1};
 if (localStorage.getItem('highScore')) highScore = localStorage.getItem('highScore');
 
 function loadImages (sources, next) {
@@ -424,7 +424,7 @@ function startNeverEndingGame (images) {
 					{ sprite: sprites.token, dropRate: dropRates.token },
 					{ sprite: sprites.milkshake, dropRate: dropRates.milkshake }
 				], {
-					rateModifier: Math.max(800 - mainCanvas.width, 0),
+					rateModifier: Math.max(600 - mainCanvas.width, 0),
 					position: function () {
 						return dContext.getRandomMapPositionBelowViewport();
 					},
@@ -437,7 +437,7 @@ function startNeverEndingGame (images) {
 				gameInfo.distance = parseFloat(player.getPixelsTravelledDownRoad() / pixelsPerMetre).toFixed(1);
 
 				if (gameInfo.distance > monsterDistanceThreshold) {
-					randomlySpawnNPC(spawnMonster, 0.001);
+					randomlySpawnNPC(spawnMonster, Math.round(gameInfo.distance / 1000) * .001);
 				}
 
 				if (gameInfo.distance)
