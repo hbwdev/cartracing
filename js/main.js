@@ -267,7 +267,6 @@ function startNeverEndingGame (images) {
 		game.gameOver();
 		gameInfo.gameEndDateTime = new Date();
 		highScore = localStorage.setItem('highScore', gameInfo.distance);
-		updateHud('Game over!');
 		
 		playingTrackNumber = 0;
 		currentTrack.muted = true;
@@ -280,13 +279,13 @@ function startNeverEndingGame (images) {
 		}
 
 		// Let the monster finish eating
-		player.isBeingEaten ? setTimeout(endGame, 2000)
+		player.isBeingEaten ? setTimeout(endGame, 1000)
 			: endGame();
 	}
 
 	function endGame() {
-		game.pause();
-		game.cycle();
+		//game.pause();
+		//game.cycle();
 		showGameOverMenu();
 	}
 

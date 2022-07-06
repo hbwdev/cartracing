@@ -68,10 +68,13 @@ var Sprite = require('./sprite');
 					startEating(whenDone);
 				}, 300);
 			} else {
-				eatingStage = 0;
-				that.isEating = false;
-				that.isMoving = true;
-				whenDone();
+				eatingStage = 1;
+				setTimeout(function () {
+					startEating(whenDone);
+				}, 300);
+				//that.isEating = false;
+				//that.isMoving = true;
+				//whenDone();
 			}
 		}
 
