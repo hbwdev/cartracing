@@ -1,6 +1,17 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
 
+if (typeof navigator !== 'undefined') {
+	navigator.vibrate = navigator.vibrate ||
+		navigator.webkitVibrate ||
+		navigator.mozVibrate ||
+		navigator.msVibrate;
+} else {
+	navigator = {
+		vibrate: false
+	};
+}
+
 (function (global) {
 	function Game (mainCanvas, player) {
 		var staticObjects = new SpriteArray();
@@ -154,7 +165,9 @@ var EventedLoop = require('eventedloop');
 			ctx.save();  
 			var dx = easing * (Math.cos(dt * 0.1 ) + Math.cos(dt * 0.3115)) * 3;
 			var dy = easing * (Math.sin(dt * 0.05) + Math.sin(dt * 0.057113)) * 3;
-			ctx.translate(dx, dy);  
+			ctx.translate(dx, dy);
+
+			navigator.vibrate(100);
 		}
 
 		function postShake(ctx) {

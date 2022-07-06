@@ -205,9 +205,7 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.turnEast = function () {
-			var discreteDirection = getDiscreteDirection();
-
-			switch (discreteDirection) {
+			switch (getDiscreteDirection()) {
 				case 'west':
 					setDiscreteDirection('wsWest');
 					break;
@@ -233,9 +231,7 @@ if (typeof navigator !== 'undefined') {
 		};
 
 		that.turnWest = function () {
-			var discreteDirection = getDiscreteDirection();
-
-			switch (discreteDirection) {
+			switch (getDiscreteDirection()) {
 				case 'east':
 					setDiscreteDirection('esEast');
 					break;
@@ -432,8 +428,6 @@ if (typeof navigator !== 'undefined') {
 				return speedY;
 			}
 
-			const direction = getDiscreteDirection();
-
 			switch (getDiscreteDirection()) {
 				case 'esEast':
 				case 'wsWest':
@@ -535,6 +529,8 @@ if (typeof navigator !== 'undefined') {
 			that.hasBeenHit = false;
 			that.availableAwake = 100;
 			that.isBeingEaten = false;
+			that.isBoosted = false;
+			that.isBoosting = false;
 		};
 
 		that.setHitObstacleCb = function (fn) {
