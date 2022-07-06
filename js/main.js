@@ -20,7 +20,7 @@ var Game = require('./lib/game');
 
 // Local variables for starting the game
 var mainCanvas = document.getElementById('game-canvas');
-var dContext = mainCanvas.getContext('2d');
+var dContext = mainCanvas.getContext('2d', { alpha: false });
 
 var imageSources = [ 'assets/cart-sprites.png', 'assets/startsign-sprite.png', 'assets/oilslick-sprite.png', 
 	'assets/token-sprites.png', 'assets/milkshake-sprite.png', 'assets/malord-sprites.png',

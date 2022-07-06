@@ -282,11 +282,13 @@ h1 {
 }
 
 .sound-on {
+	opacity: 0.6;
 	background-image: url('../assets/menus/soundOn.png');
 	background-repeat: no-repeat;
 }
 
 .sound-off {
+	opacity: 0.6;
 	background-image: url('../assets/menus/soundOff.png');
 	background-repeat: no-repeat;
 }
