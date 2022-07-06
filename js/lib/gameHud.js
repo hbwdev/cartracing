@@ -2,7 +2,7 @@ function GameHud(data) {
 	var that = this;
 
 	var hudImage = new Image();
-	hudImage.src = 'assets/top-bar.png';
+	hudImage.src = 'assets/CartWars.png';
 
 	that.lines = data.initialLines;
 
@@ -20,8 +20,7 @@ function GameHud(data) {
 
 	that.draw = function (ctx) {
 		ctx.globalAlpha = 0.75;
-		ctx.drawImage(hudImage, 0, 0, ctx.canvas.width, hudImage.height, 0, 0, ctx.canvas.width, hudImage.height);
-		ctx.restore();
+		ctx.drawImage(hudImage, 20, 5, hudImage.width * 0.3, hudImage.height * 0.3);
 
 		ctx.font = '12px monospace';
 		var yOffset = 0;
