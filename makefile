@@ -14,9 +14,11 @@ deps:
 test:
 	npm test
 
-compile:
-	browserify js/main.js -d -o dist/skifree.js
-	uglifyjs dist/skifree.js --source-map --compress --output dist/skifree.min.js
+compile: browserify
+	uglifyjs dist/cartwars.js --source-map --compress --output dist/cartwars.min.js
+
+browserify:
+	browserify js/main.js -d -o dist/cartwars.js
 
 serve:
 	ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 3000, :DocumentRoot => Dir.pwd).start'

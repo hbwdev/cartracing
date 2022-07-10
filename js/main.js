@@ -495,9 +495,14 @@ function startNeverEndingGame (images) {
 		});
 		
 		Mousetrap.bind('space', resetGame);
-		Mousetrap.bind('m', spawnMonster);
-		//Mousetrap.bind('g', toggleGodMode);
-		//Mousetrap.bind('h', game.toggleHitBoxes);
+		
+		$(document).ready(function() {
+			if (window.location.href.indexOf("index-dev.html") !== -1) {
+				Mousetrap.bind('m', spawnMonster);
+				Mousetrap.bind('g', toggleGodMode);
+				Mousetrap.bind('h', game.toggleHitBoxes);
+			}
+		});
 
 		var hammertime = new Hammer(mainCanvas);
 		hammertime.on('press', function (e) {
