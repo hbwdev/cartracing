@@ -268,7 +268,9 @@ function startNeverEndingGame (images) {
 
 		game.gameOver();
 		gameInfo.gameEndDateTime = new Date();
-		highScore = localStorage.setItem('highScore', gameInfo.distance);
+		
+		if (gameInfo.getScore() > highScore)
+			highScore = localStorage.setItem('highScore', gameInfo.getScore());
 		
 		playingTrackNumber = 0;
 		currentTrack.muted = true;
@@ -281,14 +283,13 @@ function startNeverEndingGame (images) {
 		}
 
 		// Let the monster finish eating
-		player.isBeingEaten ? setTimeout(endGame, 1000)
-			: endGame();
-	}
-
-	function endGame() {
-		//game.pause();
-		//game.cycle();
-		showGameOverMenu();
+		if (player.isBeingEaten) {
+			setTimeout(showGameOverMenu, 1000);
+		} else {
+			game.pause();
+			game.cycle();
+			showGameOverMenu();
+		}
 	}
 
 	function updateHud(message) {
@@ -311,6 +312,8 @@ function startNeverEndingGame (images) {
 			'Awake ' + player.availableAwake + '/100',
 			'Distance ' + gameInfo.distance + 'm',
 			'Speed ' + player.getSpeed(),
+			'Total Score ' + gameInfo.getScore(),
+			'High Score ' + highScore,
 			message
 		]);
 
@@ -394,11 +397,7 @@ function startNeverEndingGame (images) {
 					gameInfo.tokens += item.data.pointValues[Math.floor(Math.random() * item.data.pointValues.length)];
 					break;
 				case 'milkshake':
-					if (livesLeft < totalLives) {
-						livesLeft += 1;
-					}
 					gameInfo.levelBoost += 1;
-
 					break;
 			}
 		});
