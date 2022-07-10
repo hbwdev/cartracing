@@ -19,10 +19,9 @@ if (typeof navigator !== 'undefined') {
 		var uiElements = new SpriteArray();
 		var dContext = mainCanvas.getContext('2d');
 		var showHitBoxes = false;
-		
+
 		// Scrolling background
-		var backgroundImage = new Image();
-		backgroundImage.src = 'assets/background.png';
+		var backgroundImage = dContext.getLoadedImage('assets/background.jpg');
 		var backgroundX = 0;
 		var backgroundY = 0;
 
@@ -134,7 +133,7 @@ if (typeof navigator !== 'undefined') {
 			// Stretch background image to canvas size
 			backgroundImage.width = mainCanvas.width;
 			backgroundImage.height = mainCanvas.height;
-			
+
 			backgroundX = player.mapPosition[0] % backgroundImage.width * -1;
 			backgroundY = player.mapPosition[1] % backgroundImage.height * -1;
 
