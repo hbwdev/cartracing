@@ -112,6 +112,9 @@ if (typeof navigator !== 'undefined') {
 				if (staticObject.cycle) {
 					staticObject.cycle();
 				}
+				// Remove item
+				if (staticObject.getCanvasPositionY() < -100)
+					staticObject.deleteOnNextCycle();
 			});
 
 			uiElements.each(function (uiElement, i) {
