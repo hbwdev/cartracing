@@ -185,21 +185,25 @@ describe('Sprite', function() {
 
 		it('should not register two objects with hitboxes as having hit if they intersect in both dimensions but their hitboxes do not', function() {
 			var object1 = new Sprite({
+				parts: { main: [0, 0, 0, 0]},
 				hitBoxes: {
 					0: [ 0, 5, 10, 10 ]
 				}
 			});
 			var object2 = new Sprite({
+				parts: { main: [0, 0, 0, 0]},
 				hitBoxes: {
 					0: [ 0, 5, 10, 10 ]
 				}
 			});
 			var object3 = new Sprite({
+				parts: { main: [0, 0, 0, 0]},
 				hitBoxes: {
 					0: [ 0, 0, 5, 5 ]
 				}
 			});
 			var object4 = new Sprite({
+				parts: { main: [0, 0, 0, 0]},
 				hitBoxes: {
 					0: [ 0, 0, 10, 10 ]
 				}

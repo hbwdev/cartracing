@@ -21,10 +21,16 @@
 		that.movingWithConviction = false;
 		that.deleted = false;
 		that.maxHeight = (function () {
-			return Object.values(that.data.parts).map(function (p) { return p[3]; }).max();
+			if (that.data.parts == undefined) {
+				return 0;
+			}
+			Object.values(that.data.parts).map(function (p) { 
+				var height = p[3] || that.height;
+				return height;
+			 }).max();
 		}());
 		that.isMoving = true;
-		that.isDrawnUnderPlayer = data.isDrawnUnderPlayer;
+		that.isDrawnUnderPlayer = that.data.isDrawnUnderPlayer || false;
 		
 		if (!that.data.parts) {
 			that.data.parts = {};
