@@ -268,6 +268,8 @@ function startNeverEndingGame (images) {
 
 		game.gameOver();
 		gameInfo.gameEndDateTime = new Date();
+		livesLeft = 0;
+		updateHud();
 		
 		if (gameInfo.getScore() > highScore)
 			highScore = localStorage.setItem('highScore', gameInfo.getScore());
