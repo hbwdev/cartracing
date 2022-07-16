@@ -94,7 +94,7 @@ const gameInfo = {
 		const d = this.gameEndDateTime;
 		return '🛒 CartWars - Serious Shopper 🛒'
 			+ '\nDate: ' + d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear() + ' '
-				+ d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
+				+ ('00' + d.getHours()).slice(-2) + ':' + ('00' + d.getMinutes()).slice(-2) + ':' + ('00' + d.getSeconds()).slice(-2)
 			+ '\nLevel: ' + this.getLevel()
 			+ '\nTokens: ' + this.tokens
 			+ '\nDistance: ' + this.distance + 'm'
