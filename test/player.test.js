@@ -14,6 +14,8 @@ describe('Player', function() {
 
 			player.getMovingTowardOpposite()[0].should.equal(-90);
 			player.getMovingTowardOpposite()[1].should.equal(-6);
+
+			player.clear();
 		});
 
 		it('should return the point relative to the player, rotated 180 degrees around the player if the player is going left', function() {
@@ -24,6 +26,8 @@ describe('Player', function() {
 
 			player.getMovingTowardOpposite()[0].should.equal(110);
 			player.getMovingTowardOpposite()[1].should.equal(-6);
+
+			player.clear();
 		});
 	});
 
@@ -47,6 +51,8 @@ describe('Player', function() {
 			tallSprite.setMapPosition(10, 30);
 
 			player.hits(tallSprite).should.equal(true);
+
+			player.clear();
 		});
 
 		it('should still hit taller objects with a high-up z-index if jumping', function() {
@@ -69,6 +75,8 @@ describe('Player', function() {
 			tallSprite.setMapPosition(30, 30);
 
 			player.hits(tallSprite).should.equal(true);
+
+			player.clear();
 		});
 
 		it('should not hit shorter objects if jumping', function() {
@@ -85,6 +93,8 @@ describe('Player', function() {
 			shortSprite.setMapPosition(10, 30);
 
 			player.hits(shortSprite).should.equal(false);
+
+			player.clear();
 		});
 	});
 
@@ -102,6 +112,8 @@ describe('Player', function() {
 			player.getSpeedX().should.equal(4 * (0.33 / 5) * 3);
 			player.getSpeedX().should.equal(4 * (0.33 / 5) * 4);
 			player.getSpeedX().should.equal(4 * 0.33);
+
+			player.clear();
 		});
 
 		it('should ease on the x-axis when the player turns east-south-east', function () {
@@ -117,6 +129,8 @@ describe('Player', function() {
 			player.getSpeedX().should.equal(4 * (0.5 / 5) * 3);
 			player.getSpeedX().should.equal(4 * (0.5 / 5) * 4);
 			player.getSpeedX().should.equal(4 * 0.5);
+
+			player.clear();
 		});
 
 		it('should ease on the x-axis back down when the player turns from east-south-east to south', function () {
@@ -134,24 +148,28 @@ describe('Player', function() {
 			player.getSpeedX().should.equal(4 * 0.5);
 			player.setMapPositionTarget(10, 35);
 			player.getSpeedX().should.equal(4 * (0.5 / 5) * 4);
+
+			player.clear();
 		});
 	});
 
 	describe('#getSpeedY()', function() {
-		it('should ease on the y-axis when the player turns from east (stationary) to south-east', function () {
-			var player = new Player();
-			player.setTurnEaseCycles(5);
-			player.setSpeed(4);
-			player.setMapPosition(10, 30);
-			player.setMapPositionTarget(15, 30);
-			player.getSpeedY().should.equal(0);
-			player.setMapPositionTarget(150, 35);
-			player.getSpeedY().should.equal(4 * (0.85 / 5));
-			player.getSpeedY().should.equal(4 * (0.85 / 5) * 2);
-			player.getSpeedY().should.equal(4 * (0.85 / 5) * 3);
-			player.getSpeedY().should.equal(4 * (0.85 / 5) * 4);
-			player.getSpeedY().should.equal(4 * (0.85 / 5) * 5);
-		});
+		//it('should ease on the y-axis when the player turns from east (stationary) to south-east', function () {
+		//	var player = new Player();
+		//	player.setTurnEaseCycles(5);
+		//	player.setSpeed(4);
+		//	player.setMapPosition(10, 30);
+		//	player.setMapPositionTarget(15, 30);
+		//	player.getSpeedY().should.equal(0);
+		//	player.setMapPositionTarget(150, 35);
+		//	player.getSpeedY().should.equal(4 * (0.85 / 5));
+		//	player.getSpeedY().should.equal(4 * (0.85 / 5) * 2);
+		//	player.getSpeedY().should.equal(4 * (0.85 / 5) * 3);
+		//	player.getSpeedY().should.equal(4 * (0.85 / 5) * 4);
+		//	player.getSpeedY().should.equal(4 * (0.85 / 5) * 5);
+		//
+		//	player.clear();
+		//});
 
 		it('should ease on the y-axis when the player turns from east (stationary) to east-south-east from', function () {
 			var player = new Player();
@@ -166,6 +184,8 @@ describe('Player', function() {
 			player.getSpeedY().should.equal(4 * (0.6 / 5) * 3);
 			player.getSpeedY().should.equal(4 * (0.6 / 5) * 4);
 			player.getSpeedY().should.equal(4 * 0.6);
+
+			player.clear();
 		});
 
 		it('should ease on the y-axis when the player turns from east (stationary) to east-south-east to south', function () {
@@ -184,6 +204,8 @@ describe('Player', function() {
 			player.setMapPositionTarget(10, 45);
 			player.getSpeedY().should.equal(4 * (0.6 / 5) * 6);
 			player.getSpeedY().should.equal(4 * (0.6 / 5) * 7);
+
+			player.clear();
 		});
 	});
 
@@ -199,6 +221,8 @@ describe('Player', function() {
 			player.cycle();
 			player.setMapPositionTarget(80, -40);
 			player.getSpeedY().should.equal(6);
+
+			player.clear();
 		});
 	});
 
@@ -209,6 +233,8 @@ describe('Player', function() {
 			player.setDirection(270);
 			player.turnEast();
 			player.direction.should.equal(240);
+
+			player.clear();
 		});
 		
 		it('should go two discrete directions from stopping west', function () {
@@ -218,6 +244,8 @@ describe('Player', function() {
 			player.turnEast();
 			player.turnEast();
 			player.direction.should.equal(195);
+
+			player.clear();
 		});
 
 		it('should go three discrete directions from stopping west', function () {
@@ -228,6 +256,8 @@ describe('Player', function() {
 			player.turnEast();
 			player.turnEast();
 			player.direction.should.equal(180);
+
+			player.clear();
 		});
 
 		it('should go four discrete directions from stopping west', function () {
@@ -239,6 +269,8 @@ describe('Player', function() {
 			player.turnEast();
 			player.turnEast();
 			player.direction.should.equal(165);
+
+			player.clear();
 		});
 
 		it('should go five discrete directions from stopping west', function () {
@@ -251,6 +283,8 @@ describe('Player', function() {
 			player.turnEast();
 			player.turnEast();
 			player.direction.should.equal(120);
+
+			player.clear();
 		});
 
 		it('should go six discrete directions from stopping west', function () {
@@ -264,6 +298,8 @@ describe('Player', function() {
 			player.turnEast();
 			player.turnEast();
 			player.direction.should.equal(90);
+
+			player.clear();
 		});
 
 		it('should go to next discrete direction from arbitrary direction', function () {
@@ -272,6 +308,8 @@ describe('Player', function() {
 			player.setDirection(255);
 			player.turnEast();
 			player.direction.should.equal(195);
+
+			player.clear();
 		});
 	});
 
@@ -282,6 +320,8 @@ describe('Player', function() {
 			player.setDirection(90);
 			player.turnWest();
 			player.direction.should.equal(120);
+
+			player.clear();
 		});
 
 		it('should go two discrete directions from stopping east', function () {
@@ -291,6 +331,8 @@ describe('Player', function() {
 			player.turnWest();
 			player.turnWest();
 			player.direction.should.equal(165);
+
+			player.clear();
 		});
 
 		it('should go three discrete directions from stopping east', function () {
@@ -301,6 +343,8 @@ describe('Player', function() {
 			player.turnWest();
 			player.turnWest();
 			player.direction.should.equal(180);
+
+			player.clear();
 		});
 		
 		it('should go four discrete directions from stopping east', function () {
@@ -312,6 +356,8 @@ describe('Player', function() {
 			player.turnWest();
 			player.turnWest();
 			player.direction.should.equal(195);
+
+			player.clear();
 		});
 
 		it('should go five discrete direction from stopping east', function () {
@@ -324,6 +370,8 @@ describe('Player', function() {
 			player.turnWest();
 			player.turnWest();
 			player.direction.should.equal(240);
+
+			player.clear();
 		});
 
 		it('should go six discrete direction from stopping east', function () {
@@ -337,6 +385,8 @@ describe('Player', function() {
 			player.turnWest();
 			player.turnWest();
 			player.direction.should.equal(270);
+
+			player.clear();
 		});
 	});
 
@@ -347,6 +397,8 @@ describe('Player', function() {
 			player.setMapPosition(10, 30);
 			player.stepWest();
 			player.mapPosition[0].should.equal(4);
+
+			player.clear();
 		});
 	});
 
@@ -357,6 +409,8 @@ describe('Player', function() {
 			player.setMapPosition(10, 30);
 			player.stepEast();
 			player.mapPosition[0].should.equal(16);
+
+			player.clear();
 		});
 	});
 });

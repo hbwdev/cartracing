@@ -65,7 +65,7 @@ if (typeof navigator !== 'undefined') {
 		that.setSpeed(standardSpeed);
 
 		// Increase awake by 5 every second
-		setInterval(() => {
+		interval: awakeInterval = setInterval(() => {
 			if (that.isMoving && !that.isBoosting)
 				that.availableAwake = that.availableAwake >= 95 ? 100 : that.availableAwake + 5
 		}, 3000);
@@ -80,6 +80,11 @@ if (typeof navigator !== 'undefined') {
 			that.isBeingEaten = false;
 			setNormal();
 		};
+		
+		that.clear = function() {
+			that.reset();
+			clearInterval(awakeInterval);
+		}
 
 		function canSpeedBoost() {
 			return !that.isCrashing 
