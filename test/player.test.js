@@ -29,24 +29,15 @@ describe('Player', function() {
 
 	describe('#hits()', function() {
 		it('should still hit taller objects if jumping', function() {
-			var player = new Player({
-				parts: {
-					main : [ 0, 0, 10, 10 ]
-				},
-				hitBoxes: {
-					0: [ 0, 0, 10, 10 ],
-				}
-			});
+			var player = new Player();
 			player.setMapPosition(10, 30);
+			player.setHeight(10);
+			player.setWidth(10);
 			player.hasHitJump();
 			
 			var tallSprite = new Sprite({
 				parts: {
-					main : [ 0, 0, 10, 10 ]
-				},
-				hitBoxes: {
-					0: [ 0, 0, 10, 10 ],
-					1: [ 0, 0, 10, 10 ]
+					main : [ 0, 0, 5, 5 ]
 				},
 				zIndexesOccupied : [0, 1]
 			});
