@@ -438,7 +438,7 @@ function startNeverEndingGame (images) {
 				gameInfo.distance = parseFloat(player.getPixelsTravelledDownRoad() / pixelsPerMetre).toFixed(1);
 
 				if (gameInfo.distance > monsterDistanceThreshold) {
-					randomlySpawnNPC(spawnMonster, Math.round(gameInfo.distance / 1000) * .001);
+					randomlySpawnNPC(spawnMonster, 0.001);
 				}
 
 				if (gameInfo.distance)
