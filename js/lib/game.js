@@ -1,5 +1,6 @@
 var SpriteArray = require('./spriteArray');
 var EventedLoop = require('eventedloop');
+var Stats = require('stats.js');
 
 if (typeof navigator !== 'undefined') {
 	navigator.vibrate = navigator.vibrate ||
@@ -182,7 +183,14 @@ if (typeof navigator !== 'undefined') {
 			shakeStartTime = Date.now();
 		}
 
+		var stats = new Stats();
+		// Stats for performance debugging
+		//stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+		//document.body.appendChild(stats.dom);
+
 		that.draw = function () {
+			stats.begin();
+
 			// Clear canvas
 			mainCanvas.width = mainCanvas.width;
 			
@@ -228,6 +236,8 @@ if (typeof navigator !== 'undefined') {
 				if (playerShift > 0) playerShift -= 1;
 			}
 			dContext.setCentralPositionOffset(0, playerShift); */
+
+			stats.end();
 		};
 
 		this.start = function () {
