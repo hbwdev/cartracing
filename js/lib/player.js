@@ -495,7 +495,7 @@ if (typeof navigator !== 'undefined') {
 		that.hasHitOilSlick = function () {
 			that.setSpeed(7);
 			that.isMoving = true;
-			
+
 			// Experimenting with losing control
 			/* const direction = Math.floor(Math.random() * 4);
 			switch (direction) {

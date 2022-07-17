@@ -323,7 +323,7 @@ function startNeverEndingGame (images) {
 	}
 
 	function randomlySpawnNPC(spawnFunction, dropRate) {
-		var rateModifier = Math.max(800 - mainCanvas.width, 0);
+		var rateModifier = mainCanvas.width; //Math.max(800 - mainCanvas.width, 0);
 		if (Number.random(1000 + rateModifier) <= dropRate) {
 			spawnFunction();
 		}
