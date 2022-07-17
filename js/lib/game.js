@@ -1,5 +1,4 @@
 var SpriteArray = require('./spriteArray');
-var EventedLoop = require('eventedloop');
 var Stats = require('stats.js');
 
 if (typeof navigator !== 'undefined') {
@@ -185,8 +184,8 @@ if (typeof navigator !== 'undefined') {
 
 		var stats = new Stats();
 		// Stats for performance debugging
-		//stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-		//document.body.appendChild(stats.dom);
+		stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+		document.body.appendChild(stats.dom);
 
 		that.draw = function () {
 			stats.begin();
@@ -273,8 +272,8 @@ if (typeof navigator !== 'undefined') {
 			this.start();
 		}.bind(this);
 
-		gameLoop.on('20', this.cycle);
-		gameLoop.on('20', this.draw);
+		gameLoop.on('18', this.cycle);
+		gameLoop.on('18', this.draw);
 
 		startShake(mainCanvas);
 		setInterval(startShake, 300, dContext);
